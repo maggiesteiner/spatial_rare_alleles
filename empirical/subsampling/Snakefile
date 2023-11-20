@@ -1,0 +1,338 @@
+#!python3
+
+import pandas as pd
+import numpy as np
+
+
+### --------- Configuration Information ---------- ###
+configfile: "config.yaml"
+chroms = [f"chr{i}" for i in range(1, 23)]
+
+
+### --------- Setting up the targets for the workflow -------- ###
+seed = 42
+seedlist = range(1,21)
+TARGETS = []
+
+for seed in seedlist:
+    TARGETS.append(
+        f"../results/subsample_sfs/ukb/uniform.newcastle.merged.ukb_exomes.all.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios']['newcastle']['n']}.sfs.tsv.gz",
+    )
+    TARGETS.append(
+        f"../results/subsample_sfs/ukb_pca/group_01_sd.group_02_sd.group_10_sd.merged.ukb_exomes_pca.seed{seed}.nsamp{config['UKBB_EXOMES_PCA']['scenarios']['group_01_sd']['n']}.sfs.tsv.gz"
+    )
+
+#for c in config["GNOMAD_V3_GENOMES"]["chroms"]:
+#    if c == "none":
+#        pass
+#    elif c == "all":
+#        for c_tot in chroms:
+#            for scenario in config["GNOMAD_V3_GENOMES"]["scenarios"]:
+#                TARGETS.append(
+#                    f"../results/subsample_sfs/gnomAD_v3/{scenario}/gnomAD_v3.{c_tot}.seed{seed}.nsamp{config['GNOMAD_V3_GENOMES']['scenarios'][scenario]['n']}.sfs.tsv.gz"
+#                )
+#    else:
+#        for scenario in config["GNOMAD_V3_GENOMES"]["scenarios"]:
+#            TARGETS.append(
+#                f"../results/subsample_sfs/gnomad_V3/{scenario}/gnomAD_v3.{c}.seed{seed}.nsamp{config['GNOMAD_V3_GENOMES']['scenarios'][scenario]['n']}.sfs.tsv.gz"
+#            )
+
+#for c in config["UKBB_EXOMES"]["chroms"]:
+ #   if c == "none":
+ #       pass
+ #   elif c == "all":
+ #       for c_tot in chroms:
+ #           for scenario in ["newcastle","uniform"]#config["UKBB_EXOMES"]["scenarios"]:
+ #               for stemp in seedlist:
+ #                   TARGETS.append(
+ #                       f"../results/subsample_sfs/ukb/{scenario}/ukb_exomes.{c_tot}.all.seed{stemp}.nsamp{config['UKBB_EXOMES']['scenarios'][scenario]['n']}.sfs.tsv.gz"
+ #                   )
+                    #TARGETS.append(
+                    #    f"../results/subsample_sfs/ukb/{scenario}/ukb_exomes.{c_tot}.WB.seed{stemp}.nsamp{config['UKBB_EXOMES']['scenarios'][scenario]['n']}.sfs.tsv.gz"
+                    #)
+                #else:
+                #    TARGETS.append(
+                #        f"../results/subsample_sfs/ukb/{scenario}/ukb_exomes.{c_tot}.all.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios'][scenario]['n']}.sfs.tsv.gz"
+                #    )
+                #    TARGETS.append(
+                #        f"../results/subsample_sfs/ukb/{scenario}/ukb_exomes.{c_tot}.WB.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios'][scenario]['n']}.sfs.tsv.gz"
+                #    )
+    #else:
+    #    for scenario in config["GNOMAD_V3_GENOMES"]["scenarios"]:
+    #        TARGETS.append(
+    #            f"../results/subsample_sfs/ukb/{scenario}/ukb_exomes.{c}.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios'][scenario]['n']}.sfs.tsv.gz"
+    #        )
+
+#for c in config["UKBB_EXOMES_PCA"]["chroms"]:
+#    if c == "none":
+#        pass
+#    elif c == "all":
+#        for c_tot in chroms:
+#            for scenario in config["UKBB_EXOMES_PCA"]["scenarios"]:
+#                for stemp in seedlist:
+#                    TARGETS.append(
+#                        f"../results/subsample_sfs/ukb_pca/{scenario}/ukb_exomes_pca.{c_tot}.seed{stemp}.nsamp{config['UKBB_EXOMES_PCA']['scenarios'][scenario]['n']}.sfs.tsv.gz"
+#                    )
+                #if scenario == "newcastle":
+                #    for stemp in seedlist:
+                #        TARGETS.append(
+                #            f"../results/subsample_sfs/ukb/{scenario}/ukb_exomes.{c_tot}.all.seed{stemp}.nsamp{config['UKBB_EXOMES']['scenarios'][scenario]['n']}.sfs.tsv.gz"
+                #        )
+                #        TARGETS.append(
+                #            f"../results/subsample_sfs/ukb/{scenario}/ukb_exomes.{c_tot}.WB.seed{stemp}.nsamp{config['UKBB_EXOMES']['scenarios'][scenario]['n']}.sfs.tsv.gz"
+                #        )
+                #else:
+                #    TARGETS.append(
+                #        f"../results/subsample_sfs/ukb/{scenario}/ukb_exomes.{c_tot}.all.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios'][scenario]['n']}.sfs.tsv.gz"
+                #    )
+                #    TARGETS.append(
+                #        f"../results/subsample_sfs/ukb/{scenario}/ukb_exomes.{c_tot}.WB.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios'][scenario]['n']}.sfs.tsv.gz"
+                #    )
+    #else:
+    #for scenario in config["GNOMAD_V3_GENOMES"]["scenarios"]:
+    #        TARGETS.append(
+    #            f"../results/subsample_sfs/ukb/{scenario}/ukb_exomes.{c}.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios'][scenario]['n']}.sfs.tsv.gz"
+    #        )
+
+# Just get the unique targets for the pipeline if possible.
+TARGETS = np.unique(TARGETS).tolist()
+
+
+rule all:
+    input:
+        TARGETS,
+
+
+# ----------- 3. Annotated SFS from GnomAD v3 Genomes across multiple populations ------------------ #
+rule extract_sfs_gnomAD_v3:
+    """Extract the pop-specific AF from GnomAD v3 Genome Data with annotations."""
+    output:
+        tsv="../results/sfs_files/gnomAD_v3/geosfs.gnomad_r3.1.2.genomes.{chrom}.v3_expanded.tsv.gz",
+    wildcard_constraints:
+        chrom="chr\d+",
+    shell:
+        """
+        bcftools query -i \"TYPE=\'snp\' && AC > 0\" -f \"%CHROM\t%POS\t%ID\t%REF\t%ALT\t%gnomad_AC_nfe\t%gnomad_AN_nfe\t%gnomad_AC_eas\t%gnomad_AN_eas\t%gnomad_AC_sas\t%gnomad_AN_sas\t%gnomad_AC_mid\t%gnomad_AN_mid\t%gnomad_AC_oth\t%gnomad_AN_oth\t%vep\n\" https://gnomad-public-us-east-1.s3.amazonaws.com/release/3.1.2/vcf/genomes/gnomad.genomes.v3.1.2.hgdp_tgp.{wildcards.chrom}.vcf.bgz | awk \'BEGIN{{OFS=\"\t\"; print \"CHROM\tPOS\tID\tREF\tALT\tAC_NFE\tAN_NFE\tAC_EAS\tAN_EAS\tAC_SAS\tAN_SAS\tAC_MID\tAN_MID\tAC_OTH\tAN_OTH\tAnnot\tEffect\"}};  {{split($16, vep, \"|\"); $16=vep[2]; $17=vep[3]; print $0}}\' | bgzip > {output.tsv}
+        """
+
+rule subsamp_sfs_gnomAD_v3:
+    input:
+        input_jsfs="../results/sfs_files/gnomAD_v3/geosfs.gnomad_r3.1.2.genomes.{chrom}.v3_expanded.tsv.gz",
+    output:
+        subsamp_sfs_tsv="../results/subsample_sfs/gnomAD_v3/{scenario}/gnomAD_v3.{chrom}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+    params:
+        poplist=["NFE", "EAS", "SAS", "MID", "OTH"],
+        props=lambda wildcards: np.array(
+            [
+                float(x)
+                for x in config["GNOMAD_V3_GENOMES"]["scenarios"][wildcards.scenario][
+                    "props"
+                ].split(",")
+            ]
+        ),
+        n=lambda wildcards: int(
+            config["GNOMAD_V3_GENOMES"]["scenarios"][wildcards.scenario]["n"]
+        ),
+    script:
+        "scripts/subsample_afs.py"
+
+
+# ----------- 3. UKBB Whole Exomes -------------- #
+
+rule format_tables_UKB_exomes:
+    input:
+        ukb_jsfs="../data/ukb/chr{chrom}_{group}_center_allele_frequencies.frq.strat",
+        script="scripts/format_data_UKB.R",
+        meta="../data/ukb23158_500k_OQFE.annotations.txt"
+    output:
+        formatted_sfs="../results/sfs_files/ukb/{scenario}/ukb_exomes.chr{chrom}.{group}.jsfs.formatted.tsv.gz",
+    run:
+        shell("Rscript {input.script} {input.ukb_jsfs} {output.formatted_sfs} {input.meta}")
+
+rule subsamp_sfs_UKB_exomes:
+    input:
+        input_jsfs="../results/sfs_files/ukb/{scenario}/ukb_exomes.chr{chrom}.{group}.jsfs.formatted.tsv.gz",
+    output:
+        subsamp_sfs_tsv="../results/subsample_sfs/ukb/{scenario}/ukb_exomes.chr{chrom}.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+    params:
+        poplist=["barts","birmingham","bristol","bury","cardiff","croydon","edinburgh","glasgow","hounslow","leeds","liverpool","manchester","middlesborough","newcastle","nottingham","oxford","reading","sheffield","stockport","stoke","swansea","wrexham"],
+        n=lambda wildcards: int(
+            config["UKBB_EXOMES"]["scenarios"][wildcards.scenario]["n"]
+        ),
+        props = lambda wildcards: np.array(
+            [
+                float(x)
+                for x in config["UKBB_EXOMES"]["scenarios"][wildcards.scenario]["props"].split(",")
+            ]
+        ),
+
+    script:
+        "scripts/subsample_afs.py"
+
+rule joint_sfs_filt_UKB:
+    input:
+        subsamp1_sfs_tsv="../results/subsample_sfs/ukb/{scenario1}/ukb_exomes.chr{chrom}.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+        subsamp2_sfs_tsv="../results/subsample_sfs/ukb/{scenario2}/ukb_exomes.chr{chrom}.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+    output:
+        merged_tsv=temp(
+            "../results/subsample_sfs/ukb/{scenario1}.{scenario2}.ukb_exomes.chr{chrom}.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz"
+        ),
+    run:
+        sfs1_df = pd.read_csv(input.subsamp1_sfs_tsv, sep="\t")
+        sfs2_df = pd.read_csv(input.subsamp2_sfs_tsv, sep="\t")
+        for a in ["AC", "AF", "N"]:
+            assert a in sfs1_df.columns
+            assert a in sfs2_df.columns
+        sfs1_df = sfs1_df.rename(
+            columns={
+                "AC": f"AC_{wildcards['scenario1']}",
+                "AF": f"AF_{wildcards['scenario1']}",
+                "N": f"N_{wildcards['scenario1']}",
+            }
+        )
+        sfs2_df = sfs2_df.rename(
+            columns={
+                "AC": f"AC_{wildcards['scenario2']}",
+                "AF": f"AF_{wildcards['scenario2']}",
+                "N": f"N_{wildcards['scenario2']}",
+            }
+        )
+        merged_sfs_df = sfs1_df.merge(sfs2_df)
+        merged_sfs_df = merged_sfs_df[
+            (merged_sfs_df[f"AC_{wildcards['scenario1']}"] > 0)
+            | (merged_sfs_df[f"AC_{wildcards['scenario2']}"] > 0)
+        ]
+        merged_sfs_df.to_csv(output.merged_tsv, sep="\t", index=None)
+
+rule concat_join_sfs_UKB:
+    input:
+        expand(
+            "../results/subsample_sfs/ukb/{{scenario1}}.{{scenario2}}.ukb_exomes.{chrom}.{{group}}.seed{{seed}}.nsamp{{nsamp}}.sfs.tsv.gz",
+            chrom=chroms,
+        ),
+    output:
+        "../results/subsample_sfs/ukb/{scenario1}.{scenario2}.merged.ukb_exomes.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+    shell:
+        "zcat {input} | awk 'NR > 1 && /^Annot/ {{ next }} 1' | gzip > {output}"
+
+# ----------- 4. UKBB Whole Exomes PCA -------------- #
+
+rule format_tables_UKB_exomes_PCA:
+    input:
+        ukb_jsfs="../data/ukb/pca_groups/chr{chrom}_all_pca_allele_frequencies_v2.frq.strat",
+        script="scripts/format_data_UKB.R",
+        meta="../data/ukb23158_500k_OQFE.annotations.txt"
+    output:
+        formatted_sfs="../results/sfs_files/ukb_pca/{scenario}/ukb_exomes_pca.chr{chrom}.v2.jsfs.formatted.tsv.gz",
+    run:
+        shell("Rscript {input.script} {input.ukb_jsfs} {output.formatted_sfs} {input.meta}")
+
+rule subsamp_sfs_UKB_exomes_PCA:
+    input:
+        input_jsfs="../results/sfs_files/ukb_pca/{scenario}/ukb_exomes_pca.chr{chrom}.v2.jsfs.formatted.tsv.gz",
+    output:
+        subsamp_sfs_tsv="../results/subsample_sfs/ukb_pca/{scenario}/ukb_exomes_pca.chr{chrom}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+    params:
+        poplist=["group_0.1_sd","group_0.2_sd","group_10_sd"],
+        n=lambda wildcards: int(
+            config["UKBB_EXOMES_PCA"]["scenarios"][wildcards.scenario]["n"]
+        ),
+        props = lambda wildcards: np.array(
+            [
+                   float(x)
+                   for x in config["UKBB_EXOMES_PCA"]["scenarios"][wildcards.scenario]["props"].split(",")
+            ]
+        ),
+
+    script:
+        "scripts/subsample_afs.py"
+
+rule joint_sfs_filt_UKB_pca:
+    input:
+        subsamp1_sfs_tsv="../results/subsample_sfs/ukb_pca/{scenario_pca1}/ukb_exomes_pca.chr{chrom}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+        subsamp2_sfs_tsv="../results/subsample_sfs/ukb_pca/{scenario_pca2}/ukb_exomes_pca.chr{chrom}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+        subsamp3_sfs_tsv="../results/subsample_sfs/ukb_pca/{scenario_pca3}/ukb_exomes_pca.chr{chrom}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+        #subsamp4_sfs_tsv="../results/subsample_sfs/ukb_pca/{scenario_pca4}/ukb_exomes_pca.chr{chrom}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+        #subsamp5_sfs_tsv="../results/subsample_sfs/ukb_pca/{scenario_pca5}/ukb_exomes_pca.chr{chrom}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+    output:
+        merged_tsv=temp(
+            "../results/subsample_sfs/ukb_pca/{scenario_pca1}.{scenario_pca2}.{scenario_pca3}.ukb_exomes_pca.chr{chrom}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz"
+        ),
+    run:
+        sfs1_df = pd.read_csv(input.subsamp1_sfs_tsv, sep="\t")
+        sfs2_df = pd.read_csv(input.subsamp2_sfs_tsv, sep="\t")
+        sfs3_df = pd.read_csv(input.subsamp3_sfs_tsv, sep="\t")
+        #sfs4_df = pd.read_csv(input.subsamp4_sfs_tsv, sep="\t")
+        #sfs5_df = pd.read_csv(input.subsamp5_sfs_tsv, sep="\t")
+        for a in ["AC", "AF", "N"]:
+            assert a in sfs1_df.columns
+            assert a in sfs2_df.columns
+            assert a in sfs3_df.columns
+            #assert a in sfs4_df.columns
+            #assert a in sfs5_df.columns 
+        sfs1_df = sfs1_df.rename(
+            columns={
+                "AC": f"AC_{wildcards['scenario_pca1']}",
+                "AF": f"AF_{wildcards['scenario_pca1']}",
+                "N": f"N_{wildcards['scenario_pca1']}",
+            }
+        )
+        sfs2_df = sfs2_df.rename(
+            columns={
+                "AC": f"AC_{wildcards['scenario_pca2']}",
+                "AF": f"AF_{wildcards['scenario_pca2']}",
+                "N": f"N_{wildcards['scenario_pca2']}",
+            }
+        )
+        sfs3_df = sfs3_df.rename(
+            columns={
+                "AC": f"AC_{wildcards['scenario_pca3']}",
+                "AF": f"AF_{wildcards['scenario_pca3']}",
+                "N": f"N_{wildcards['scenario_pca3']}",
+            }
+        )
+        #sfs4_df = sfs4_df.rename(
+        #    columns={
+        #        "AC": f"AC_{wildcards['scenario_pca4']}",
+        #        "AF": f"AF_{wildcards['scenario_pca4']}",
+        #        "N": f"N_{wildcards['scenario_pca4']}",
+        #    }
+        #)
+        #sfs5_df = sfs5_df.rename(
+        #    columns={
+        #        "AC": f"AC_{wildcards['scenario_pca5']}",
+        #        "AF": f"AF_{wildcards['scenario_pca5']}",
+        #        "N": f"N_{wildcards['scenario_pca5']}",
+        #    }
+        #)
+        #merged_sfs_df = sfs1_df.merge(sfs2_df).merge(sfs3_df).merge(sfs4_df).merge(sfs5_df)
+        merged_df = sfs1_df.merge(sfs2_df)
+        del sfs1_df, sfs2_df
+
+        merged_df = merged_df.merge(sfs3_df)
+        del sfs3_df
+
+        #merged_df = merged_df.merge(sfs4_df)
+        #del sfs4_df
+
+        #merged_df = merged_df.merge(sfs5_df)
+        #del sfs5_df
+
+
+        merged_df = merged_df[
+            (merged_df[f"AC_{wildcards['scenario_pca1']}"] > 0)
+            | (merged_df[f"AC_{wildcards['scenario_pca2']}"] > 0)
+            | (merged_df[f"AC_{wildcards['scenario_pca3']}"] > 0)
+        ]
+        merged_df.to_csv(output.merged_tsv, sep="\t", index=None)
+
+rule concat_join_sfs_UKB_pca:
+    input:
+        expand(
+            "../results/subsample_sfs/ukb_pca/{{scenario_pca1}}.{{scenario_pca2}}.{{scenario_pca3}}.ukb_exomes_pca.{chrom}.seed{{seed}}.nsamp{{nsamp}}.sfs.tsv.gz",
+            chrom=chroms,
+        ),
+    output:
+        "../results/subsample_sfs/ukb_pca/{scenario_pca1}.{scenario_pca2}.{scenario_pca3}.merged.ukb_exomes_pca.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+    shell:
+        "zcat {input} | awk 'NR > 1 && /^Annot/ {{ next }} 1' | gzip > {output}"
