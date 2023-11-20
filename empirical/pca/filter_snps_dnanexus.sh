@@ -12,8 +12,4 @@ for chrom in {1..22}; do
         -iin=used_in_pca.tsv \
         -iin=ukb_snps_used_pca.txt \
         -icmd="plink --bfile ukb22418_c${chrom}_b0_v2 --extract ukb_snps_used_pca.txt --make-bed --recode --out c${chrom}_filtered"
-
-    #dx make_download_url c${chrom}_filtered.ped >> download_urls_c${chrom}.txt
-    #dx make_download_url c${chrom}_filtered.map >> download_urls_c${chrom}.txt
-    #wget --input-file download_urls_c${chrom}.txt -P plink_files 
 done
