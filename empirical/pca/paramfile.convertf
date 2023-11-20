@@ -1,0 +1,8 @@
+genotypename:	plink_files/merged_filtered.bed
+snpname:	plink_files/merged_filtered.bim
+indivname:	plink_files/merged_filtered.fam
+outputformat: 	EIGENSTRAT
+genotypeoutname:	eigenstrat_files/merged_filtered.geno
+snpoutname:	eigenstrat_files/merged_filtered.snp
+indivoutname:	eigenstrat_files/merged_filtered.ind
+
