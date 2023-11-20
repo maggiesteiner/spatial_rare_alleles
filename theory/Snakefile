@@ -1,0 +1,91 @@
+rule all:
+    input:
+        "plots_pade_poles_dim2_errorTrue.png",
+        "plots_pade_poles_dim2_errorFalse.png",
+        "plots_pade_residues_dim2_errorTrue.png",
+        "plots_pade_residues_dim2_errorFalse.png",
+        "plots_pade_remainder_dim2_errorTrue.png",
+        "plots_pade_remainder_dim2_errorFalse.png",
+        "plots_pade_poles_vs_residues_dim2_errorTrue.png",
+        "plots_pade_poles_vs_residues_dim2_errorFalse.png",
+        "plots_pade_error_dim2_errorTrue.png",
+        "plots_pade_rel_error_dim2_errorTrue.png",
+        "plots_pade_pole_error_dim2_errorTrue.png",
+        "cumulants_dim2.png",
+        "plots_sfs_dim2_polytype_1_1_N1000.png",
+        "plots_params_selection_dim2_polytype_1_1_N1000.png"
+
+rule calc_integrals_dim2:
+    input:
+    output:
+        "spatial_integrals_dim2.csv"
+    shell:
+        "python spatial_integrals_v2.py --dim 2"
+
+rule plot_cumulants:
+    input:
+        "spatial_integrals_dim2.csv"
+    output:
+        "cumulants_dim2.png"
+    shell:
+        """
+        python plot_cumulants.py --dim 2
+        """
+
+rule pade_approx:
+    input:
+        "spatial_integrals_dim2.csv"
+    output:
+        "pade_approx_dim2_errorFalse.csv",
+        "pade_approx_dim2_errorTrue.csv"
+    shell:
+        """
+        python pade_approx_v2.py --dim 2
+        python pade_approx_v2.py --dim 2 --calc_error
+        """
+
+rule clean_data:
+    input:
+        "pade_approx_dim2_errorFalse.csv",
+        "pade_approx_dim2_errorTrue.csv"
+    output:
+        "cleaned_data_dim2_errorFalse.csv",
+        "cleaned_data_dim2_errorTrue.csv"
+    shell:
+        """
+        python clean_data.py --dim 2
+        python clean_data.py --dim 2 --calc_error
+        """
+
+rule make_plots:
+    input:
+        "cleaned_data_dim2_errorFalse.csv",
+        "cleaned_data_dim2_errorTrue.csv"
+    output:
+        "plots_pade_poles_dim2_errorTrue.png",
+        "plots_pade_poles_dim2_errorFalse.png",
+        "plots_pade_residues_dim2_errorTrue.png",
+        "plots_pade_residues_dim2_errorFalse.png",
+        "plots_pade_remainder_dim2_errorTrue.png",
+        "plots_pade_remainder_dim2_errorFalse.png",
+        "plots_pade_poles_vs_residues_dim2_errorTrue.png",
+        "plots_pade_poles_vs_residues_dim2_errorFalse.png",
+        "plots_pade_error_dim2_errorTrue.png",
+        "plots_pade_rel_error_dim2_errorTrue.png",
+        "plots_pade_pole_error_dim2_errorTrue.png"
+    shell:
+        """
+        python make_plots_pade.py --dim 2
+        python make_plots_pade.py --dim 2 --calc_error
+        """
+
+rule plot_sfs:
+    input:
+        "cleaned_data_dim2_errorFalse.csv"
+    output:
+        "plots_sfs_dim2_polytype_1_1_N1000.png",
+        "plots_params_selection_dim2_polytype_1_1_N1000.png"
+    shell:
+        """
+        python plot_sfs.py --dim 2 --pt 1_1 --N 1000 --plot_both
+        """
