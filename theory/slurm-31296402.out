@@ -1,0 +1,20 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 14
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	calc_integrals_dim2
+	1	clean_data
+	1	make_plots
+	1	pade_approx
+	1	plot_cumulants
+	1	plot_sfs
+	7
+
+[Wed Nov 22 10:52:48 2023]
+rule calc_integrals_dim2:
+    output: spatial_integrals_dim2.csv
+    jobid: 5
+

@@ -86,8 +86,8 @@ def gaussquad_integral(w,dim,integrandA,integrandB=None,opts=None):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--wmin", type=float, help="lower bound for w", default=-2)
-    parser.add_argument("--wmax", type=float, help="upper bound for w", default=3)
-    parser.add_argument("--nsamp", type=int, help="number of samples for w", default=1000)
+    parser.add_argument("--wmax", type=float, help="upper bound for w", default=2)
+    parser.add_argument("--nsamp", type=int, help="number of samples for w", default=100)
     parser.add_argument("--dim", type=int, help="dimension, default is 1", choices=[1,2], default=1)
     parser.add_argument("--outname", type=str, help="name for output file (without extension)", default="spatial_integrals")
     args = parser.parse_args()
