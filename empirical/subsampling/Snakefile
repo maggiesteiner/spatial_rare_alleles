@@ -26,24 +26,79 @@ rule all:
     input:
         TARGETS,
 
-# ----------- 2. UKBB Whole Exomes - By Center (categorical subsampling) -------------- #
+# ----------- UKBB Whole Exomes - By Center (categorical subsampling) -------------- #
+
+rule get_frq_files:
+    input:
+        "ids_assessment_center.csv",
+        "ids_assessment_center_WB.csv",
+        "ids_country_UKmainland.csv",
+        "ids_country_UKmainland_WB.csv",
+    output:
+        frq_file_1="data/frq/c{chrom}_assessment_center.frq.strat",
+        frq_file_2="data/frq/c{chrom}_country_UKmainland.frq.strat",
+        frq_file_3="data/frq/c{chrom}_assessment_center_WBonly.frq.strat",
+        frq_file_4="data/frq/c{chrom}_country_UKmainland_WBonly.frq.strat",
+    shell:
+        """
+        dx upload ids_assessment_center.csv
+        dx upload ids_assessment_center_WB.csv
+        dx upload ids_country_UKmainland.csv
+        dx upload ids_country_UKmainland_WB.csv
+
+
+        eval "dx run app-swiss-army-knife -y --wait \
+                -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bed \
+                -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bim \
+                -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.fam \
+                -iin=ids_assessment_center.csv \
+                -icmd='plink --bfile ukb23158_c{wildcards.chrom}_b0_v1 --keep ids_assessment_center.csv --freq --within ids_assessment_center.csv --out chr{wildcards.chrom}_wes_assessment_center
+
+        eval "dx run app-swiss-army-knife -y --wait \
+                -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bed \
+                -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bim \
+                -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.fam \
+                -iin=ids_assessment_center.csv \
+                -icmd='plink --bfile ukb23158_c{wildcards.chrom}_b0_v1 --keep ids_assessment_center_WB.csv --freq --within ids_assessment_center_WB.csv --out chr{wildcards.chrom}_wes_assessment_center_WBonly
+
+        eval "dx run app-swiss-army-knife -y --wait \
+                -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bed \
+                -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bim \
+                -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.fam \
+                -iin=ids_assessment_center.csv \
+                -icmd='plink --bfile ukb23158_c{wildcards.chrom}_b0_v1 --keep ids_country_UKmainland.csv --freq --within ids_country_UKmainland.csv --out chr{wildcards.chrom}_wes_country_UKmainland
+
+        eval "dx run app-swiss-army-knife -y --wait \
+                -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bed \
+                -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bim \
+                -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.fam \
+                -iin=ids_assessment_center.csv \
+                -icmd='plink --bfile ukb23158_c{wildcards.chrom}_b0_v1 --keep ids_country_UKmainland_WB.csv --freq --within ids_country_UKmainland_WB.csv --out chr{wildcards.chrom}_wes_country_UKmainland_WBonly
+
+        dx download chr{wildcards.chrom}_wes_assessment_center.frq.strat
+        dx download chr{wildcards.chrom}_wes_assessment_center_WBonly.frq.strat
+        dx download chr{wildcards.chrom}_wes_country_UKmainland.frq.strat
+        dx download chr{wildcards.chrom}_wes_country_UKmainland_WBonly.frq.strat
+
+        """
 
 rule format_tables_UKB_exomes:
     input:
-        ukb_jsfs="../data/ukb_center/chr{chrom}_{group}_center_allele_frequencies.frq.strat",
+        ukb_jsfs="data/frq/chr{chrom}_wes_{group}.frq.strat",
         script="scripts/format_data_UKB.R",
-        meta="../data/ukb23158_500k_OQFE.annotations.txt"
+        meta="data/ukb23158_500k_OQFE.annotations.txt"
     output:
-        formatted_sfs="../results/sfs_files/ukb_center/{scenario}/ukb_exomes.chr{chrom}.{group}.jsfs.formatted.tsv.gz",
+        formatted_sfs="results/sfs_files/{scenario}/chr{chrom}.wes.{group}.jsfs.formatted.tsv.gz",
     run:
         shell("Rscript {input.script} {input.ukb_jsfs} {output.formatted_sfs} {input.meta}")
 
 rule subsamp_sfs_UKB_exomes:
     input:
-        input_jsfs="../results/sfs_files/ukb_center/{scenario}/ukb_exomes.chr{chrom}.{group}.jsfs.formatted.tsv.gz",
+        input_jsfs="../results/sfs_files/{scenario}/chr{chrom}.wes.{group}.jsfs.formatted.tsv.gz",
     output:
-        subsamp_sfs_tsv="../results/subsample_sfs/ukb_center/{scenario}/ukb_exomes.chr{chrom}.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+        subsamp_sfs_tsv="../results/subsample_sfs/{scenario}/chr{chrom}.wes.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
     params:
+        # STOPPED EDITING HERE 11/24
         poplist=["barts","birmingham","bristol","bury","cardiff","croydon","edinburgh","glasgow","hounslow","leeds","liverpool","manchester","middlesborough","newcastle","nottingham","oxford","reading","sheffield","stockport","stoke","swansea","wrexham"],
         n=lambda wildcards: int(
             config["UKBB_EXOMES"]["scenarios"][wildcards.scenario]["n"]
