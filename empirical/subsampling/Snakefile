@@ -13,11 +13,14 @@ chroms = [f"chr{i}" for i in range(1, 23)]
 seed = 42
 seedlist = range(1,21)
 TARGETS = []
+center_list = ["Barts","Birmingham","Bristol","Bury","Cardiff","Croydon","Edinburgh","Glasgow","Hounslow","Leeds","Liverpool","Manchester","Middlesborough","Newcastle","Nottingham","Oxford","Reading","Sheffield","Stoke"],
+
 
 for seed in seedlist:
-    TARGETS.append(
-        f"../results/subsample_sfs/ukb_center/uniform.newcastle.merged.ukb_exomes.all.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios']['newcastle']['n']}.sfs.tsv.gz",
-    )
+    for center in center_list:
+        TARGETS.append(
+            f"results/subsample_sfs/Uniform.{center}.merged.wes.all.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios']['{center}']['n']}.sfs.tsv.gz",
+        )
 
 # Just get the unique targets for the pipeline if possible.
 TARGETS = np.unique(TARGETS).tolist()
@@ -98,8 +101,7 @@ rule subsamp_sfs_UKB_exomes:
     output:
         subsamp_sfs_tsv="../results/subsample_sfs/{scenario}/chr{chrom}.wes.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
     params:
-        # STOPPED EDITING HERE 11/24
-        poplist=["barts","birmingham","bristol","bury","cardiff","croydon","edinburgh","glasgow","hounslow","leeds","liverpool","manchester","middlesborough","newcastle","nottingham","oxford","reading","sheffield","stockport","stoke","swansea","wrexham"],
+        poplist=["Barts","Birmingham","Bristol","Bury","Cardiff","Croydon","Edinburgh","Glasgow","Hounslow","Leeds","Liverpool","Manchester","Middlesborough","Newcastle","Nottingham","Oxford","Reading","Sheffield","Stoke","Swansea","Wrexham","Stockport (pilot)"],
         n=lambda wildcards: int(
             config["UKBB_EXOMES"]["scenarios"][wildcards.scenario]["n"]
         ),
@@ -115,11 +117,11 @@ rule subsamp_sfs_UKB_exomes:
 
 rule joint_sfs_filt_UKB:
     input:
-        subsamp1_sfs_tsv="../results/subsample_sfs/ukb_center/{scenario1}/ukb_exomes.chr{chrom}.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
-        subsamp2_sfs_tsv="../results/subsample_sfs/ukb_center/{scenario2}/ukb_exomes.chr{chrom}.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+        subsamp1_sfs_tsv="results/subsample_sfs/{scenario1}/chr{chrom}.wes.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+        subsamp2_sfs_tsv="results/subsample_sfs/{scenario2}/chr{chrom}.{wes.group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
     output:
         merged_tsv=temp(
-            "../results/subsample_sfs/ukb_center/{scenario1}.{scenario2}.ukb_exomes.chr{chrom}.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz"
+            "results/subsample_sfs/{scenario1}.{scenario2}.chr{chrom}.wes.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz"
         ),
     run:
         sfs1_df = pd.read_csv(input.subsamp1_sfs_tsv, sep="\t")
@@ -151,11 +153,11 @@ rule joint_sfs_filt_UKB:
 rule concat_join_sfs_UKB:
     input:
         expand(
-            "../results/subsample_sfs/ukb_center/{{scenario1}}.{{scenario2}}.ukb_exomes.{chrom}.{{group}}.seed{{seed}}.nsamp{{nsamp}}.sfs.tsv.gz",
+            "results/subsample_sfs/{{scenario1}}.{{scenario2}}.{chrom}.wes.{{group}}.seed{{seed}}.nsamp{{nsamp}}.sfs.tsv.gz",
             chrom=chroms,
         ),
     output:
-        "../results/subsample_sfs/ukb_center/{scenario1}.{scenario2}.merged.ukb_exomes.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+        "results/subsample_sfs/{scenario1}.{scenario2}.merged.wes.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
     shell:
         "zcat {input} | awk 'NR > 1 && /^Annot/ {{ next }} 1' | gzip > {output}"
 
