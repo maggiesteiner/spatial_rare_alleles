@@ -2,6 +2,7 @@
 
 import pandas as pd
 import numpy as np
+import os
 
 
 ### --------- Configuration Information ---------- ###
@@ -13,14 +14,34 @@ chroms = [f"chr{i}" for i in range(1, 23)]
 seed = 42
 seedlist = range(1,21)
 TARGETS = []
-center_list = ["Barts","Birmingham","Bristol","Bury","Cardiff","Croydon","Edinburgh","Glasgow","Hounslow","Leeds","Liverpool","Manchester","Middlesborough","Newcastle","Nottingham","Oxford","Reading","Sheffield","Stoke"],
+center_list = ["Barts","Birmingham","Bristol","Bury","Cardiff","Croydon","Edinburgh","Glasgow","Hounslow","Leeds","Liverpool","Manchester","Middlesborough","Newcastle","Nottingham","Oxford","Reading","Sheffield","Stoke"]
+country_list = ["England","Scotland","Wales"]
 
+os.makedirs("results/sfs_files/Uniform_Centers", exist_ok=True)
+os.makedirs("results/subsample_sfs/Uniform_Centers", exist_ok=True)
+os.makedirs("results/sfs_files/Uniform_Countries", exist_ok=True)
+os.makedirs("results/subsample_sfs/Uniform_Countries", exist_ok=True)
 
 for seed in seedlist:
     for center in center_list:
         TARGETS.append(
-            f"results/subsample_sfs/Uniform.{center}.merged.wes.all.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios']['{center}']['n']}.sfs.tsv.gz",
+            f"results/subsample_sfs/Uniform_Centers.{center}.merged.wes.assessment_center.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios'][center]['n']}.centers.sfs.tsv.gz",
         )
+        TARGETS.append(
+            f"results/subsample_sfs/Uniform_Centers.{center}.merged.wes.assessment_center_WBonly.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios'][center]['n']}.centers.sfs.tsv.gz",
+        )
+        os.makedirs("results/sfs_files/{center}", exist_ok=True)
+        os.makedirs("results/subsample_sfs/{center}", exist_ok=True)
+    for country in country_list:
+        TARGETS.append(
+            f"results/subsample_sfs/Uniform_Countries.{country}.merged.wes.country_UKmainland.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios'][country]['n']}.birthcountry.sfs.tsv.gz",
+        )
+        TARGETS.append(
+            f"results/subsample_sfs/Uniform_Countries.{country}.merged.wes.country_UKmainland_WBonly.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios'][country]['n']}.birthcountry.sfs.tsv.gz",
+        )
+        os.makedirs("results/sfs_files/{country}", exist_ok=True)
+        os.makedirs("results/subsample_sfs/{country}", exist_ok=True)
+
 
 # Just get the unique targets for the pipeline if possible.
 TARGETS = np.unique(TARGETS).tolist()
@@ -95,11 +116,11 @@ rule format_tables_UKB_exomes:
     run:
         shell("Rscript {input.script} {input.ukb_jsfs} {output.formatted_sfs} {input.meta}")
 
-rule subsamp_sfs_UKB_exomes:
+rule subsamp_centers_sfs_UKB_exomes:
     input:
-        input_jsfs="../results/sfs_files/{scenario}/chr{chrom}.wes.{group}.jsfs.formatted.tsv.gz",
+        input_jsfs="results/sfs_files/{scenario}/chr{chrom}.wes.{group}.jsfs.formatted.tsv.gz",
     output:
-        subsamp_sfs_tsv="../results/subsample_sfs/{scenario}/chr{chrom}.wes.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+        subsamp_sfs_tsv="results/subsample_sfs/{scenario}/chr{chrom}.wes.{group}.seed{seed}.nsamp{nsamp}.centers.sfs.tsv.gz",
     params:
         poplist=["Barts","Birmingham","Bristol","Bury","Cardiff","Croydon","Edinburgh","Glasgow","Hounslow","Leeds","Liverpool","Manchester","Middlesborough","Newcastle","Nottingham","Oxford","Reading","Sheffield","Stoke","Swansea","Wrexham","Stockport (pilot)"],
         n=lambda wildcards: int(
@@ -115,13 +136,33 @@ rule subsamp_sfs_UKB_exomes:
     script:
         "scripts/subsample_afs.py"
 
+rule subsamp_birthcountry_sfs_UKB_exomes:
+    input:
+        input_jsfs="results/sfs_files/{scenario}/chr{chrom}.wes.{group}.jsfs.formatted.tsv.gz",
+    output:
+        subsamp_sfs_tsv="results/subsample_sfs/{scenario}/chr{chrom}.wes.{group}.seed{seed}.nsamp{nsamp}.birthcountry.sfs.tsv.gz",
+    params:
+        poplist=["England","Scotland","Wales"],
+        n=lambda wildcards: int(
+            config["UKBB_EXOMES"]["scenarios"][wildcards.scenario]["n"]
+        ),
+        props = lambda wildcards: np.array(
+            [
+                float(x)
+                for x in config["UKBB_EXOMES"]["scenarios"][wildcards.scenario]["props"].split(",")
+            ]
+        ),
+
+    script:
+        "scripts/subsample_afs.py"
+
 rule joint_sfs_filt_UKB:
     input:
-        subsamp1_sfs_tsv="results/subsample_sfs/{scenario1}/chr{chrom}.wes.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
-        subsamp2_sfs_tsv="results/subsample_sfs/{scenario2}/chr{chrom}.{wes.group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+        subsamp1_sfs_tsv="results/subsample_sfs/{scenario1}/chr{chrom}.wes.{group}.seed{seed}.nsamp{nsamp}.{setting}.sfs.tsv.gz",
+        subsamp2_sfs_tsv="results/subsample_sfs/{scenario2}/chr{chrom}.wes.{group}.seed{seed}.nsamp{nsamp}.{setting}.sfs.tsv.gz",
     output:
         merged_tsv=temp(
-            "results/subsample_sfs/{scenario1}.{scenario2}.chr{chrom}.wes.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz"
+            "results/subsample_sfs/{scenario1}.{scenario2}.chr{chrom}.wes.{group}.seed{seed}.nsamp{nsamp}.{setting}.sfs.tsv.gz"
         ),
     run:
         sfs1_df = pd.read_csv(input.subsamp1_sfs_tsv, sep="\t")
@@ -153,11 +194,11 @@ rule joint_sfs_filt_UKB:
 rule concat_join_sfs_UKB:
     input:
         expand(
-            "results/subsample_sfs/{{scenario1}}.{{scenario2}}.{chrom}.wes.{{group}}.seed{{seed}}.nsamp{{nsamp}}.sfs.tsv.gz",
+            "results/subsample_sfs/{{scenario1}}.{{scenario2}}.{chrom}.wes.{{group}}.seed{{seed}}.nsamp{{nsamp}}.{{setting}}.sfs.tsv.gz",
             chrom=chroms,
         ),
     output:
-        "results/subsample_sfs/{scenario1}.{scenario2}.merged.wes.{group}.seed{seed}.nsamp{nsamp}.sfs.tsv.gz",
+        "results/subsample_sfs/{scenario1}.{scenario2}.merged.wes.{group}.seed{seed}.nsamp{nsamp}.{setting}.sfs.tsv.gz",
     shell:
         "zcat {input} | awk 'NR > 1 && /^Annot/ {{ next }} 1' | gzip > {output}"
 
