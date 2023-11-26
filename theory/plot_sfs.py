@@ -49,7 +49,7 @@ def main():
 
     s_vals = args.s_list
     fig, axs = plt.subplots(2, 3,figsize=(10,8))
-
+    x_range = np.logspace(0,3,1000)
     axs[0,0].set_title("s="+str(s_vals[0]))
     axs[0,0].set_xscale("log")
     axs[0, 0].set_yscale("log")

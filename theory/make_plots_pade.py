@@ -7,10 +7,15 @@ def plot_scatter(df,y,x="w",outname="fig.png",xtrans=None,ytrans=None,ylab=None,
     sns.lmplot(x, y, data=df, hue='poly_type', fit_reg=False,scatter_kws={"s": 2},legend=False,palette="colorblind")
     if xtrans is not None:
         plt.xscale(xtrans)
-    if ytrans is not None and linthreshy is not None:
-        plt.yscale(ytrans,linthreshy=linthreshy)
-    elif ytrans is not None:
-        plt.yscale(ytrans)
+    #if ytrans is not None and linthreshy is not None:
+    #    plt.yscale(ytrans,linthreshy=linthreshy)
+    #elif ytrans is not None:
+    #    plt.yscale(ytrans)
+    if ytrans is not None:
+        ax = plt.gca()
+        ax.set_yscale(ytrans)
+        if ytrans == 'symlog' and linthreshy is not None:
+            ax.set_yticks([-linthreshy, 0, linthreshy])
     if ylab is not None:
         plt.ylabel(ylab)
     plt.legend(markerscale=5)

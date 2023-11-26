@@ -12,8 +12,8 @@ rule all:
         "plots_pade_rel_error_dim2_errorTrue.png",
         "plots_pade_pole_error_dim2_errorTrue.png",
         "cumulants_dim2.png",
-        "plots_sfs_dim2_polytype_1_1_N1000.png",
-        "plots_params_selection_dim2_polytype_1_1_N1000.png"
+        "plots_sfs_dim2_polytype_1_1_N1000.0.png",
+        "plots_params_selection_dim2_polytype_1_1_N1000.0.png"
 
 rule calc_integrals_dim2:
     input:
@@ -83,9 +83,9 @@ rule plot_sfs:
     input:
         "cleaned_data_dim2_errorFalse.csv"
     output:
-        "plots_sfs_dim2_polytype_1_1_N1000.png",
-        "plots_params_selection_dim2_polytype_1_1_N1000.png"
+        "plots_sfs_dim2_polytype_1_1_N1000.0.png",
+        "plots_params_selection_dim2_polytype_1_1_N1000.0.png"
     shell:
         """
-        python plot_sfs.py --dim 2 --pt 1_1 --N 1000 --plot_both
+        python plot_sfs.py --dim 2 --pt 1_1 --N 1000 
         """
