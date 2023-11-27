@@ -7,12 +7,13 @@ import os
 
 ### --------- Configuration Information ---------- ###
 configfile: "config.yaml"
-chroms = [f"chr{i}" for i in range(1, 23)]
+
+chroms = [f"c{i}" for i in range(1, 23)]
 
 
 ### --------- Setting up the targets for the workflow -------- ###
 seed = 42
-seedlist = range(1,21)
+seedlist = [0]#range(1,21)
 TARGETS = []
 center_list = ["Barts","Birmingham","Bristol","Bury","Cardiff","Croydon","Edinburgh","Glasgow","Hounslow","Leeds","Liverpool","Manchester","Middlesborough","Newcastle","Nottingham","Oxford","Reading","Sheffield","Stoke"]
 country_list = ["England","Scotland","Wales"]
@@ -25,19 +26,19 @@ os.makedirs("results/subsample_sfs/Uniform_Countries", exist_ok=True)
 for seed in seedlist:
     for center in center_list:
         TARGETS.append(
-            f"results/subsample_sfs/Uniform_Centers.{center}.merged.wes.assessment_center.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios'][center]['n']}.centers.sfs.tsv.gz",
+            f"results/subsample_sfs/Uniform_Centers.{center}.merged.assessment_center.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios'][center]['n']}.centers.sfs.tsv.gz",
         )
         TARGETS.append(
-            f"results/subsample_sfs/Uniform_Centers.{center}.merged.wes.assessment_center_WBonly.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios'][center]['n']}.centers.sfs.tsv.gz",
+            f"results/subsample_sfs/Uniform_Centers.{center}.merged.assessment_center_WBonly.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios'][center]['n']}.centers.sfs.tsv.gz",
         )
         os.makedirs("results/sfs_files/{center}", exist_ok=True)
         os.makedirs("results/subsample_sfs/{center}", exist_ok=True)
     for country in country_list:
         TARGETS.append(
-            f"results/subsample_sfs/Uniform_Countries.{country}.merged.wes.country_UKmainland.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios'][country]['n']}.birthcountry.sfs.tsv.gz",
+            f"results/subsample_sfs/Uniform_Countries.{country}.merged.country_UKmainland.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios'][country]['n']}.birthcountry.sfs.tsv.gz",
         )
         TARGETS.append(
-            f"results/subsample_sfs/Uniform_Countries.{country}.merged.wes.country_UKmainland_WBonly.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios'][country]['n']}.birthcountry.sfs.tsv.gz",
+            f"results/subsample_sfs/Uniform_Countries.{country}.merged.country_UKmainland_WBonly.seed{seed}.nsamp{config['UKBB_EXOMES']['scenarios'][country]['n']}.birthcountry.sfs.tsv.gz",
         )
         os.makedirs("results/sfs_files/{country}", exist_ok=True)
         os.makedirs("results/subsample_sfs/{country}", exist_ok=True)
@@ -45,6 +46,7 @@ for seed in seedlist:
 
 # Just get the unique targets for the pipeline if possible.
 TARGETS = np.unique(TARGETS).tolist()
+TARGETS = [target.replace(" ", "") for target in TARGETS]
 
 rule all:
     input:
@@ -54,75 +56,81 @@ rule all:
 
 rule get_frq_files:
     input:
-        "ids_assessment_center.csv",
-        "ids_assessment_center_WB.csv",
-        "ids_country_UKmainland.csv",
-        "ids_country_UKmainland_WB.csv",
+        "ids_assessment_center.tsv",
+        "ids_assessment_center_WB.tsv",
+        "ids_country_UKmainland.tsv",
+        "ids_country_UKmainland_WB.tsv",
     output:
         frq_file_1="data/frq/c{chrom}_assessment_center.frq.strat",
         frq_file_2="data/frq/c{chrom}_country_UKmainland.frq.strat",
         frq_file_3="data/frq/c{chrom}_assessment_center_WBonly.frq.strat",
         frq_file_4="data/frq/c{chrom}_country_UKmainland_WBonly.frq.strat",
+    params:
+        chrom="{chrom}",
     shell:
         """
         dx upload ids_assessment_center.csv
         dx upload ids_assessment_center_WB.csv
         dx upload ids_country_UKmainland.csv
         dx upload ids_country_UKmainland_WB.csv
-
-
-        eval "dx run app-swiss-army-knife -y --wait \
+        dx run app-swiss-army-knife -y --wait \
                 -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bed \
                 -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bim \
                 -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.fam \
-                -iin=ids_assessment_center.csv \
-                -icmd='plink --bfile ukb23158_c{wildcards.chrom}_b0_v1 --keep ids_assessment_center.csv --freq --within ids_assessment_center.csv --out chr{wildcards.chrom}_wes_assessment_center
+                -iin=ids_assessment_center.tsv \
+                -icmd="plink --bfile ukb23158_c{wildcards.chrom}_b0_v1 --keep ids_assessment_center.tsv --freq --within ids_assessment_center.tsv --out c{wildcards.chrom}_assessment_center"
 
-        eval "dx run app-swiss-army-knife -y --wait \
+        dx run app-swiss-army-knife -y --wait \
                 -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bed \
                 -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bim \
                 -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.fam \
-                -iin=ids_assessment_center.csv \
-                -icmd='plink --bfile ukb23158_c{wildcards.chrom}_b0_v1 --keep ids_assessment_center_WB.csv --freq --within ids_assessment_center_WB.csv --out chr{wildcards.chrom}_wes_assessment_center_WBonly
+                -iin=ids_assessment_center_WB.tsv \
+                -icmd="plink --bfile ukb23158_c{wildcards.chrom}_b0_v1 --keep ids_assessment_center_WB.tsv --freq --within ids_assessment_center_WB.tsv --out c{wildcards.chrom}_assessment_center_WBonly"
 
-        eval "dx run app-swiss-army-knife -y --wait \
+        dx run app-swiss-army-knife -y --wait \
                 -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bed \
                 -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bim \
                 -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.fam \
-                -iin=ids_assessment_center.csv \
-                -icmd='plink --bfile ukb23158_c{wildcards.chrom}_b0_v1 --keep ids_country_UKmainland.csv --freq --within ids_country_UKmainland.csv --out chr{wildcards.chrom}_wes_country_UKmainland
+                -iin=ids_country_UKmainland.tsv \
+                -icmd="plink --bfile ukb23158_c{wildcards.chrom}_b0_v1 --keep ids_country_UKmainland.tsv --freq --within ids_country_UKmainland.tsv --out c{wildcards.chrom}_country_UKmainland"
 
-        eval "dx run app-swiss-army-knife -y --wait \
+        dx run app-swiss-army-knife -y --wait \
                 -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bed \
                 -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bim \
                 -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.fam \
-                -iin=ids_assessment_center.csv \
-                -icmd='plink --bfile ukb23158_c{wildcards.chrom}_b0_v1 --keep ids_country_UKmainland_WB.csv --freq --within ids_country_UKmainland_WB.csv --out chr{wildcards.chrom}_wes_country_UKmainland_WBonly
+                -iin=ids_country_UKmainland_WB.tsv \
+                -icmd="plink --bfile ukb23158_c{wildcards.chrom}_b0_v1 --keep ids_country_UKmainland_WB.tsv --freq --within ids_country_UKmainland_WB.tsv --out c{wildcards.chrom}_country_UKmainland_WBonly"
 
-        dx download chr{wildcards.chrom}_wes_assessment_center.frq.strat
-        dx download chr{wildcards.chrom}_wes_assessment_center_WBonly.frq.strat
-        dx download chr{wildcards.chrom}_wes_country_UKmainland.frq.strat
-        dx download chr{wildcards.chrom}_wes_country_UKmainland_WBonly.frq.strat
-
+        dx download c{wildcards.chrom}_assessment_center.frq.strat
+        dx download c{wildcards.chrom}_assessment_center_WBonly.frq.strat
+        dx download c{wildcards.chrom}_country_UKmainland.frq.strat
+        dx download c{wildcards.chrom}_country_UKmainland_WBonly.frq.strat
+        
+        mv c{wildcards.chrom}_assessment_center.frq.strat data/frq
+        mv c{wildcards.chrom}_assessment_center_WBonly.frq.strat data/frq
+        mv c{wildcards.chrom}_country_UKmainland.frq.strat data/frq
+        mv c{wildcards.chrom}_country_UKmainland_WBonly.frq.strat data/frq
+        # move these to data/frq
+        # this step should be run separately with dx login enabled
         """
 
 rule format_tables_UKB_exomes:
     input:
-        ukb_jsfs="data/frq/chr{chrom}_wes_{group}.frq.strat",
+        ukb_jsfs="data/frq/c{chrom}_{group}.frq.strat",
         script="scripts/format_data_UKB.R",
         meta="data/ukb23158_500k_OQFE.annotations.txt"
     output:
-        formatted_sfs="results/sfs_files/{scenario}/chr{chrom}.wes.{group}.jsfs.formatted.tsv.gz",
+        formatted_sfs="results/sfs_files/{scenario}/c{chrom}.{group}.jsfs.formatted.tsv.gz",
     run:
         shell("Rscript {input.script} {input.ukb_jsfs} {output.formatted_sfs} {input.meta}")
 
 rule subsamp_centers_sfs_UKB_exomes:
     input:
-        input_jsfs="results/sfs_files/{scenario}/chr{chrom}.wes.{group}.jsfs.formatted.tsv.gz",
+        input_jsfs="results/sfs_files/{scenario}/c{chrom}.{group}.jsfs.formatted.tsv.gz",
     output:
-        subsamp_sfs_tsv="results/subsample_sfs/{scenario}/chr{chrom}.wes.{group}.seed{seed}.nsamp{nsamp}.centers.sfs.tsv.gz",
+        subsamp_sfs_tsv="results/subsample_sfs/{scenario}/c{chrom}.{group}.seed{seed}.nsamp{nsamp}.centers.sfs.tsv.gz",
     params:
-        poplist=["Barts","Birmingham","Bristol","Bury","Cardiff","Croydon","Edinburgh","Glasgow","Hounslow","Leeds","Liverpool","Manchester","Middlesborough","Newcastle","Nottingham","Oxford","Reading","Sheffield","Stoke","Swansea","Wrexham","Stockport (pilot)"],
+        poplist=["Barts","Birmingham","Bristol","Bury","Cardiff","Croydon","Edinburgh","Glasgow","Hounslow","Leeds","Liverpool","Manchester","Middlesborough","Newcastle","Nottingham","Oxford","Reading","Sheffield","Stoke","Swansea","Wrexham","Stockport"],
         n=lambda wildcards: int(
             config["UKBB_EXOMES"]["scenarios"][wildcards.scenario]["n"]
         ),
@@ -138,9 +146,9 @@ rule subsamp_centers_sfs_UKB_exomes:
 
 rule subsamp_birthcountry_sfs_UKB_exomes:
     input:
-        input_jsfs="results/sfs_files/{scenario}/chr{chrom}.wes.{group}.jsfs.formatted.tsv.gz",
+        input_jsfs="results/sfs_files/{scenario}/c{chrom}.{group}.jsfs.formatted.tsv.gz",
     output:
-        subsamp_sfs_tsv="results/subsample_sfs/{scenario}/chr{chrom}.wes.{group}.seed{seed}.nsamp{nsamp}.birthcountry.sfs.tsv.gz",
+        subsamp_sfs_tsv="results/subsample_sfs/{scenario}/c{chrom}.{group}.seed{seed}.nsamp{nsamp}.birthcountry.sfs.tsv.gz",
     params:
         poplist=["England","Scotland","Wales"],
         n=lambda wildcards: int(
@@ -158,11 +166,11 @@ rule subsamp_birthcountry_sfs_UKB_exomes:
 
 rule joint_sfs_filt_UKB:
     input:
-        subsamp1_sfs_tsv="results/subsample_sfs/{scenario1}/chr{chrom}.wes.{group}.seed{seed}.nsamp{nsamp}.{setting}.sfs.tsv.gz",
-        subsamp2_sfs_tsv="results/subsample_sfs/{scenario2}/chr{chrom}.wes.{group}.seed{seed}.nsamp{nsamp}.{setting}.sfs.tsv.gz",
+        subsamp1_sfs_tsv="results/subsample_sfs/{scenario1}/c{chrom}.{group}.seed{seed}.nsamp{nsamp}.{setting}.sfs.tsv.gz",
+        subsamp2_sfs_tsv="results/subsample_sfs/{scenario2}/c{chrom}.{group}.seed{seed}.nsamp{nsamp}.{setting}.sfs.tsv.gz",
     output:
         merged_tsv=temp(
-            "results/subsample_sfs/{scenario1}.{scenario2}.chr{chrom}.wes.{group}.seed{seed}.nsamp{nsamp}.{setting}.sfs.tsv.gz"
+            "results/subsample_sfs/{scenario1}.{scenario2}.c{chrom}.wes.{group}.seed{seed}.nsamp{nsamp}.{setting}.sfs.tsv.gz"
         ),
     run:
         sfs1_df = pd.read_csv(input.subsamp1_sfs_tsv, sep="\t")
@@ -193,12 +201,13 @@ rule joint_sfs_filt_UKB:
 
 rule concat_join_sfs_UKB:
     input:
-        expand(
-            "results/subsample_sfs/{{scenario1}}.{{scenario2}}.{chrom}.wes.{{group}}.seed{{seed}}.nsamp{{nsamp}}.{{setting}}.sfs.tsv.gz",
-            chrom=chroms,
-        ),
+        [path.replace(" ", "") for path in expand("results/subsample_sfs/{{scenario1}}.{{scenario2}}.{chrom}.wes.{{group}}.seed{{seed}}.nsamp{{nsamp}}.{{setting}}.sfs.tsv.gz", chrom=chroms)],
+       # expand(
+       #     "results/subsample_sfs/{{scenario1}}.{{scenario2}}.c{chrom}.wes.{{group}}.seed{{seed}}.nsamp{{nsamp}}.{{setting}}.sfs.tsv.gz",
+       #     chrom=chroms,
+       # ),
     output:
-        "results/subsample_sfs/{scenario1}.{scenario2}.merged.wes.{group}.seed{seed}.nsamp{nsamp}.{setting}.sfs.tsv.gz",
+        "results/subsample_sfs/{scenario1}.{scenario2}.merged.{group}.seed{seed}.nsamp{nsamp}.{setting}.sfs.tsv.gz",
     shell:
         "zcat {input} | awk 'NR > 1 && /^Annot/ {{ next }} 1' | gzip > {output}"
 

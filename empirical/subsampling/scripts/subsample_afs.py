@@ -14,7 +14,7 @@ def resample_alleles(ac, an, min_n = 100, n=5000, seed=42):
     """
     assert ac.size == an.size
     assert min_n > 1
-    assert seed > 0   
+    assert seed > -1   
     np.random.seed(seed)
     af = np.nan_to_num(ac/an)
     ac_resamp = np.random.binomial(n=n, p=af)
