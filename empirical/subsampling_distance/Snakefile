@@ -12,20 +12,20 @@ chroms = [f"c{i}" for i in range(1, 23)]
 
 ### --------- Setting up the targets for the workflow -------- ###
 
-seedlist = range(0,20)
+seedlist = [0]#range(0,20)
 TARGETS = []
 sdlist = ["01SD","1SD","2SD","3SD","4SD","5SD","6SD","7SD","8SD","9SD","10SD"]
 
 
 for chrom in chroms:
-    TARGETS.append(f"{chrom}_closest10k_IS_seedNA_n10000.frq.strat")
+    TARGETS.append(f"data/frq/{chrom}_closest10k_IS_seedNA_n10000.frq.strat")
     for seed in seedlist:
-        TARGETS.append(f"{chrom}_UNIF_IS_seed{seed}_n10000.frq.strat")
+        TARGETS.append(f"data/frq/{chrom}_UNIF_IS_seed{seed}_n10000.frq.strat")
         for group in sdlist:
-            TARGETS.append(f"{chrom}_{group}_IS_seed{seed}_n10000.frq.strat")
+            TARGETS.append(f"data/frq/{chrom}_{group}_IS_seed{seed}_n10000.frq.strat")
 
 TARGETS = np.unique(TARGETS).tolist()
-
+TARGETS = [target.replace(" ", "") for target in TARGETS]
 
 rule all:
     input:
@@ -35,18 +35,19 @@ rule get_frq_files:
     input:
         "id_files/{group}_IS_seed{seed}_n10000.tsv",
     output:
-        "{chrom}_{group}_IS_seed{seed}_n10000.frq.strat",
+        "data/frq/{chrom}_{group}_IS_seed{seed}_n10000.frq.strat",
     shell:
         """
-        dx upload id_files/{group}_IS_seed{seed}_n10000.tsv
+        #dx upload id_files/{group}_IS_seed{seed}_n10000.tsv
 
         dx run app-swiss-army-knife -y --wait \
                 -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_{wildcards.chrom}_b0_v1.bed \
                 -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_{wildcards.chrom}_b0_v1.bim \
                 -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_{wildcards.chrom}_b0_v1.fam \
-                -iin={wildcards.group}_IS_seed{wildcards.seed}_n10000.tsv\
+                -iin=id_files/{wildcards.group}_IS_seed{wildcards.seed}_n10000.tsv\
                 -icmd="plink --bfile ukb23158_{wildcards.chrom}_b0_v1 --keep {wildcards.group}_IS_seed{wildcards.seed}_n10000.tsv --freq --within {wildcards.group}_IS_seed{wildcards.seed}_n10000.tsv --out {wildcards.chrom}_{wildcards.group}_IS_seed{wildcards.seed}_n10000"
 
         dx download {wildcards.chrom}_{wildcards.group}_IS_seed{wildcards.seed}_n10000.frq.strat
+        mv {wildcards.chrom}_{wildcards.group}_IS_seed{wildcards.seed}_n10000.frq.strat data/frq
         """
 
