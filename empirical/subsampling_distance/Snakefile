@@ -14,16 +14,19 @@ chroms = [f"c{i}" for i in range(1, 23)]
 
 seedlist = [0]#range(0,20)
 TARGETS = []
-sdlist = ["01SD","1SD","2SD","3SD","4SD","5SD","6SD","7SD","8SD","9SD","10SD"]
-
+sdlist_PCA = ["01SD","1SD","2SD","3SD","4SD","5SD","6SD","7SD","8SD","9SD","10SD"]
+sdlist_GEO = ["GEO_01SD","GEO_1SD","GEO_2SD","GEO_3SD","GEO_4SD","GEO_5SD","GEO_6SD","GEO_7SD"]
 
 for chrom in chroms:
     TARGETS.append(f"data/frq/{chrom}_closest10k_IS_seedNA_n10000.frq.strat")
+    TARGETS.append(f"data/frq/{chrom}_GEO_closest10k_IS_seedNA_n10000.frq.strat")
     for seed in seedlist:
         TARGETS.append(f"data/frq/{chrom}_UNIF_IS_seed{seed}_n10000.frq.strat")
-        for group in sdlist:
+        for group in sdlist_PCA:
             TARGETS.append(f"data/frq/{chrom}_{group}_IS_seed{seed}_n10000.frq.strat")
-
+        TARGETS.append(f"data/frq/{chrom}_GEO_UNIF_IS_seed{seed}_n10000.frq.strat")
+        for group in sdlist_GEO:
+            TARGETS.append(f"data/frq/{chrom}_{group}_IS_seed{seed}_n10000.frq.strat")
 TARGETS = np.unique(TARGETS).tolist()
 TARGETS = [target.replace(" ", "") for target in TARGETS]
 
