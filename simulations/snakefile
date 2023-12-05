@@ -1,0 +1,101 @@
+### Welcome to the spatial rare alleles simulation pipeline!
+### This pipeline runs spatial simulations in SLiM
+### and then samples individuals with a spatial kernel
+### to obtain an SFS
+
+
+replicates = 25 # number of simulation replicates
+s_coeffs = [-1e-3, -1e-2, -1e-1]
+s_coeffs_slim =  [s*2 for s in s_coeffs] # selection coefficients for slim
+mus = [1e-10] # mutation rates
+Ks = [5] # densities
+Ws = [75]
+sigmas = [0.2]
+
+localrules: all
+
+rule all:
+    input:
+        expand("{filetype}/{rep}_W{W}_s{s}_mu{mu}_K{K}_sigma{sigma}_recapitated_N{past_Ne}_t{time_bottle}_n{n}_niter{niter}.{filetype}",
+               rep=[0, 1, 5, 7, 9, 10, 19, 28, 33, 37, 38, 42, 47, 52, 56, 65, 70, 75, 76, 79, 80, 84, 89, 93, 98],
+               s=-1e-2,
+               mu=mus,
+               K=Ks,
+               W=Ws,
+               sigma=sigmas, n= 10000, niter = 100,past_Ne=[2000],time_bottle=[2000],filetype=["sfs","variants"])
+
+# Define the first step: run_simulations
+rule run_simulations:
+    output:
+        "sims/{rep}_W{W}_s{s}_mu{mu}_K{K}_sigma{sigma,[0-9]+(\.[0-9]+)?}.trees"
+    log: "logs/sims/{rep}_W{W}_s{s}_mu{mu}_K{K}_sigma{sigma}.trees.log"
+    params: s_val= lambda wildcards: str(wildcards.s) 
+    resources: slurm_partition="broadwl",mem_mb=60000
+    shell:
+        """
+        module load SLiM/3.0
+        slim -define K={wildcards.K} \
+            -define mu={wildcards.mu} \
+            -define s={params.s_val} \
+            -define W={wildcards.W} \
+            -define "outpath='{output}'" \
+            -define sigma={wildcards.sigma} \
+            scripts/rare_variant_simulation.slim
+         """
+
+# Second step: sfs sampling
+rule sample_sfs:
+    input:
+        "sims/{file}.trees"
+    log: "logs/sfs/{file}_n{n}_niter{niter}.sfs.log"
+    output:
+        "sfs/{file}_n{n}_niter{niter}.sfs"
+    resources:
+        slurm_partition="broadwl",mem_mb=10000,time_min=180
+    #conda:
+	#"spatialrarealleles"
+    shell:
+        """
+        python scripts/sample_sfs.py {input} \
+            --num_samples {wildcards.n} \
+            --output {output} \
+            --niter {wildcards.niter}
+        """
+
+# Variant sampling
+rule sample_variants:
+    input:
+        "sims/{file}.trees"
+    log: "logs/variants/{file}_n{n}_niter{niter}.variants.log"
+    output:
+        "variants/{file}_n{n}_niter{niter}.variants"
+    resources:
+        slurm_partition="jnovembre",mem_mb=5000,time_min=90
+    #conda:
+        #"spatialrarealleles"
+    shell:
+        """
+        python scripts/sample_variants.py {input} \
+            --num_samples {wildcards.n} \
+            --output {output} \
+            --niter {wildcards.niter}
+        """
+
+# cut and recapitate trees
+rule cut_recapitate:
+    input:
+        "sims/{file}.trees"
+    log: "logs/sims/{file}_recapitated_N{past_Ne}_t{time_bottle}.trees.log"
+    output:
+        "sims/{file}_recapitated_N{past_Ne}_t{time_bottle}.trees"
+    #conda:
+        #"spatialrarealleles"
+    resources:
+        slurm_partition="jnovembre"
+    shell:
+        """
+        python scripts/cut_recapitate_snakemake.py {input} \
+            --past_Ne {wildcards.past_Ne} \
+            --time_bottle {wildcards.time_bottle} \
+            --output {output}
+        """
