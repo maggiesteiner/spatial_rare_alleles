@@ -1,0 +1,2 @@
+cluster: "sbatch --time=01:00:00 --partition=jnovembre --account=pi-jnovembre"
+jobs: 20
