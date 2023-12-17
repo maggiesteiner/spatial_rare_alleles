@@ -4,7 +4,7 @@ import argparse
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--filename", type=str, help="name of input file", default="pade_approx")
+    parser.add_argument("--filename", type=str, help="name of input file", default="results/pade_approx")
     parser.add_argument("--dim", type=int, help="dimension, default is 1", choices=[1, 2], default=1)
     parser.add_argument("--calc_error",action='store_true')
     parser.add_argument("--outname", type=str, help="name for output files (without extension)",

@@ -17,6 +17,7 @@ rule all:
 #        "temp_plots/plots_pade_pole_error_dim2_errorTrue.png",
 #        "temp_plots/cumulants_dim2.png",
 #        "temp_plots/plots_sfs_dim2_polytype_1_1_N1000.0.png",
+#        "temp_plots/plots_params_selection_dim2_polytype_1_1_N1000.0.png"
 
 rule calc_integrals_dim2:
     input:
