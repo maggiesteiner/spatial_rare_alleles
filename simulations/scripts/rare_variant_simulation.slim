@@ -76,9 +76,10 @@ early() {
 1: late() {
 	// to be ready for mate choice
 	i2.evaluate(p1);
-	if (sim.generation%1000==0){
-		cat("still running");
+	if (sim.generation%10==0){
+		cat("still running at generation ");
 		cat(sim.generation);
+		cat(".\n");
 	}
 }
 

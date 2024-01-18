@@ -1,0 +1,4 @@
+cluster: "sbatch --time=01:00:00 --partition=jnovembre --account=pi-jnovembre --output=\"logs/{rule}/slurm_%x_%j.out\" --error=\"logs/{rule}/slurm_%x_%j.log\""
+jobs: 20
+show-failed-logs: True
+jobname: "{rule}.{jobid}"

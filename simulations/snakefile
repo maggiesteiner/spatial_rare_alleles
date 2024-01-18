@@ -16,7 +16,7 @@ localrules: all
 rule all:
     input:
         expand("{filetype}/{rep}_W{W}_s{s}_mu{mu}_K{K}_sigma{sigma}_recapitated_N{past_Ne}_t{time_bottle}_n{n}_niter{niter}.{filetype}",
-               rep=range(100),
+               rep=range(50),
                s=s_coeffs,
                mu=mus,
                K=Ks,
@@ -29,7 +29,7 @@ rule run_simulations:
         "sims/{rep}_W{W}_s{s}_mu{mu}_K{K}_sigma{sigma,[0-9]+(\.[0-9]+)?}.trees"
     log: "logs/sims/{rep}_W{W}_s{s}_mu{mu}_K{K}_sigma{sigma}.trees.log"
     params: s_val= lambda wildcards: str(wildcards.s * 2) # multiplied by 2 because in SLiM the coefficient is defined for homozygotes
-    resources: partition="bigmem2",mem_mb=480000,time="20:00:00"
+    resources: partition="jnovembre",mem_mb=48000,time="12:00:00"
     shell:
         """
         module load SLiM/3.0
@@ -50,7 +50,7 @@ rule sample_sfs:
     output:
         "sfs/{file}_n{n}_niter{niter}.sfs"
     resources:
-        partition="jnovembre",mem_mb=50000,time_min=180
+        partition="jnovembre",mem_mb=50000,time="03:00:00"
     #conda:
 	#"spatialrarealleles"
     shell:
@@ -58,7 +58,8 @@ rule sample_sfs:
         python scripts/sample_sfs.py {input} \
             --num_samples {wildcards.n} \
             --output {output} \
-            --niter {wildcards.niter}
+            --niter {wildcards.niter} \
+            --bins 50
         """
 
 # Variant sampling
@@ -69,7 +70,7 @@ rule sample_variants:
     output:
         "variants/{file}_n{n}_niter{niter}.variants"
     resources:
-        partition="jnovembre",mem_mb=50000,time_min=90
+        partition="jnovembre",mem_mb=50000,time="01:30:00"
     #conda:
         #"spatialrarealleles"
     shell:
