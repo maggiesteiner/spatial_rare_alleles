@@ -15,13 +15,19 @@ localrules: all
 
 rule all:
     input:
-        expand("{filetype}/{rep}_W{W}_s{s}_mu{mu}_K{K}_sigma{sigma}_recapitated_N{past_Ne}_t{time_bottle}_n{n}_niter{niter}.{filetype}",
+        expand("{filetype}/{rep}_W{W}_s{s}_mu{mu}_K{K}_sigma{sigma}{pan}_recapitated_N{past_Ne}_t{time_bottle}_n{n}_niter{niter}.{filetype}",
                rep=range(50),
                s=s_coeffs,
                mu=mus,
                K=Ks,
                W=Ws,
-               sigma=sigmas, n= 10000, niter = 100,past_Ne=[2000],time_bottle=[2000],filetype=["sfs","variants"])
+               sigma=sigmas,
+               n= 10000,
+               niter = 100,
+               past_Ne=[2000],
+               time_bottle=[2000],
+               filetype=["sfs","variants"],
+               pan=["span","nonspan"]) # spatial panmictic and nonspatial panmictic
 
 # Define the first step: run_simulations
 rule run_simulations:
@@ -99,3 +105,22 @@ rule cut_recapitate:
             --time_bottle {wildcards.time_bottle} \
             --output {output}
         """
+
+# Define the first step: run_simulations
+rule run_simulations_spatial_panmictic:
+    output:
+        "sims/{rep}_W{W}_s{s}_mu{mu}_K{K}_sigma{sigma,[0-9]+(\.[0-9]+)?}span.trees"
+    log: "logs/sims/{rep}_W{W}_s{s}_mu{mu}_K{K}_sigma{sigma}span.trees.log"
+    params: s_val= lambda wildcards: str(wildcards.s * 2) # multiplied by 2 because in SLiM the coefficient is defined for homozygotes
+    resources: partition="jnovembre",mem_mb=48000,time="12:00:00"
+    shell:
+        """
+        module load SLiM/3.0
+        slim -define K={wildcards.K} \
+            -define mu={wildcards.mu} \
+            -define s={params.s_val} \
+            -define W={wildcards.W} \
+            -define "outpath='{output}'" \
+            -define sigma={wildcards.sigma} \
+            scripts/rare_variant_simulation_spatial_panmictic.slim
+         """
