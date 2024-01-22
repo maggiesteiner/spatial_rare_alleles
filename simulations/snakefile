@@ -27,7 +27,7 @@ rule all:
                past_Ne=[2000],
                time_bottle=[2000],
                filetype=["sfs","variants"],
-               pan=["span","nonspan"]) # spatial panmictic and nonspatial panmictic
+               pan=["span","nonspan",""]) # spatial panmictic and nonspatial panmictic
 
 # Define the first step: run_simulations
 rule run_simulations:
@@ -35,7 +35,7 @@ rule run_simulations:
         "sims/{rep}_W{W}_s{s}_mu{mu}_K{K}_sigma{sigma,[0-9]+(\.[0-9]+)?}.trees"
     log: "logs/sims/{rep}_W{W}_s{s}_mu{mu}_K{K}_sigma{sigma}.trees.log"
     params: s_val= lambda wildcards: str(wildcards.s * 2) # multiplied by 2 because in SLiM the coefficient is defined for homozygotes
-    resources: partition="jnovembre",mem_mb=48000,time="12:00:00"
+    resources: partition="jnovembre",mem_mb=35000,time="10:00:00"
     shell:
         """
         module load SLiM/3.0
@@ -76,7 +76,7 @@ rule sample_variants:
     output:
         "variants/{file}_n{n}_niter{niter}.variants"
     resources:
-        partition="jnovembre",mem_mb=50000,time="01:30:00"
+        partition="jnovembre",mem_mb=48000,time="01:30:00"
     #conda:
         #"spatialrarealleles"
     shell:
@@ -106,13 +106,13 @@ rule cut_recapitate:
             --output {output}
         """
 
-# Define the first step: run_simulations
+# Runs spatial panmictic simulations
 rule run_simulations_spatial_panmictic:
     output:
         "sims/{rep}_W{W}_s{s}_mu{mu}_K{K}_sigma{sigma,[0-9]+(\.[0-9]+)?}span.trees"
     log: "logs/sims/{rep}_W{W}_s{s}_mu{mu}_K{K}_sigma{sigma}span.trees.log"
     params: s_val= lambda wildcards: str(wildcards.s * 2) # multiplied by 2 because in SLiM the coefficient is defined for homozygotes
-    resources: partition="jnovembre",mem_mb=48000,time="12:00:00"
+    resources: partition="jnovembre",mem_mb=35000,time="10:00:00"
     shell:
         """
         module load SLiM/3.0
@@ -123,4 +123,23 @@ rule run_simulations_spatial_panmictic:
             -define "outpath='{output}'" \
             -define sigma={wildcards.sigma} \
             scripts/rare_variant_simulation_spatial_panmictic.slim
+         """
+
+# Runs nonspatial panmictic simulations
+rule run_simulations_nonspatial_panmictic:
+    output:
+        "sims/{rep}_W{W}_s{s}_mu{mu}_K{K}_sigma{sigma,[0-9]+(\.[0-9]+)?}nonspan.trees"
+    log: "logs/sims/{rep}_W{W}_s{s}_mu{mu}_K{K}_sigma{sigma}nonspan.trees.log"
+    params: s_val= lambda wildcards: str(wildcards.s * 2) # multiplied by 2 because in SLiM the coefficient is defined for homozygotes
+    resources: partition="jnovembre",mem_mb=10000,time="01:00:00"
+    shell:
+        """
+        module load SLiM/3.0
+        slim -define K={wildcards.K} \
+            -define mu={wildcards.mu} \
+            -define s={params.s_val} \
+            -define W={wildcards.W} \
+            -define "outpath='{output}'" \
+            -define sigma={wildcards.sigma} \
+            scripts/rare_variant_simulation_nonspatial_panmictic.slim
          """
