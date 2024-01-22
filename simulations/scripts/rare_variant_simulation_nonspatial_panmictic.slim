@@ -1,0 +1,37 @@
+// a non spatial simulation
+initialize() {
+	initializeSLiMModelType("nonWF");
+	initializeTreeSeq(checkCoalescence=F);
+	defineConstant("D", K * W * W); // changed
+
+	defineConstant("G", 1e8);  // genome length
+	initializeMutationType("m1", 0.5, "f", s); // fixed 
+	initializeGenomicElementType("g1", m1, 1.0);
+	initializeGenomicElement(g1, 0, G-1);
+	initializeMutationRate(mu);
+	initializeRecombinationRate(1e-8);
+}
+reproduction() {
+	subpop.addCrossed(individual, subpop.sampleIndividuals(1));
+}
+1 early() {
+	sim.addSubpop("p1", 	D );
+}
+early() {
+	p1.fitnessScaling = D  / p1.individualCount;
+}
+1: late() {	
+	
+	if (sim.generation%10==0){
+		cat("still running at generation ");
+		cat(sim.generation);
+		cat(".\n");
+	}
+}
+
+10000 late() {
+	// Output tree sequence
+	sim.treeSeqOutput(outpath);
+	sim.simulationFinished();
+}
+
