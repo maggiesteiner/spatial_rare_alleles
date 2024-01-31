@@ -33,15 +33,15 @@ initialize() {
 	initializeInteractionType(1, "xy", reciprocal=T, maxDistance=SI * 3);
 	i1.setInteractionFunction("n", 1.0/(2*PI*SI^2), SI);
 	
-	// mate choice
-	initializeInteractionType(2, "xy", reciprocal=T, maxDistance=SM * 3);
-	i2.setInteractionFunction("n", 1.0/(2*PI*SM^2), SM);
+	// mate choice - here removed to simulate panmixia
+	//initializeInteractionType(2, "xy", reciprocal=T, maxDistance=SM * 3);
+	//i2.setInteractionFunction("n", 1.0/(2*PI*SM^2), SM);
 	
 
 }
 
 reproduction() {
-	mate = i2.drawByStrength(individual, 1);
+	mate = subpop.sampleIndividuals(1);
 	if (mate.size()) {
 		nOff = rpois(1, FECUN);
 		for (i in seqLen(nOff)) {
@@ -75,7 +75,7 @@ early() {
 
 1: late() {
 	// to be ready for mate choice
-	i2.evaluate(p1);
+	// i2.evaluate(p1); remove this part - non-spatial mating to achieve panmixia
 	if (sim.generation%10==0){
 		cat("still running at generation ");
 		cat(sim.generation);
