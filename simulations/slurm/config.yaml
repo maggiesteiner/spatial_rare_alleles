@@ -1,2 +1,8 @@
-cluster: "sbatch --time=01:00:00 --partition=jnovembre --account=pi-jnovembre"
-jobs: 20
+cluster: "sbatch --account=pi-jnovembre --output=\"logs/{rule}/slurm_%x_%j.out\" --error=\"logs/{rule}/slurm_%x_%j.log\" --partition={resources.partition} --mem={resources.mem_mb} --time={resources.time}"
+jobs: 50
+show-failed-logs: True
+jobname: "{rule}.{jobid}"
+default-resources:
+  - partition=jnovembre
+  - mem_mb=2000
+  - time="01:00:00"
