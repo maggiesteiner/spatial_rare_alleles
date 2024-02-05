@@ -9,7 +9,7 @@ directory <- inputdir
 print(inputdir)
 # Get list of files in the directory
 
-file_list <- list.files(pattern = "*.sfs.tsv",path = inputdir)
+file_list <- list.files(pattern = "*.sfs",path = inputdir)
 print(paste(length(file_list),"files found."))
 # Initialize an empty list to store data frames
 dfs <- list()
