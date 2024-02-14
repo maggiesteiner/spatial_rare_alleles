@@ -1,0 +1,63 @@
+// a non spatial simulation
+initialize() {
+	initializeSLiMModelType("nonWF");
+	defineConstant("sigma",0.2);
+	defineConstant("W",75);
+	defineConstant("mu",1e-10); 
+	defineConstant("K",5);
+	defineConstant("SD", sigma);  // sigma_D, the dispersal distance
+	defineConstant("SI", sigma);  // sigma_I, the spatial interaction distance
+	defineConstant("SM", SI);  // sigma_M, the mate choice distance
+	defineConstant("L", 4);    // mean lifetime at stationarity
+	defineConstant("G", 1e8);  // genome length
+	defineConstant("FECUN", 1/L); // mean fecundity
+	defineConstant("RHO", FECUN/((1+FECUN) * K)); // constant in spatial competition function
+	defineConstant("D", K * W * W); // changed
+
+	
+	
+	initializeMutationType("m1", 0.5, "f", s); // fixed 
+	initializeGenomicElementType("g1", m1, 1.0);
+	initializeGenomicElement(g1, 0, G-1);
+	initializeMutationRate(mu);
+	initializeRecombinationRate(1e-8);
+
+	defineConstant("GENTIME", rep(NAN, 100));
+	defineConstant("AGE", rep(NAN, 100));
+	defineConstant("FITNESS", rep(NAN, 100));
+}
+
+reproduction() {
+	mate=subpop.sampleIndividuals(1)
+	subpop.addCrossed(individual, mate);
+}
+1 early() {
+	sim.addSubpop("p1", 	D );
+}
+early() {
+	p1.fitnessScaling = D  / p1.individualCount;
+}
+1: late() {	
+	
+	if (sim.cycle%10==0){
+		cat("still running at generation ");
+		cat(sim.cycle);
+		cat(".\n");
+	}
+}
+
+
+1: late() {
+	// this should happen *after* mortality (so, in late())
+	GENTIME[sim.cycle - 1] = mean(p1.individuals.meanParentAge);
+	AGE[sim.cycle - 1]= mean(p1.individuals.age);
+	FITNESS[sim.cycle - 1] = mean(p1.cachedFitness(NULL));
+}
+
+100 late() {
+	catn("Done! Mean generation time " + mean(GENTIME[50:99]));
+	catn("Mean age " + mean(AGE[50:99]));
+	line = paste(s/2, mean(GENTIME[50:99]),mean(AGE[50:99]),mean(FITNESS[50:99]));
+	writeFile("simulation_checks/nonspatial_output.txt", line, append=T);
+	sim.simulationFinished();
+}
