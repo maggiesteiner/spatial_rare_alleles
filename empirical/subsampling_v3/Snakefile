@@ -8,6 +8,54 @@ import itertools
 ### --------- Configuration Information ---------- ###
 configfile: "config.yml"
 
+### --------- GWAS info --------- ###
+
+output_dir = "results/gwas/"
+GWAS_input_dir = "GWAS_input/"
+project = "Rare\ Variants\ in\ Space:/"
+# using exome sequences
+data_field = "ukb23159"
+geno_dir = "Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ BGEN\ format\ -\ final\ release/"
+# always control for age and sex
+# control for x number of PCs
+basic_covars = "age_at_recruitment,genetic_sex,"
+
+def formatted_PCs(num):
+    # helps to format covariates
+    PC_titles = [f"genetic_principal_components_|_array_{str(i)}" for i in range(1,num+1,1)]
+    return(basic_covars + ",".join(PC_titles))
+
+def get_column_headers(file_path):
+    # function to get the column headers of the
+    # phenotype file, in order to automatically use all the phenotypes included
+    with open(file_path, 'r') as file:
+        # Read the first line (header)
+        header_line = file.readline().strip()
+
+    # Split the header line into columns
+    columns = header_line.split('\t')
+
+    # Exclude the first two columns (FID and IID)
+    column_headers = [column for column in columns[2:]]
+
+    # Join the column headers into a comma-delimited string
+    #return ','.join(column_headers)
+    return column_headers
+
+def get_column_index(file_path, target_header):
+    # function to get the index of a given column header
+    # within the phenotype file
+    headers = get_column_headers(file_path)
+
+    try:
+        # Find the index of the target_header in the list of headers
+        index = headers.index(target_header)
+        return index
+    except ValueError:
+        # Handle the case where the target_header is not found
+        print(f"Column header '{target_header}' not found.")
+        return None
+
 ### --------- Set Up Targets --------- ###
 
 seeds = range(1, 2) #21
@@ -31,9 +79,15 @@ for seed in seeds:
             TARGETS.append(
                 f"results/sfs/{s}_n10000_LOF.tsv",
             )
-
+        TARGETS.append(f"results/gwas/step1_results/{s}_height_results_chr1_seed{seed}_n10000_pred.list")
+        TARGETS.append(f"results/gwas/step2_results/{s}_height_assoc_chr1_seed{seed}_n10000_height.regenie.gz")
+        #TARGETS.append(f"results/gwas/{s}_phenotypes_assoc_chr1_height.regenie.gz")
+TARGETS.append(GWAS_input_dir + "filtering_results/qc_pass_chr1.snplist")
 TARGETS.append("data/metadata/participant_metadata_all.csv")
 TARGETS.append("data/metadata/participant_metadata_wes.csv")
+TARGETS.append("data/metadata/participant_metadata_gwas.csv")
+TARGETS.append("GWAS_input/height.phe")
+TARGETS.append("GWAS_input/covar.phe")
 
 # Just get the unique targets for the pipeline if possible.
 TARGETS = np.unique(TARGETS).tolist()
@@ -52,6 +106,28 @@ rule download_metadata:
     shell:
         """
         bash scripts/metadata.sh
+        """
+
+rule download_metadata_gwas:
+    input:
+    output:
+       #"data/metadata/wes_ids_all.txt",
+       "data/metadata/participant_metadata_gwas.csv",
+    shell:
+        """
+        bash scripts/gwas_metadata.sh
+        """
+
+rule phe_files_gwas:
+    input:
+       "data/metadata/participant_metadata_gwas.csv",
+    output:
+       #"data/metadata/wes_ids_all.txt",
+       "GWAS_input/covar.phe",
+       "GWAS_input/height.phe",
+    shell:
+        """
+        bash scripts/phe_files.sh
         """
 
 rule filter_metadata:
@@ -152,4 +228,151 @@ rule sfs:
 
 ### --- GWAS --- ###
 
+# Step 1: Variant Filtering
+rule variant_filtering:
+    params:
+        bgen = project + geno_dir + data_field + "_c{chrom}_b0_v1.bgen",
+        sample = project + geno_dir + data_field + "_c{chrom}_b0_v1.sample",
+        dat_f = data_field,
+        GWAS_input_d = GWAS_input_dir,
+        output_d = output_dir
+    output:
+        snplist = GWAS_input_dir + "filtering_results/qc_pass_chr{chrom}.snplist",
+        #samples = GWAS_input_dir + "filtering_results/qc_pass_chr{chrom}.id"
+    shell:
+        """
+        dx mkdir -p {params.GWAS_input_d}filtering_results; \
+        dx run swiss-army-knife --wait \
+            -iin="{params.bgen}" \
+            -iin="{params.bgen}.bgi" \
+            -iin="{params.sample}" \
+            -icmd="plink2 \
+              --bgen '{params.dat_f}_c{wildcards.chrom}_b0_v1.bgen'  'ref-first' \
+              --sample '{params.dat_f}_c{wildcards.chrom}_b0_v1.sample' \
+              --geno 0.1 --hwe 1e-15  \
+              --maf 0.01 --mind 0.1 \
+              --write-snplist --no-id-header  \
+              --out qc_pass_chr1" \
+           --tag='Filtering' \
+           --instance-type 'mem1_ssd1_v2_x16' \
+           --destination='maggie_gwas/GWAS_input/filtering_results/' --brief --yes; \
+        dx download maggie_gwas/GWAS_input/filtering_results/qc_pass_chr{wildcards.chrom}.snplist ; \
+        mv qc_pass_chr{wildcards.chrom}.snplist {params.GWAS_input_d}filtering_results;
+        """
 
+# Step 2: GWAS - Step 1
+rule gwas_step1:
+    input:
+        snplist = GWAS_input_dir + "filtering_results/qc_pass_chr{chrom}.snplist",
+        samples = "data/id_lists/{scenario}_seed{seed}_n{n}.tsv",
+        covar = "GWAS_input/covar.phe",
+        pheno = "GWAS_input/height.phe",
+    params:
+        bgen = project + geno_dir + data_field + "_c{chrom}_b0_v1.bgen",
+        bgen_samples = project + geno_dir + data_field + "_c{chrom}_b0_v1.sample",
+        #covar = GWAS_input_dir + "covar.phe",
+        #pheno = GWAS_input_dir + "height.phe",
+        #use_covars = lambda wildcards: formatted_PCs(int(wildcards.num_pcs)),
+        #samples = lambda wildcards: config[wildcards.width],
+        dat_f = data_field,
+        output_d = output_dir,
+        samples = "{scenario}_seed{seed}_n{n}.tsv",
+    output:
+        pred = output_dir + "step1_results/{scenario}_{pheno}_results_chr{chrom}_seed{seed}_n{n}_pred.list",
+        loco =  output_dir + "step1_results/{scenario}_{pheno}_results_chr{chrom}_seed{seed}_n{n}_1.loco.gz"
+    shell:
+        """
+        dx mkdir -p "maggie_gwas/step1_results";
+        mkdir -p "{output_dir}step1_results";
+        dx run swiss-army-knife --wait \
+           -iin="{params.bgen}" \
+           -iin="{params.bgen}.bgi" \
+           -iin="{params.bgen_samples}" \
+           -iin="{wildcards.scenario}_seed{wildcards.seed}_n{wildcards.n}.tsv" \
+           -iin="maggie_gwas/GWAS_input/filtering_results/qc_pass_chr{wildcards.chrom}.snplist" \
+           -iin="covar.phe" \
+           -iin="height.phe" \
+           -icmd="regenie --step 1 \
+                --out {wildcards.scenario}_{wildcards.pheno}_results_chr{wildcards.chrom}_seed{wildcards.seed}_n{wildcards.n} \
+                --bgen '{params.dat_f}_c{wildcards.chrom}_b0_v1.bgen' \
+                --sample '{params.dat_f}_c{wildcards.chrom}_b0_v1.sample' \
+                --phenoFile height.phe \
+                --covarFile covar.phe \
+                --bsize 1000 \
+                --keep {params.samples} \
+                --extract qc_pass_chr{wildcards.chrom}.snplist \
+                --qt \
+                --gz \
+                --threads 16" \
+            --tag='Regenie-Step1' \
+            --instance-type 'mem1_ssd1_v2_x16' \
+            --destination='maggie_gwas/step1_results/' --brief --yes;
+        dx download -f maggie_gwas/step1_results/{wildcards.scenario}_{wildcards.pheno}_results_chr{wildcards.chrom}_seed{wildcards.seed}_n{wildcards.n}_pred.list; \
+        dx download -f maggie_gwas/step1_results/{wildcards.scenario}_{wildcards.pheno}_results_chr{wildcards.chrom}_seed{wildcards.seed}_n{wildcards.n}_1.loco.gz; \
+        mv {wildcards.scenario}_{wildcards.pheno}_results_chr{wildcards.chrom}_seed{wildcards.seed}_n{wildcards.n}_pred.list {params.output_d}step1_results/ ; \
+        mv {wildcards.scenario}_{wildcards.pheno}_results_chr{wildcards.chrom}_seed{wildcards.seed}_n{wildcards.n}_1.loco.gz {params.output_d}step1_results/  
+        """
+
+rule gwas_step2:
+    input:
+        #snplist = GWAS_input_dir + "filtering_results/qc_pass_c{chrom}.snplist",
+        #samples = lambda wildcards: GWAS_input_dir + config[wildcards.width],
+        pred = output_dir + "step1_results/{scenario}_{pheno}_results_chr{chrom}_seed{seed}_n{n}_pred.list",
+        #pheno_file = GWAS_input_dir + "{pheno}_data.phe"
+        snplist = GWAS_input_dir + "filtering_results/qc_pass_chr{chrom}.snplist",
+        samples = "data/id_lists/{scenario}_seed{seed}_n{n}.tsv",
+        #covar = "GWAS_input/covar.phe",
+        pheno = "GWAS_input/height.phe",
+    params:
+        bgen = project + geno_dir + data_field + "_c{chrom}_b0_v1.bgen",
+        bgen_samples = project + geno_dir + data_field + "_c{chrom}_b0_v1.sample",
+        covar = "covar.phe",
+        pheno_file = "{pheno}.phe",
+        #use_covars = lambda wildcards: formatted_PCs(int(wildcards.num_pcs)),
+        dat_f = data_field,
+        output_d = output_dir,
+        samples = "{scenario}_seed{seed}_n{n}.tsv",#lambda wildcards: config[wildcards.width],
+        step1_dir = "maggie_gwas/step1_results/",
+        #loco = "maggie_gwas/step1_results/{wildcards.scenario}_{wildcards.pheno}_results_chr{wildcards.chrom}_seed{wildcards.seed}_n{wildcards.n}_1.loco.gz",
+        #loco = lambda wildcards: "maggie_gwas/step1_results/" + wildcards.scenario + "_" + wildcards.pheno + "_results_chr" + wildcards.chrom + "_seed" + wildcards.seed + "_n" + wildcards.n +  str(get_column_index("GWAS_input/height.phe",wildcards.focus_pheno) + 1) + ".loco.gz"
+    output:
+        "results/gwas/step2_results/{scenario}_{pheno}_assoc_chr{chrom}_seed{seed}_n{n}_height.regenie.gz"
+    wildcard_constraints:
+        pheno="[a-zA-Z]+",
+        chrom="[0-9]+",
+        width="[a-zA-Z]+"
+    shell:
+        """
+        dx mkdir -p "{output_dir}step2_results";
+        dx run swiss-army-knife --wait \
+           -iin="{params.bgen}" \
+           -iin="{params.bgen}.bgi" \
+           -iin="{params.bgen_samples}" \
+           -iin="{params.samples}" \
+           -iin="maggie_gwas/GWAS_input/filtering_results/qc_pass_chr1.snplist" \
+           -iin="{params.covar}" \
+           -iin="{params.pheno_file}" \
+           -iin="maggie_gwas/step1_results/{wildcards.scenario}_{wildcards.pheno}_results_chr{wildcards.chrom}_seed{wildcards.seed}_n{wildcards.n}_pred.list" \
+           -iin="maggie_gwas/step1_results/{wildcards.scenario}_{wildcards.pheno}_results_chr{wildcards.chrom}_seed{wildcards.seed}_n{wildcards.n}_1.loco.gz" \
+           -icmd="regenie --step 2 \
+                --out '{wildcards.scenario}_{wildcards.pheno}_assoc_chr{wildcards.chrom}_seed{wildcards.seed}_n{wildcards.n}' \
+                --bgen '{params.dat_f}_c{wildcards.chrom}_b0_v1.bgen' \
+                --sample '{params.dat_f}_c{wildcards.chrom}_b0_v1.sample' \
+                --phenoFile '{wildcards.pheno}.phe' \
+                --phenoCol 'height' \
+                --covarFile covar.phe \
+                --qt \
+                --keep {params.samples} \
+                --pred '{wildcards.scenario}_{wildcards.pheno}_results_chr{wildcards.chrom}_seed{wildcards.seed}_n{wildcards.n}_pred.list' \
+                --bsize 200 \
+                --pThresh 0.05 \
+                --minMAC 3 \
+                --gz \
+                --threads 16" \
+            --tag=Regenie_Step2 \
+            --instance-type 'mem1_ssd1_v2_x16' \
+            --destination='{params.output_d}step2_results/' --brief --yes; \
+        dx download {output};\
+        mv '{wildcards.scenario}_{wildcards.pheno}_assoc_chr{wildcards.chrom}_seed{wildcards.seed}_n{wildcards.n}_{wildcards.focus_pheno}.regenie.gz' '{params.output_d}step2_results/' \
+        """
+#"maggie_gwas/step2_results/{scenario}_{pheno}_assoc_chr{chrom}_seed{seed}_n{n}_{focus_pheno}.regenie.gz"
