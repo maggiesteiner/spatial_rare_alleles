@@ -2,12 +2,12 @@ import numpy as np
 from numpy.random import exponential
 import argparse
 
-def time_to_next(k,s,mu,rho,r,L):
-    return exponential(k*(1-s)+k+mu*rho*L*L+r)
+def time_to_next(k,s,theta,r):
+    return exponential(k*(1-s)+k+theta+r)
 
-def choose_event(k,s,mu,rho,r,L):
-    tot = k*(1-s)+k+mu*rho*L*L+r
-    event = np.random.choice(['b','d','m','s'],p=[(k*(1-s)/tot),(k/tot),(mu*rho*L*L/tot),(r/tot)])
+def choose_event(k,s,theta,r):
+    tot = k*(1-s)+k+theta+r
+    event = np.random.choice(['b','d','m','s'],p=[(k*(1-s)/tot),(k/tot),(theta/tot),(r/tot)])
     return event
 
 def get_alive(locations):
@@ -17,10 +17,17 @@ def get_nan(locations):
     return np.where(np.isnan(locations[:, 0]))[0]
 
 def wrap_locations(locations,L):
-    wrapped_locations = locations.copy()
-    wrapped_locations[:, 0] = (wrapped_locations[:, 0]) % L
-    wrapped_locations[:, 1] = (wrapped_locations[:, 1]) % L
-    return wrapped_locations
+    return locations % L
+
+def extend_locations(locations):
+    return np.pad(locations, pad_width=((0, locations.shape[0]), (0, 0)), constant_values=np.nan)
+
+def update_locations(locations,sigma,t_next,L):
+    alive_rows = get_alive(locations)
+    if len(alive_rows) > 0:
+        locations[alive_rows] += np.random.normal(loc=0, scale=sigma * np.sqrt(t_next), size=(len(alive_rows), 2))
+    locations = wrap_locations(locations, L)
+    return locations
 
 def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
     """
@@ -36,10 +43,13 @@ def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
     3. Select event type and apply it
 
     Data structures:
-    * During simulation, store individual level-data (continuously updated)
+    * During simulation, store locations of individuals at the current time
     * At each sample point update the SFS distribution (array w/ pre-specified length)
     * Output SFS distribution
     """
+
+    # parameter for total mutation rate
+    theta = mu*rho*(L**2)
 
     # initialize array for SFS distribution
     sfs_dist = np.zeros(sfs_len)
@@ -53,13 +63,12 @@ def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
         alive_rows = get_alive(locations)
         k = len(alive_rows)  # number of alive particles
         # draw time to next event
-        t_next = time_to_next(k, s, mu, rho, r, L)
+        t_next = time_to_next(k,s,theta,r)
         # draw event type
-        e_type = choose_event(k, s, mu, rho, r, L)
+        e_type = choose_event(k,s,theta,r)
 
         ### update spatial coordinates
-        if len(alive_rows) > 0:
-            locations[alive_rows] += np.random.normal(loc=0, scale=sigma * np.sqrt(t_next), size=(len(alive_rows),2))
+        locations = update_locations(locations,sigma,t_next,L)
 
         ### mutation
         if e_type == 'm':
@@ -68,19 +77,18 @@ def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
             if len(empty_row_indices) > 0:  # check that there is a row available
                 next_row = empty_row_indices[0]  # choose the first available row
             else:
-                locations_new = np.full((locations.shape[0]*2,2),np.nan)
-                locations_new[:locations.shape[0],:] = locations
-                next_row = locations.shape[0]+1
-                locations = locations_new.copy()
+                print("Doubling array size")
+                next_row = locations.shape[0] + 1
+                locations = extend_locations(locations)
+
             # add row for new lineage at random location
-            locations[next_row, :] = [np.random.uniform(0, L), np.random.uniform(0, L)]
+            locations[next_row] = np.random.uniform(0, L, size=2)
 
         ### death
         elif e_type == 'd':
             ## choose individual who dies
             random_index = np.random.choice(alive_rows)  # choose one at random
-            locations[random_index, 0] = np.nan  # mark coord to nan
-            locations[random_index, 1] = np.nan  # mark coord to nan
+            locations[random_index] = np.nan  # mark coords to nan
 
         ### birth
         elif e_type == 'b':
@@ -90,14 +98,13 @@ def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
                 next_row = empty_row_indices[0]  # choose the first available row
             else:
                 print("Doubling array size")
-                locations_new = np.full((locations.shape[0] * 2, 2), np.nan)
-                locations_new[:locations.shape[0], :] = locations
                 next_row = locations.shape[0] + 1
-                locations = locations_new
+                locations = extend_locations(locations)
+
             # choose parent at random from alive individuals
-            random_index = np.random.choice(alive_rows)
+            parent_index = np.random.choice(alive_rows)
             # add row for new (split) lineage with location of parent
-            locations[next_row, :] = [locations[random_index, 0], locations[random_index, 1]]
+            locations[next_row] = locations[parent_index]
 
         ### sample NOTE: WILL WANT TO UPDATE TO SPATIAL SAMPLING
         ### currently counts number of extant lineages & updates SFS
@@ -110,9 +117,7 @@ def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
             else:
                 print("Error: SFS entry out of bounds ("+str(k)+")")
 
-        # check if locations out of bounds
-        if (np.any(locations < 0)) or (np.any(locations > L)):
-           locations = wrap_locations(locations, L)
+
 
     return sfs_dist, locations
 
