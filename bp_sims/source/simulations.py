@@ -14,6 +14,7 @@ class Event(Enum):
 
 
 def event_rates(k: int, s: float, theta: float, r: float) -> dict[Event, float]:
+    """Calculate the rate of each event type."""
     return {
         Event.BIRTH: k * (1 - s),
         Event.DEATH: k,
@@ -145,12 +146,12 @@ def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
             next_row = get_free_row(locations)
             locations[next_row] = np.random.uniform(0, L, size=2)
 
-        if event is Event.DEATH:
+        elif event is Event.DEATH:
             ## choose a random individual to die
             random_index = np.random.choice(alive_rows)
             locations[random_index] = np.nan
 
-        if event is Event.BIRTH:
+        elif event is Event.BIRTH:
             # choose parent at random from alive individuals
             parent_index = np.random.choice(alive_rows)
             # add new lineage with location of parent
