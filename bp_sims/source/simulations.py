@@ -1,15 +1,28 @@
 import numpy as np
-from numpy.random import exponential
+from numpy.random import exponential, poisson
 import argparse
 
-def time_to_next(k,s,theta,r):
-    total_rate = k * (1 - s) + k + theta + r
+def time_to_next(k: int, s: float, theta: float, r: float) -> float:
+    """Generate the waiting time to the next event."""
+    if k == 0:
+        # If nothing is alive, jump to the next mutation; don't sample
+        total_rate = theta
+    else:
+        total_rate = k * (1 - s) + k + theta + r
     return exponential(scale=1 / total_rate)
 
-def choose_event(k,s,theta,r):
+def choose_event(k: int, s: float, theta: float, r: float) -> str:
+    """Choose the type of the next event."""
+    # If nothing is alive, jump to the next mutation; don't sample
+    if k == 0:
+        return "m"
     tot = k*(1-s)+k+theta+r
     event = np.random.choice(['b','d','m','s'],p=[(k*(1-s)/tot),(k/tot),(theta/tot),(r/tot)])
     return event
+
+def generate_zeros(t_zero: float, r: float) -> int:
+    """Simulate the number of samples taken during times when zero carriers are alive"""
+    return poisson(t_zero * r)
 
 def get_alive(locations):
     return np.where(~np.isnan(locations[:, 0]))[0]
@@ -59,12 +72,18 @@ def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
     # keep track of individual level data
     # [x coord, y coord]
     locations = np.full((max_ind, 2),np.nan)
+
+    # keep a running total of the time with zero carriers alive
+    t_zero = 0
+
     # initialize current time at 0
     for _ in range(num_iter):
         alive_rows = get_alive(locations)
         k = len(alive_rows)  # number of alive particles
         # draw time to next event
         t_next = time_to_next(k,s,theta,r)
+        if k == 0:
+            t_zero += t_next
         # draw event type
         e_type = choose_event(k,s,theta,r)
 
@@ -118,7 +137,8 @@ def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
             else:
                 print("Error: SFS entry out of bounds ("+str(k)+")")
 
-
+    # Simulate the zero count SFS bin
+    sfs_dist[0] += generate_zeros(t_zero, r)
 
     return sfs_dist, locations
 
