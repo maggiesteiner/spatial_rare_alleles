@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import unittest
+from copy import copy
+
 import numpy as np
 
 from simulations import *
@@ -52,13 +54,29 @@ class TestLocations(unittest.TestCase):
 
     def test_extend_locations(self):
         orig_len = self.locations.shape[0]
-        extended = extend_locations(self.locations)
+        extended = copy(self.locations)
+        extend_locations(extended)
         self.assertEqual(extended.shape[0], orig_len * 2)
         # The beginning of extended should be equal to the original
         self.assertTrue(
             np.array_equal(extended[:orig_len], self.locations, equal_nan=True)
         )
         self.assertTrue(np.all(np.isnan(extended[orig_len:])))
+
+    def test_get_free_row(self):
+        with self.subTest("free"):
+            to_check = copy(self.locations)
+            self.assertEqual(get_free_row(to_check), 1)
+            # If there is a free row, should not change locations
+            self.assertTrue(np.array_equal(to_check, self.locations, equal_nan=True))
+
+        with self.subTest("no free"):
+            full = np.array([[0.5, 0.5]])
+            self.assertEqual(get_free_row(full), 1)
+            # If there is not a free row, should double the length and fill with nan
+            self.assertTrue(
+                np.array_equal(full, [[0.5, 0.5], [np.nan, np.nan]], equal_nan=True)
+            )
 
     def test_wrap_locations(self):
         # Wrapping shouldn't do anything if we're already in bounds
