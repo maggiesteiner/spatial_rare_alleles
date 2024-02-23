@@ -1,9 +1,14 @@
 import argparse
 from enum import Enum
 from sys import stderr
+from typing import TypeAlias
 
 import numpy as np
+import numpy.typing as npt
 from numpy.random import exponential, poisson
+
+Locations: TypeAlias = npt.NDArray[np.float64]
+SFS: TypeAlias = npt.NDArray[np.float64]
 
 
 class Event(Enum):
@@ -49,15 +54,15 @@ def generate_zeros(t_zero: float, r: float) -> int:
     return poisson(t_zero * r)
 
 
-def get_alive(locations):
+def get_alive(locations: Locations) -> npt.NDArray[np.intp]:
     return np.where(~np.isnan(locations[:, 0]))[0]
 
 
-def get_nan(locations):
+def get_nan(locations: Locations) -> npt.NDArray[np.intp]:
     return np.where(np.isnan(locations[:, 0]))[0]
 
 
-def get_free_row(locations) -> int:
+def get_free_row(locations: Locations) -> int:
     """
     Get the index of the next free row in locations.
 
@@ -73,18 +78,20 @@ def get_free_row(locations) -> int:
         return next_row
 
 
-def extend_locations(locations) -> None:
+def extend_locations(locations: Locations) -> None:
     """Double the length of locations in-place."""
     old_length = locations.shape[0]
     locations.resize((2 * old_length, locations.shape[1]), refcheck=False)
     locations[old_length:] = np.nan
 
 
-def wrap_locations(locations, L):
+def wrap_locations(locations: Locations, L: float) -> Locations:
     return locations % L
 
 
-def update_locations(locations, sigma, t_next, L):
+def update_locations(
+    locations: Locations, sigma: float, t_next: float, L: float
+) -> Locations:
     alive_rows = get_alive(locations)
     if len(alive_rows) > 0:
         locations[alive_rows] += np.random.normal(
@@ -94,7 +101,17 @@ def update_locations(locations, sigma, t_next, L):
     return locations
 
 
-def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
+def run_sim_spatial(
+    s: float,
+    mu: float,
+    rho: float,
+    r: float,
+    sigma: float,
+    num_iter: int,
+    max_ind: int,
+    L: float = 50,
+    sfs_len: int = 100,
+) -> tuple[Locations, SFS]:
     """
     * Carriers appear de novo with rate `mu`*`rho`
     * Carriers give birth (split) with rate `1-s`
@@ -125,7 +142,7 @@ def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
     locations = np.full((max_ind, 2), np.nan)
 
     # keep a running total of the time with zero carriers alive
-    t_zero = 0
+    t_zero = 0.0
 
     # initialize current time at 0
     for _ in range(num_iter):
