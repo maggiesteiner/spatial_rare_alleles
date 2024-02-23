@@ -3,7 +3,8 @@ from numpy.random import exponential
 import argparse
 
 def time_to_next(k,s,theta,r):
-    return exponential(k*(1-s)+k+theta+r)
+    total_rate = k * (1 - s) + k + theta + r
+    return exponential(scale=1 / total_rate)
 
 def choose_event(k,s,theta,r):
     tot = k*(1-s)+k+theta+r
