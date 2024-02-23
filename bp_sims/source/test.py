@@ -32,11 +32,11 @@ class TestEvents(unittest.TestCase):
         # Only mutations when k = 0
         with self.subTest(k=0):
             events_0 = [choose_event(0, s, theta, r) for _ in range(num_samples)]
-            self.assertEqual(set(events_0), set(["m"]))
+            self.assertEqual(set(events_0), set([Event.MUTATION]))
         # When k > 0, should sample all events
         with self.subTest(k=1):
             events_1 = [choose_event(1, s, theta, r) for _ in range(num_samples)]
-            self.assertEqual(set(events_1), set(["b", "d", "m", "s"]))
+            self.assertEqual(set(events_1), set(Event))
 
 
 class TestLocations(unittest.TestCase):

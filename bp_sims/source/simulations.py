@@ -1,8 +1,25 @@
 import argparse
+from enum import Enum
 from sys import stderr
 
 import numpy as np
 from numpy.random import exponential, poisson
+
+
+class Event(Enum):
+    BIRTH = 0
+    DEATH = 1
+    MUTATION = 2
+    SAMPLE = 3
+
+
+def event_rates(k: int, s: float, theta: float, r: float) -> dict[Event, float]:
+    return {
+        Event.BIRTH: k * (1 - s),
+        Event.DEATH: k,
+        Event.MUTATION: theta,
+        Event.SAMPLE: r,
+    }
 
 
 def time_to_next(k: int, s: float, theta: float, r: float) -> float:
@@ -11,21 +28,19 @@ def time_to_next(k: int, s: float, theta: float, r: float) -> float:
         # If nothing is alive, jump to the next mutation; don't sample
         total_rate = theta
     else:
-        total_rate = k * (1 - s) + k + theta + r
+        total_rate = sum(event_rates(k, s, theta, r).values())
     return exponential(scale=1 / total_rate)
 
 
-def choose_event(k: int, s: float, theta: float, r: float) -> str:
+def choose_event(k: int, s: float, theta: float, r: float) -> Event:
     """Choose the type of the next event."""
     # If nothing is alive, jump to the next mutation; don't sample
     if k == 0:
-        return "m"
-    tot = k * (1 - s) + k + theta + r
-    event = np.random.choice(
-        ["b", "d", "m", "s"],
-        p=[(k * (1 - s) / tot), (k / tot), (theta / tot), (r / tot)],
-    )
-    return event
+        return Event.MUTATION
+    rates = event_rates(k, s, theta, r)
+    tot = sum(rates.values())
+    choice = np.random.choice(len(Event), p=[rates[e] / tot for e in Event])
+    return Event(choice)
 
 
 def generate_zeros(t_zero: float, r: float) -> int:
@@ -120,25 +135,22 @@ def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
         if k == 0:
             t_zero += t_next
         # draw event type
-        e_type = choose_event(k, s, theta, r)
+        event = choose_event(k, s, theta, r)
 
         ### update spatial coordinates
         locations = update_locations(locations, sigma, t_next, L)
 
-        ### mutation
-        if e_type == "m":
+        if event is Event.MUTATION:
             # add a new lineage at a random location
             next_row = get_free_row(locations)
             locations[next_row] = np.random.uniform(0, L, size=2)
 
-        ### death
-        elif e_type == "d":
+        if event is Event.DEATH:
             ## choose a random individual to die
             random_index = np.random.choice(alive_rows)
             locations[random_index] = np.nan
 
-        ### birth
-        elif e_type == "b":
+        if event is Event.BIRTH:
             # choose parent at random from alive individuals
             parent_index = np.random.choice(alive_rows)
             # add new lineage with location of parent
@@ -147,7 +159,7 @@ def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
 
         ### sample NOTE: WILL WANT TO UPDATE TO SPATIAL SAMPLING
         ### currently counts number of extant lineages & updates SFS
-        elif e_type == "s":
+        elif event is Event.SAMPLE:
             if int(k) < sfs_len:
                 sfs_dist[int(k)] += 1
                 # print for debugging
