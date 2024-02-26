@@ -44,6 +44,15 @@ def update_locations(locations,sigma,t_next,L):
     locations = wrap_locations(locations, L)
     return locations
 
+def sample_sfs(k: int, N: float, n: int, sfs_len: int) -> np.ndarray[np.float64]:
+    sfs_temp = np.zeros(sfs_len+1)
+    j = np.arange(sfs_len)
+    sfs_temp[:-1] += binom.pmf(j, n, k/N) # pmf
+    sfs_temp[-1] += binom.sf(sfs_len,n,k/N) # 1 - cdf
+    return sfs_temp
+
+
+
 def run_sim_spatial(n, s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
     """
     * Carriers appear de novo with rate `mu`*`rho`
@@ -68,9 +77,7 @@ def run_sim_spatial(n, s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=10
     theta = mu*N
 
     # initialize array for SFS distribution
-    running_sfs = np.zeros(sfs_len + 1)
-    running_samples = np.zeros(sfs_len + 1)
-    #     # keep track of time steps
+    running_sfs = np.zeros(sfs_len+1)
 
     # keep track of individual level data
     # [x coord, y coord]
@@ -131,18 +138,15 @@ def run_sim_spatial(n, s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=10
 
         ### sample (uniform)
         elif e_type == 's':
-            if int(k) < sfs_len:
-                running_samples[k] += 1
-                running_sfs[k] += binom.pmf(k,n,k/N)
-            else:
-                running_samples[-1] += 1
-                running_sfs[-1] += binom.sf(k,n,k/N)
+            running_sfs += sample_sfs(k,N,n,sfs_len)
+
 
     # Simulate the zero count SFS bin
     running_sfs[0] += generate_zeros(t_zero, r)
 
     # Normalize expected SFS to one
-    expected_sfs = running_sfs / np.sum(running_samples)
+    expected_sfs = running_sfs / np.sum(running_sfs)
+
     return expected_sfs, locations
 
 def main():
