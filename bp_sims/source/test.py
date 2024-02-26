@@ -40,10 +40,10 @@ class TestEvents(unittest.TestCase):
         k = 5
         N = 10000
         n = 1000
-        sfs_len = 1000
-        sample_temp = sample_sfs(k,N,n,sfs_len)
+        max_allele_count = 1000
+        sample_temp = sample_sfs(k,N,n,max_allele_count)
         self.assertAlmostEqual(np.sum(sample_temp), 1, delta = 1e-4)
-        self.assertEqual(len(sample_temp),sfs_len+1)
+        self.assertEqual(len(sample_temp),max_allele_count+1)
 
 
 class TestLocations(unittest.TestCase):

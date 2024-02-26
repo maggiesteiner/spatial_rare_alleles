@@ -45,16 +45,16 @@ def update_locations(locations,sigma,t_next,L):
     locations = wrap_locations(locations, L)
     return locations
 
-def sample_sfs(k: int, N: float, n: int, sfs_len: int) -> NDArray[np.float64]:
-    sfs_temp = np.zeros(sfs_len+1)
-    j = np.arange(sfs_len)
-    sfs_temp[:-1] += binom.pmf(j, n, k/N) # pmf, entries 0 through sfs_len-1
-    sfs_temp[-1] += binom.sf(sfs_len-1,n,k/N) # 1 - cdf
+def sample_sfs(k: int, N: float, n: int, max_allele_count: int) -> NDArray[np.float64]:
+    sfs_temp = np.zeros(max_allele_count+1)
+    j = np.arange(max_allele_count)
+    sfs_temp[:-1] += binom.pmf(j, n, k/N) # pmf, entries 0 through max_allele_count-1
+    sfs_temp[-1] += binom.sf(max_allele_count-1,n,k/N) # 1 - cdf
     return sfs_temp
 
 
 
-def run_sim_spatial(n, s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
+def run_sim_spatial(n, s, mu, rho, r, sigma, num_iter, max_ind, L=50, max_allele_count=100):
     """
     * Carriers appear de novo with rate `mu`*`rho`
     * Carriers give birth (split) with rate `1-s`
@@ -78,7 +78,7 @@ def run_sim_spatial(n, s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=10
     theta = mu*N
 
     # initialize array for SFS distribution
-    running_sfs = np.zeros(sfs_len+1)
+    running_sfs = np.zeros(max_allele_count+1)
 
     # keep track of individual level data
     # [x coord, y coord]
@@ -139,7 +139,7 @@ def run_sim_spatial(n, s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=10
 
         ### sample (uniform)
         elif e_type == 's':
-            running_sfs += sample_sfs(k,N,n,sfs_len)
+            running_sfs += sample_sfs(k,N,n,max_allele_count)
 
 
     # Simulate the zero count SFS bin
@@ -161,7 +161,7 @@ def main():
     parser.add_argument('--num_iter',type=int,help='number of iterations',default=1000)
     parser.add_argument('--max_ind',type=int,help='max number of individuals',default=1000)
     parser.add_argument('-L',type=float,help='habitat width',default=50)
-    parser.add_argument('--sfs_length',type=int,help='max length of sfs to output',default=1000)
+    parser.add_argument('--max_allele_count',type=int,help='max allele count to track',default=1000)
     parser.add_argument('--sfs_out',type=str,help='output file name for sfs',default='sfs.csv')
     parser.add_argument('--loc_out',type=str,help='output file name for locations',default='loc.csv')
     parser.add_argument('--seed',type=int,help='random string',default=2024)
@@ -172,7 +172,7 @@ def main():
 
     # run simulation
     counts, df = run_sim_spatial(n=args.n, s=args.s, mu=args.mu, rho=args.dens, r=args.r, sigma=args.sigma, num_iter=args.num_iter,
-                                 max_ind=args.max_ind, L=args.L, sfs_len=args.sfs_length)
+                                 max_ind=args.max_ind, L=args.L, max_allele_count=args.max_allele_count)
 
     # save output as CSV
     np.savetxt(args.sfs_out,counts,delimiter=',')
