@@ -1,6 +1,7 @@
 import numpy as np
 from numpy.random import exponential, poisson
 import argparse
+from scipy.stats import binom
 
 def time_to_next(k: int, s: float, theta: float, r: float) -> float:
     """Generate the waiting time to the next event."""
@@ -43,7 +44,7 @@ def update_locations(locations,sigma,t_next,L):
     locations = wrap_locations(locations, L)
     return locations
 
-def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
+def run_sim_spatial(n, s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
     """
     * Carriers appear de novo with rate `mu`*`rho`
     * Carriers give birth (split) with rate `1-s`
@@ -63,11 +64,13 @@ def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
     """
 
     # parameter for total mutation rate
-    theta = mu*rho*(L**2)
+    N = rho*(L**2)
+    theta = mu*N
 
     # initialize array for SFS distribution
-    sfs_dist = np.zeros(sfs_len)
-    # keep track of time steps
+    running_sfs = np.zeros(sfs_len + 1)
+    running_samples = np.zeros(sfs_len + 1)
+    #     # keep track of time steps
 
     # keep track of individual level data
     # [x coord, y coord]
@@ -126,24 +129,25 @@ def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
             # add row for new (split) lineage with location of parent
             locations[next_row] = locations[parent_index]
 
-        ### sample NOTE: WILL WANT TO UPDATE TO SPATIAL SAMPLING
-        ### currently counts number of extant lineages & updates SFS
+        ### sample (uniform)
         elif e_type == 's':
             if int(k) < sfs_len:
-                sfs_dist[int(k)] += 1
-                # print for debugging
-                if k > 0:
-                    print(k)
+                running_samples[k] += 1
+                running_sfs[k] += binom.pmf(k,n,k/N)
             else:
-                print("Error: SFS entry out of bounds ("+str(k)+")")
+                running_samples[-1] += 1
+                running_sfs[-1] += binom.sf(k,n,k/N)
 
     # Simulate the zero count SFS bin
-    sfs_dist[0] += generate_zeros(t_zero, r)
+    running_sfs[0] += generate_zeros(t_zero, r)
 
-    return sfs_dist, locations
+    # Normalize expected SFS to one
+    expected_sfs = running_sfs / np.sum(running_samples)
+    return expected_sfs, locations
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument('-n', type=int, help='sample size', default=1e3)
     parser.add_argument('-s',type=float,help='selection coefficient',default=1e-2)
     parser.add_argument('--mu',type=float,help='mutation rate',default=1e-4)
     parser.add_argument('--dens',type=float,help='population density',default=2)
@@ -162,7 +166,7 @@ def main():
     np.random.seed(args.seed)
 
     # run simulation
-    counts, df = run_sim_spatial(s=args.s, mu=args.mu, rho=args.dens, r=args.r, sigma=args.sigma, num_iter=args.num_iter,
+    counts, df = run_sim_spatial(n=args.n, s=args.s, mu=args.mu, rho=args.dens, r=args.r, sigma=args.sigma, num_iter=args.num_iter,
                                  max_ind=args.max_ind, L=args.L, sfs_len=args.sfs_length)
 
     # save output as CSV
