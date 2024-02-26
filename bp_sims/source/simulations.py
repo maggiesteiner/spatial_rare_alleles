@@ -48,8 +48,8 @@ def update_locations(locations,sigma,t_next,L):
 def sample_sfs(k: int, N: float, n: int, sfs_len: int) -> NDArray[np.float64]:
     sfs_temp = np.zeros(sfs_len+1)
     j = np.arange(sfs_len)
-    sfs_temp[:-1] += binom.pmf(j, n, k/N) # pmf
-    sfs_temp[-1] += binom.sf(sfs_len,n,k/N) # 1 - cdf
+    sfs_temp[:-1] += binom.pmf(j, n, k/N) # pmf, entries 0 through sfs_len-1
+    sfs_temp[-1] += binom.sf(sfs_len-1,n,k/N) # 1 - cdf
     return sfs_temp
 
 
