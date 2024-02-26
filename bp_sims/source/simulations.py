@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.random import exponential, poisson
 import argparse
-from scipy.stats import binom
+from scipy.stats import binom # type: ignore
 
 def time_to_next(k: int, s: float, theta: float, r: float) -> float:
     """Generate the waiting time to the next event."""
