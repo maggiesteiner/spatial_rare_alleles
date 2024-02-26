@@ -2,6 +2,7 @@ import numpy as np
 from numpy.random import exponential, poisson
 import argparse
 from scipy.stats import binom # type: ignore
+from numpy.typing import NDArray
 
 def time_to_next(k: int, s: float, theta: float, r: float) -> float:
     """Generate the waiting time to the next event."""
@@ -44,7 +45,7 @@ def update_locations(locations,sigma,t_next,L):
     locations = wrap_locations(locations, L)
     return locations
 
-def sample_sfs(k: int, N: float, n: int, sfs_len: int) -> np.ndarray[np.float64]:
+def sample_sfs(k: int, N: float, n: int, sfs_len: int) -> NDArray[np.float64]:
     sfs_temp = np.zeros(sfs_len+1)
     j = np.arange(sfs_len)
     sfs_temp[:-1] += binom.pmf(j, n, k/N) # pmf
