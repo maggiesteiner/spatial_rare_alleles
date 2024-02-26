@@ -36,6 +36,15 @@ class TestEvents(unittest.TestCase):
             events_1 = [choose_event(1, s, theta, r) for _ in range(num_samples)]
             self.assertEqual(set(events_1), set(["b", "d", "m", "s"]))
 
+    def test_sampling(self):
+        k = 2
+        N = 100
+        n = 10
+        max_allele_count = 10
+        sample_temp = sample_sfs(k,N,n,max_allele_count)
+        self.assertAlmostEqual(np.sum(sample_temp), 1, delta = 1e-8)
+        self.assertEqual(len(sample_temp),max_allele_count+1)
+
 
 class TestLocations(unittest.TestCase):
     def setUp(self):
@@ -118,7 +127,6 @@ class TestLocations(unittest.TestCase):
                             equal_nan=True,
                         )
                     )
-
 
 if __name__ == "__main__":
     unittest.main()

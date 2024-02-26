@@ -1,6 +1,8 @@
 import numpy as np
 from numpy.random import exponential, poisson
 import argparse
+from scipy.stats import binom # type: ignore
+from numpy.typing import NDArray
 
 def time_to_next(k: int, s: float, theta: float, r: float) -> float:
     """Generate the waiting time to the next event."""
@@ -43,7 +45,16 @@ def update_locations(locations,sigma,t_next,L):
     locations = wrap_locations(locations, L)
     return locations
 
-def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
+def sample_sfs(k: int, N: float, n: int, max_allele_count: int) -> NDArray[np.float64]:
+    sfs_temp = np.zeros(max_allele_count+1)
+    j = np.arange(max_allele_count)
+    sfs_temp[:-1] += binom.pmf(j, n, k/N) # pmf, entries 0 through max_allele_count-1
+    sfs_temp[-1] += binom.sf(max_allele_count-1,n,k/N) # 1 - cdf
+    return sfs_temp
+
+
+
+def run_sim_spatial(n, s, mu, rho, r, sigma, num_iter, max_ind, L=50, max_allele_count=100):
     """
     * Carriers appear de novo with rate `mu`*`rho`
     * Carriers give birth (split) with rate `1-s`
@@ -63,11 +74,11 @@ def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
     """
 
     # parameter for total mutation rate
-    theta = mu*rho*(L**2)
+    N = rho*(L**2)
+    theta = mu*N
 
     # initialize array for SFS distribution
-    sfs_dist = np.zeros(sfs_len)
-    # keep track of time steps
+    running_sfs = np.zeros(max_allele_count+1)
 
     # keep track of individual level data
     # [x coord, y coord]
@@ -126,24 +137,22 @@ def run_sim_spatial(s, mu, rho, r, sigma, num_iter, max_ind, L=50, sfs_len=100):
             # add row for new (split) lineage with location of parent
             locations[next_row] = locations[parent_index]
 
-        ### sample NOTE: WILL WANT TO UPDATE TO SPATIAL SAMPLING
-        ### currently counts number of extant lineages & updates SFS
+        ### sample (uniform)
         elif e_type == 's':
-            if int(k) < sfs_len:
-                sfs_dist[int(k)] += 1
-                # print for debugging
-                if k > 0:
-                    print(k)
-            else:
-                print("Error: SFS entry out of bounds ("+str(k)+")")
+            running_sfs += sample_sfs(k,N,n,max_allele_count)
+
 
     # Simulate the zero count SFS bin
-    sfs_dist[0] += generate_zeros(t_zero, r)
+    running_sfs[0] += generate_zeros(t_zero, r)
 
-    return sfs_dist, locations
+    # Normalize expected SFS to one
+    expected_sfs = running_sfs / np.sum(running_sfs)
+
+    return expected_sfs, locations
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument('-n', type=int, help='sample size', default=1e3)
     parser.add_argument('-s',type=float,help='selection coefficient',default=1e-2)
     parser.add_argument('--mu',type=float,help='mutation rate',default=1e-4)
     parser.add_argument('--dens',type=float,help='population density',default=2)
@@ -152,7 +161,7 @@ def main():
     parser.add_argument('--num_iter',type=int,help='number of iterations',default=1000)
     parser.add_argument('--max_ind',type=int,help='max number of individuals',default=1000)
     parser.add_argument('-L',type=float,help='habitat width',default=50)
-    parser.add_argument('--sfs_length',type=int,help='max length of sfs to output',default=1000)
+    parser.add_argument('--max_allele_count',type=int,help='max allele count to track',default=1000)
     parser.add_argument('--sfs_out',type=str,help='output file name for sfs',default='sfs.csv')
     parser.add_argument('--loc_out',type=str,help='output file name for locations',default='loc.csv')
     parser.add_argument('--seed',type=int,help='random string',default=2024)
@@ -162,8 +171,8 @@ def main():
     np.random.seed(args.seed)
 
     # run simulation
-    counts, df = run_sim_spatial(s=args.s, mu=args.mu, rho=args.dens, r=args.r, sigma=args.sigma, num_iter=args.num_iter,
-                                 max_ind=args.max_ind, L=args.L, sfs_len=args.sfs_length)
+    counts, df = run_sim_spatial(n=args.n, s=args.s, mu=args.mu, rho=args.dens, r=args.r, sigma=args.sigma, num_iter=args.num_iter,
+                                 max_ind=args.max_ind, L=args.L, max_allele_count=args.max_allele_count)
 
     # save output as CSV
     np.savetxt(args.sfs_out,counts,delimiter=',')
