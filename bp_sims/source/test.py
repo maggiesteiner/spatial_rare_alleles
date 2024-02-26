@@ -37,12 +37,12 @@ class TestEvents(unittest.TestCase):
             self.assertEqual(set(events_1), set(["b", "d", "m", "s"]))
 
     def test_sampling(self):
-        k = 5
-        N = 10000
-        n = 1000
-        max_allele_count = 1000
+        k = 2
+        N = 100
+        n = 10
+        max_allele_count = 10
         sample_temp = sample_sfs(k,N,n,max_allele_count)
-        self.assertAlmostEqual(np.sum(sample_temp), 1, delta = 1e-4)
+        self.assertAlmostEqual(np.sum(sample_temp), 1, delta = 1e-8)
         self.assertEqual(len(sample_temp),max_allele_count+1)
 
 
