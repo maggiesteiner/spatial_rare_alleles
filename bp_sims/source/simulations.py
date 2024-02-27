@@ -45,16 +45,25 @@ def update_locations(locations,sigma,t_next,L):
     locations = wrap_locations(locations, L)
     return locations
 
-def sample_sfs(k: int, N: float, n: int, max_allele_count: int) -> NDArray[np.float64]:
+def get_p_gaussian(locations,w,L):
+    locations = locations[~np.isnan(locations).any(axis=1)]
+    center = np.array([L/2,L/2]) # eventually want to generalize this
+    distances = np.linalg.norm(locations-center,axis=1)
+    pdf = np.exp(-0.5*(distances/w)**2)/locations.shape[0]
+    return np.sum(pdf)
+
+def sample_sfs(k: int, N: float, n: int, max_allele_count: int, gaussian: bool, w=None, locations=None,L=None,rho=None) -> NDArray[np.float64]:
     sfs_temp = np.zeros(max_allele_count+1)
     j = np.arange(max_allele_count)
-    sfs_temp[:-1] += binom.pmf(j, n, k/N) # pmf, entries 0 through max_allele_count-1
+    if gaussian is True:
+        p = get_p_gaussian(locations,w,L)/rho
+    else:
+        p = k/N
+    sfs_temp[:-1] += binom.pmf(j, n, p) # pmf, entries 0 through max_allele_count-1
     sfs_temp[-1] += binom.sf(max_allele_count-1,n,k/N) # 1 - cdf
     return sfs_temp
 
-
-
-def run_sim_spatial(n, s, mu, rho, r, sigma, num_iter, max_ind, L=50, max_allele_count=100):
+def run_sim_spatial(n, s, mu, rho, r, sigma, num_iter, max_ind, L=50, max_allele_count=100,gaussian=False,w=1):
     """
     * Carriers appear de novo with rate `mu`*`rho`
     * Carriers give birth (split) with rate `1-s`
@@ -139,7 +148,7 @@ def run_sim_spatial(n, s, mu, rho, r, sigma, num_iter, max_ind, L=50, max_allele
 
         ### sample (uniform)
         elif e_type == 's':
-            running_sfs += sample_sfs(k,N,n,max_allele_count)
+            running_sfs += sample_sfs(k,N,n,max_allele_count,gaussian,w,locations,L,rho)
 
 
     # Simulate the zero count SFS bin
@@ -165,6 +174,8 @@ def main():
     parser.add_argument('--sfs_out',type=str,help='output file name for sfs',default='sfs.csv')
     parser.add_argument('--loc_out',type=str,help='output file name for locations',default='loc.csv')
     parser.add_argument('--seed',type=int,help='random string',default=2024)
+    parser.add_argument('--gaussian',action='store_true',help='implement Gaussian sampling kernel',default=False)
+    parser.add_argument('-w',type=float,help='width for sampling kernel',default=1)
     args = parser.parse_args()
 
     # set seed
@@ -172,7 +183,7 @@ def main():
 
     # run simulation
     counts, df = run_sim_spatial(n=args.n, s=args.s, mu=args.mu, rho=args.dens, r=args.r, sigma=args.sigma, num_iter=args.num_iter,
-                                 max_ind=args.max_ind, L=args.L, max_allele_count=args.max_allele_count)
+                                 max_ind=args.max_ind, L=args.L, max_allele_count=args.max_allele_count,gaussian=args.gaussian,w=args.w)
 
     # save output as CSV
     np.savetxt(args.sfs_out,counts,delimiter=',')
