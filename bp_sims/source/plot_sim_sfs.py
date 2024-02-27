@@ -1,6 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
-import pandas as pd
+import pandas as pd # type: ignore
 import argparse
 from scipy.special import loggamma # type: ignore
 import re
