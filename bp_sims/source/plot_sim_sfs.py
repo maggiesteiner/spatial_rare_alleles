@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import pandas as pd
 import argparse
-from scipy.special import loggamma
+from scipy.special import loggamma # type: ignore
 import re
 
 def finite_sfs_k_unif(k,n,s,mu,N):
