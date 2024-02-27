@@ -1,0 +1,14 @@
+s_vals = [1e-2,1e-4,1e-8]
+n_vals = [1000,10000]
+mu_vals = [1e-4,1e-6,1e-8]
+dens_vals = [5,10]
+L_vals = [50]
+maxcount = [1000]
+seeds = [0]
+sigma_vals = [0.2]
+num_iter = [10000000]
+extensions = ["sfs","loc"]
+
+rule all:
+    input:
+        expand("results/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}.{extensions}"
