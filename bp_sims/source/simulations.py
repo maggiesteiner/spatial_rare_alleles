@@ -52,7 +52,7 @@ def get_p_gaussian(locations,w,L):
     pdf = np.exp(-0.5*(distances/w)**2)/locations.shape[0]
     return np.sum(pdf)
 
-def sample_sfs(k: int, N: float, n: int, max_allele_count: int, gaussian: bool, w=None, locations=None,L=None,rho=None) -> NDArray[np.float64]:
+def sample_sfs(k: int, N: float, n: int, max_allele_count: int, gaussian=None, w=None, locations=None,L=None,rho=None) -> NDArray[np.float64]:
     sfs_temp = np.zeros(max_allele_count+1)
     j = np.arange(max_allele_count)
     if gaussian is True:
