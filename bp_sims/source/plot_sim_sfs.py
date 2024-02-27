@@ -1,5 +1,5 @@
 import numpy as np
-from matplotlib import pyplot as plt
+from matplotlib import pyplot as plt # type: ignore
 import pandas as pd # type: ignore
 import argparse
 from scipy.special import loggamma # type: ignore
