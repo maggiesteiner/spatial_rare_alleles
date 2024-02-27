@@ -32,7 +32,7 @@ def main():
     parser.add_argument('--plot_theory',action='store_true',help='plot theory SFS on top of sim')
     args = parser.parse_args()
 
-    pattern = r"s([0-9.]+)_n(\d+)_mu([0-9.]+)_rho(\d+)_L(\d+)"
+    pattern = r"s([\d.e-]+)_n(\d+)_mu([\de.-]+)_rho(\d+)_L(\d+)"
     match = re.search(pattern, args.sfs_file)
     s = float(match.group(1))
     n = int(match.group(2))
