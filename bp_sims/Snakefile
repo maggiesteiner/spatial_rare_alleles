@@ -1,14 +1,29 @@
-s_vals = [1e-2,1e-4,1e-8]
-n_vals = [1000,10000]
-mu_vals = [1e-4,1e-6,1e-8]
-dens_vals = [5,10]
+s_vals = [1e-2,1e-4,1e-6]
+n_vals = [1000]
+mu_vals = [1e-4,1e-8]
+dens_vals = [5]
 L_vals = [50]
 maxcount = [1000]
 seeds = [0]
 sigma_vals = [0.2]
 num_iter = [10000000]
 extensions = ["sfs","loc"]
+samp_rate = [0.1]
 
 rule all:
     input:
-        expand("results/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}.{extensions}"
+        expand("results/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}.{extensions}",
+               s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,maxcount=maxcount,sigma_vals=sigma_vals,seeds=seeds,num_iter=num_iter,
+               extensions=extensions,samp_rate=samp_rate)
+
+rule run_sims:
+    input:
+    output:
+        sfs="results/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}.sfs",
+        loc="results/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}.loc",
+    shell:
+        """
+        python source/simulations.py -n {wildcards.n} -s {wildcards.s} --mu {wildcards.mu} --dens {wildcards.dens} -r {wildcards.r} \
+            --sigma {wildcards.sigma} --num_iter {wildcards.iter} --max_allele_count {wildcards.maxcount} -L {wildcards.L} --sfs_out {output.sfs} \
+            --loc_out {output.loc} --seed {wildcards.seed}" 
+        """
