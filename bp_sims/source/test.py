@@ -37,6 +37,7 @@ class TestEvents(unittest.TestCase):
             self.assertEqual(set(events_1), set(["b", "d", "m", "s"]))
 
     def test_sampling(self):
+        ## test with uniform sampling
         k = 2
         N = 100
         n = 10
@@ -45,6 +46,23 @@ class TestEvents(unittest.TestCase):
         self.assertAlmostEqual(np.sum(sample_temp), 1, delta = 1e-8)
         self.assertEqual(len(sample_temp),max_allele_count+1)
 
+        ## test with spatial sampling
+        L = 50
+        locations = np.array([[0.24, 0.81], [np.nan, np.nan], [0.01, 0.01], [0.99, 0.99]])
+        w = 10
+        rho = 2
+        sample_temp_gaussian = sample_sfs(k=k,N=rho*L**2,n=n,max_allele_count=max_allele_count,locations=locations,L=L,w=w,rho=rho,gaussian=True)
+        self.assertAlmostEqual(np.sum(sample_temp_gaussian), 1, delta=1e-8)
+        self.assertEqual(len(sample_temp_gaussian), max_allele_count + 1)
+
+    def test_sampling_prob(self):
+        L = 50
+        locations = np.array([[0.24, 0.81], [np.nan, np.nan], [0.01, 0.01], [0.99, 0.99]])
+        w = 10
+        rho = 2
+        p_temp = sampling_probability_gaussian(locations,w,L,rho)
+        self.assertGreaterEqual(p_temp,0)
+        self.assertLessEqual(p_temp,1)
 
 class TestLocations(unittest.TestCase):
     def setUp(self):

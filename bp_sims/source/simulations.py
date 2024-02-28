@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.random import exponential, poisson
 import argparse
-from scipy.stats import binom # type: ignore
+from scipy.stats import binom, truncnorm # type: ignore
 from numpy.typing import NDArray
 
 def time_to_next(k: int, s: float, theta: float, r: float) -> float:
@@ -45,18 +45,18 @@ def update_locations(locations,sigma,t_next,L):
     locations = wrap_locations(locations, L)
     return locations
 
-def get_p_gaussian(locations,w,L):
+def sampling_probability_gaussian(locations,w,L,rho):
     locations = locations[~np.isnan(locations).any(axis=1)]
-    center = np.array([L/2,L/2]) # eventually want to generalize this
-    distances = np.linalg.norm(locations-center,axis=1)
-    pdf = np.exp(-0.5*(distances/w)**2)/locations.shape[0]
-    return np.sum(pdf)
+    x1_dens = truncnorm.pdf(locations[:,0],loc=L/2,scale=w,a=(-L/2)/w,b=(L/2)/w)
+    x2_dens = truncnorm.pdf(locations[:,1],loc=L/2,scale=w,a=(-L/2)/w,b=(L/2)/w)
+    prod_dens = x1_dens*x2_dens
+    return np.sum(prod_dens)/rho
 
 def sample_sfs(k: int, N: float, n: int, max_allele_count: int, gaussian=None, w=None, locations=None,L=None,rho=None) -> NDArray[np.float64]:
     sfs_temp = np.zeros(max_allele_count+1)
     j = np.arange(max_allele_count)
     if gaussian is True:
-        p = get_p_gaussian(locations,w,L)/rho
+        p = sampling_probability_gaussian(locations,w,L,rho)
     else:
         p = k/N
     sfs_temp[:-1] += binom.pmf(j, n, p) # pmf, entries 0 through max_allele_count-1
