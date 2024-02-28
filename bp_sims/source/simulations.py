@@ -56,7 +56,7 @@ def sample_sfs(k: int, N: float, n: int, max_allele_count: int, gaussian=None, w
     sfs_temp = np.zeros(max_allele_count+1)
     j = np.arange(max_allele_count)
     if gaussian is True:
-        p = sampling_probability_gaussian(locations,w,L,rho)
+        p = min(sampling_probability_gaussian(locations,w,L,rho),1)
     else:
         p = k/N
     sfs_temp[:-1] += binom.pmf(j, n, p) # pmf, entries 0 through max_allele_count-1
