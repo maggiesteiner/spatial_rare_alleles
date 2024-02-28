@@ -1,0 +1,2 @@
+cluster: "sbatch --time=04:00:00 -p broadwl -o slurm/logs/{rule}_{wildcards} -e slurm/logs/{rule}_{wildcards}"
+jobs: 100
