@@ -4,9 +4,9 @@ from enum import Enum
 from typing import TypeAlias
 
 import numpy as np
-from numpy.typing import NDArray
 from numpy.random import exponential, poisson
-from scipy.stats import binom, truncnorm # type: ignore
+from numpy.typing import NDArray
+from scipy.stats import binom, truncnorm  # type: ignore
 
 Locations: TypeAlias = NDArray[np.float64]
 SFS: TypeAlias = NDArray[np.float64]
