@@ -102,7 +102,9 @@ def update_locations(
     return locations
 
 
-def sampling_probability_gaussian(locations, w, L, rho):
+def sampling_probability_gaussian(
+    locations: Locations, w: float, L: float, rho: float
+) -> float:
     locations = locations[~np.isnan(locations).any(axis=1)]
     x1_dens = truncnorm.pdf(
         locations[:, 0], loc=L / 2, scale=w, a=(-L / 2) / w, b=(L / 2) / w
