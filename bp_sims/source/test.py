@@ -37,16 +37,111 @@ class TestEvents(unittest.TestCase):
             self.assertEqual(set(events_1), set(["b", "d", "m", "s"]))
 
     def test_sampling(self):
-        k = 2
-        N = 100
-        n = 10
-        max_allele_count = 10
-        sample_temp = sample_sfs(k,N,n,max_allele_count)
-        self.assertAlmostEqual(np.sum(sample_temp), 1, delta = 1e-8)
-        self.assertEqual(len(sample_temp),max_allele_count+1)
+        with self.subTest("uniform"):
+            ## test with uniform sampling
+            k = 2
+            N = 100
+            n = 10
+            max_allele_count = 10
+            sample_temp = sample_sfs(k,N,n,max_allele_count)
+            self.assertAlmostEqual(np.sum(sample_temp), 1, delta = 1e-8)
+            self.assertEqual(len(sample_temp),max_allele_count+1)
 
+        with self.subTest("gaussian"):
+            ## test with spatial sampling
+            L = 50
+            locations = np.array([[0.24, 0.81], [np.nan, np.nan], [0.01, 0.01], [0.99, 0.99]])
+            w = 10
+            rho = 2
+            sample_temp_gaussian = sample_sfs(k=k,N=rho*L**2,n=n,max_allele_count=max_allele_count,locations=locations,L=L,w=w,rho=rho,gaussian=True)
+            self.assertAlmostEqual(np.sum(sample_temp_gaussian), 1, delta=1e-8)
+            self.assertEqual(len(sample_temp_gaussian), max_allele_count + 1)
+
+    def test_sampling_prob(self):
+
+        with self.subTest("in range"):
+            L = 50
+            w = 10
+            rho = 2
+            locations = np.array([[0.24, 0.81], [np.nan, np.nan], [0.01, 0.01], [0.99, 0.99]])
+            p_temp = sampling_probability_gaussian(locations,w,L,rho)
+            self.assertGreaterEqual(p_temp,0)
+            self.assertLessEqual(p_temp,1)
+
+        with self.subTest("add carrier"):
+            L = 1.0
+            w = 0.1
+            rho = 2
+            locations = np.array([[0.24, 0.81], [np.nan, np.nan], [0.01, 0.01], [0.99, 0.99]])
+            p_temp = sampling_probability_gaussian(locations,w,L,rho)
+            loc_new = np.append(locations,[[0.5,0.5]],axis=0)
+            p_new = sampling_probability_gaussian(loc_new,w,L,rho)
+            self.assertGreater(p_new,p_temp)
+
+        with self.subTest("farther away"):
+            L = 1.0
+            w = 0.1
+            rho = 2
+            locations = np.array([[0.5,0.5],[0.5,0.5],[0.4,0.4]])
+            p_temp = sampling_probability_gaussian(locations, w, L, rho)
+            loc_new = locations-0.2
+            p_new = sampling_probability_gaussian(loc_new, w, L, rho)
+            self.assertLess(p_new, p_temp)
+
+        with self.subTest("increase w"):
+            L = 1.0
+            w = 0.1
+            rho = 2
+            locations = np.array([[0.5,0.5]])
+            p_temp = sampling_probability_gaussian(locations, w, L, rho)
+            p_new = sampling_probability_gaussian(locations, w*2, L, rho)
+            self.assertLess(p_new, p_temp)
+
+        with self.subTest("one at boundary: 0"):
+            L = 1.0
+            w = 0.1
+            rho = 2
+            locations = np.array([[0,0]])
+            p_temp = sampling_probability_gaussian(locations, w, L, rho)
+            self.assertGreater(p_temp, 0)
+
+        with self.subTest("one at boundary: 1"):
+            L = 1.0
+            w = 0.1
+            rho = 2
+            locations = np.array([[1,1]])
+            p_temp = sampling_probability_gaussian(locations, w, L, rho)
+            self.assertGreater(p_temp, 0)
+
+        with self.subTest("one at boundary: epsilon away"):
+            L = 1.0
+            w = 0.1
+            rho = 2
+            epsilon=1e-12
+            locations = np.array([[1-epsilon,1-epsilon]])
+            p_temp = sampling_probability_gaussian(locations, w, L, rho)
+            self.assertGreater(p_temp, 0)
+
+        with self.subTest("no carriers"):
+            L = 1.0
+            w = 0.1
+            rho = 2
+            locations = np.array([[np.nan,np.nan],[np.nan,np.nan]])
+            p_temp = sampling_probability_gaussian(locations, w, L, rho)
+            self.assertEqual(p_temp, 0)
+
+        with self.subTest("near edge"):
+            L = 1.0
+            w = 0.1
+            rho = 2
+            epsilon = 1e-12
+            locations = np.array([[1 - epsilon, 1 - epsilon]])
+            p_temp = sampling_probability_gaussian(locations, w, L, rho)
+            p_new = sampling_probability_gaussian(locations, w*2, L, rho)
+            self.assertGreater(p_new,p_temp)
 
 class TestLocations(unittest.TestCase):
+
     def setUp(self):
         self.L = 1.0
         self.locations = np.array(

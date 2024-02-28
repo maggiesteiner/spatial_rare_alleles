@@ -1,8 +1,9 @@
 import numpy as np
 from numpy.random import exponential, poisson
 import argparse
-from scipy.stats import binom # type: ignore
+from scipy.stats import binom, truncnorm # type: ignore
 from numpy.typing import NDArray
+import sys
 
 def time_to_next(k: int, s: float, theta: float, r: float) -> float:
     """Generate the waiting time to the next event."""
@@ -45,16 +46,28 @@ def update_locations(locations,sigma,t_next,L):
     locations = wrap_locations(locations, L)
     return locations
 
-def sample_sfs(k: int, N: float, n: int, max_allele_count: int) -> NDArray[np.float64]:
+def sampling_probability_gaussian(locations,w,L,rho):
+    locations = locations[~np.isnan(locations).any(axis=1)]
+    x1_dens = truncnorm.pdf(locations[:,0],loc=L/2,scale=w,a=(-L/2)/w,b=(L/2)/w)
+    x2_dens = truncnorm.pdf(locations[:,1],loc=L/2,scale=w,a=(-L/2)/w,b=(L/2)/w)
+    prod_dens = x1_dens*x2_dens
+    return np.sum(prod_dens)/rho
+
+def sample_sfs(k: int, N: float, n: int, max_allele_count: int, gaussian=None, w=None, locations=None,L=None,rho=None) -> NDArray[np.float64]:
     sfs_temp = np.zeros(max_allele_count+1)
     j = np.arange(max_allele_count)
-    sfs_temp[:-1] += binom.pmf(j, n, k/N) # pmf, entries 0 through max_allele_count-1
+    if gaussian is True:
+        sampling_prob = sampling_probability_gaussian(locations,w,L,rho)
+        if sampling_prob>1:
+            sys.stderr.write("Warning: p>1, parameters violate model assumptions")
+        p = min(sampling_prob,1)
+    else:
+        p = k/N
+    sfs_temp[:-1] += binom.pmf(j, n, p) # pmf, entries 0 through max_allele_count-1
     sfs_temp[-1] += binom.sf(max_allele_count-1,n,k/N) # 1 - cdf
     return sfs_temp
 
-
-
-def run_sim_spatial(n, s, mu, rho, r, sigma, num_iter, max_ind, L=50, max_allele_count=100):
+def run_sim_spatial(n, s, mu, rho, r, sigma, num_iter, max_ind, L=50, max_allele_count=100,gaussian=False,w=1):
     """
     * Carriers appear de novo with rate `mu`*`rho`
     * Carriers give birth (split) with rate `1-s`
@@ -139,7 +152,7 @@ def run_sim_spatial(n, s, mu, rho, r, sigma, num_iter, max_ind, L=50, max_allele
 
         ### sample (uniform)
         elif e_type == 's':
-            running_sfs += sample_sfs(k,N,n,max_allele_count)
+            running_sfs += sample_sfs(k,N,n,max_allele_count,gaussian,w,locations,L,rho)
 
 
     # Simulate the zero count SFS bin
@@ -165,6 +178,8 @@ def main():
     parser.add_argument('--sfs_out',type=str,help='output file name for sfs',default='sfs.csv')
     parser.add_argument('--loc_out',type=str,help='output file name for locations',default='loc.csv')
     parser.add_argument('--seed',type=int,help='random string',default=2024)
+    parser.add_argument('--gaussian',action='store_true',help='implement Gaussian sampling kernel',default=False)
+    parser.add_argument('-w',type=float,help='width for sampling kernel',default=1)
     args = parser.parse_args()
 
     # set seed
@@ -172,7 +187,7 @@ def main():
 
     # run simulation
     counts, df = run_sim_spatial(n=args.n, s=args.s, mu=args.mu, rho=args.dens, r=args.r, sigma=args.sigma, num_iter=args.num_iter,
-                                 max_ind=args.max_ind, L=args.L, max_allele_count=args.max_allele_count)
+                                 max_ind=args.max_ind, L=args.L, max_allele_count=args.max_allele_count,gaussian=args.gaussian,w=args.w)
 
     # save output as CSV
     np.savetxt(args.sfs_out,counts,delimiter=',')
