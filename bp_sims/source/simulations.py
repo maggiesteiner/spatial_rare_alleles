@@ -101,25 +101,41 @@ def update_locations(
     locations = wrap_locations(locations, L)
     return locations
 
-def sampling_probability_gaussian(locations,w,L,rho):
-    locations = locations[~np.isnan(locations).any(axis=1)]
-    x1_dens = truncnorm.pdf(locations[:,0],loc=L/2,scale=w,a=(-L/2)/w,b=(L/2)/w)
-    x2_dens = truncnorm.pdf(locations[:,1],loc=L/2,scale=w,a=(-L/2)/w,b=(L/2)/w)
-    prod_dens = x1_dens*x2_dens
-    return np.sum(prod_dens)/rho
 
-def sample_sfs(k: int, N: float, n: int, max_allele_count: int, gaussian=None, w=None, locations=None,L=None,rho=None) -> NDArray[np.float64]:
-    sfs_temp = np.zeros(max_allele_count+1)
+def sampling_probability_gaussian(locations, w, L, rho):
+    locations = locations[~np.isnan(locations).any(axis=1)]
+    x1_dens = truncnorm.pdf(
+        locations[:, 0], loc=L / 2, scale=w, a=(-L / 2) / w, b=(L / 2) / w
+    )
+    x2_dens = truncnorm.pdf(
+        locations[:, 1], loc=L / 2, scale=w, a=(-L / 2) / w, b=(L / 2) / w
+    )
+    prod_dens = x1_dens * x2_dens
+    return np.sum(prod_dens) / rho
+
+
+def sample_sfs(
+    k: int,
+    N: float,
+    n: int,
+    max_allele_count: int,
+    gaussian=None,
+    w=None,
+    locations=None,
+    L=None,
+    rho=None,
+) -> NDArray[np.float64]:
+    sfs_temp = np.zeros(max_allele_count + 1)
     j = np.arange(max_allele_count)
     if gaussian is True:
-        sampling_prob = sampling_probability_gaussian(locations,w,L,rho)
-        if sampling_prob>1:
+        sampling_prob = sampling_probability_gaussian(locations, w, L, rho)
+        if sampling_prob > 1:
             sys.stderr.write("Warning: p>1, parameters violate model assumptions")
-        p = min(sampling_prob,1)
+        p = min(sampling_prob, 1)
     else:
-        p = k/N
-    sfs_temp[:-1] += binom.pmf(j, n, p) # pmf, entries 0 through max_allele_count-1
-    sfs_temp[-1] += binom.sf(max_allele_count-1,n,k/N) # 1 - cdf
+        p = k / N
+    sfs_temp[:-1] += binom.pmf(j, n, p)  # pmf, entries 0 through max_allele_count-1
+    sfs_temp[-1] += binom.sf(max_allele_count - 1, n, k / N)  # 1 - cdf
     return sfs_temp
 
 
@@ -156,11 +172,11 @@ def run_sim_spatial(
     """
 
     # parameter for total mutation rate
-    N = rho*(L**2)
-    theta = mu*N
+    N = rho * (L**2)
+    theta = mu * N
 
     # initialize array for SFS distribution
-    running_sfs = np.zeros(max_allele_count+1)
+    running_sfs = np.zeros(max_allele_count + 1)
 
     # keep track of individual level data
     # [x coord, y coord]
@@ -201,7 +217,9 @@ def run_sim_spatial(
             locations[next_row] = locations[parent_index]
 
         elif event is Event.SAMPLE:
-            running_sfs += sample_sfs(k,N,n,max_allele_count,gaussian,w,locations,L,rho)
+            running_sfs += sample_sfs(
+                k, N, n, max_allele_count, gaussian, w, locations, L, rho
+            )
 
     # Simulate the zero count SFS bin
     running_sfs[0] += generate_zeros(t_zero, r)
@@ -214,29 +232,58 @@ def run_sim_spatial(
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-n', type=int, help='sample size', default=1e3)
-    parser.add_argument('-s',type=float,help='selection coefficient',default=1e-2)
-    parser.add_argument('--mu',type=float,help='mutation rate',default=1e-4)
-    parser.add_argument('--dens',type=float,help='population density',default=2)
-    parser.add_argument('-r',type=float,help='sampling rate',default=0.1)
-    parser.add_argument('--sigma',type=float,help='diffusion coefficient',default=0.2)
-    parser.add_argument('--num_iter',type=int,help='number of iterations',default=1000)
-    parser.add_argument('--max_ind',type=int,help='max number of individuals',default=1000)
-    parser.add_argument('-L',type=float,help='habitat width',default=50)
-    parser.add_argument('--max_allele_count',type=int,help='max allele count to track',default=1000)
-    parser.add_argument('--sfs_out',type=str,help='output file name for sfs',default='sfs.csv')
-    parser.add_argument('--loc_out',type=str,help='output file name for locations',default='loc.csv')
-    parser.add_argument('--seed',type=int,help='random string',default=2024)
-    parser.add_argument('--gaussian',action='store_true',help='implement Gaussian sampling kernel',default=False)
-    parser.add_argument('-w',type=float,help='width for sampling kernel',default=1)
+    parser.add_argument("-n", type=int, help="sample size", default=1e3)
+    parser.add_argument("-s", type=float, help="selection coefficient", default=1e-2)
+    parser.add_argument("--mu", type=float, help="mutation rate", default=1e-4)
+    parser.add_argument("--dens", type=float, help="population density", default=2)
+    parser.add_argument("-r", type=float, help="sampling rate", default=0.1)
+    parser.add_argument(
+        "--sigma", type=float, help="diffusion coefficient", default=0.2
+    )
+    parser.add_argument(
+        "--num_iter", type=int, help="number of iterations", default=1000
+    )
+    parser.add_argument(
+        "--max_ind", type=int, help="max number of individuals", default=1000
+    )
+    parser.add_argument("-L", type=float, help="habitat width", default=50)
+    parser.add_argument(
+        "--max_allele_count", type=int, help="max allele count to track", default=1000
+    )
+    parser.add_argument(
+        "--sfs_out", type=str, help="output file name for sfs", default="sfs.csv"
+    )
+    parser.add_argument(
+        "--loc_out", type=str, help="output file name for locations", default="loc.csv"
+    )
+    parser.add_argument("--seed", type=int, help="random string", default=2024)
+    parser.add_argument(
+        "--gaussian",
+        action="store_true",
+        help="implement Gaussian sampling kernel",
+        default=False,
+    )
+    parser.add_argument("-w", type=float, help="width for sampling kernel", default=1)
     args = parser.parse_args()
 
     # set seed
     np.random.seed(args.seed)
 
     # run simulation
-    counts, df = run_sim_spatial(n=args.n, s=args.s, mu=args.mu, rho=args.dens, r=args.r, sigma=args.sigma, num_iter=args.num_iter,
-                                 max_ind=args.max_ind, L=args.L, max_allele_count=args.max_allele_count,gaussian=args.gaussian,w=args.w)
+    counts, df = run_sim_spatial(
+        n=args.n,
+        s=args.s,
+        mu=args.mu,
+        rho=args.dens,
+        r=args.r,
+        sigma=args.sigma,
+        num_iter=args.num_iter,
+        max_ind=args.max_ind,
+        L=args.L,
+        max_allele_count=args.max_allele_count,
+        gaussian=args.gaussian,
+        w=args.w,
+    )
 
     # save output as CSV
     np.savetxt(args.sfs_out, counts, delimiter=",")
