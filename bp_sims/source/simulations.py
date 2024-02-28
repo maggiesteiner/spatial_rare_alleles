@@ -137,7 +137,7 @@ def sample_sfs(
     else:
         p = k / N
     sfs_temp[:-1] += binom.pmf(j, n, p)  # pmf, entries 0 through max_allele_count-1
-    sfs_temp[-1] += binom.sf(max_allele_count - 1, n, k / N)  # 1 - cdf
+    sfs_temp[-1] += binom.sf(max_allele_count - 1, n, p)  # 1 - cdf
     return sfs_temp
 
 
