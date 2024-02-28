@@ -3,6 +3,7 @@ from numpy.random import exponential, poisson
 import argparse
 from scipy.stats import binom, truncnorm # type: ignore
 from numpy.typing import NDArray
+import sys
 
 def time_to_next(k: int, s: float, theta: float, r: float) -> float:
     """Generate the waiting time to the next event."""
@@ -56,7 +57,10 @@ def sample_sfs(k: int, N: float, n: int, max_allele_count: int, gaussian=None, w
     sfs_temp = np.zeros(max_allele_count+1)
     j = np.arange(max_allele_count)
     if gaussian is True:
-        p = min(sampling_probability_gaussian(locations,w,L,rho),1)
+        sampling_prob = sampling_probability_gaussian(locations,w,L,rho)
+        if sampling_prob>1:
+            sys.stderr.write("Warning: p>1, parameters violate model assumptions")
+        p = min(sampling_prob,1)
     else:
         p = k/N
     sfs_temp[:-1] += binom.pmf(j, n, p) # pmf, entries 0 through max_allele_count-1
