@@ -90,8 +90,8 @@ def main():
 
     elif args.gaussian is True:
 
-        data = pd.read_csv("../../theory/old_files/results/spatial_integrals_dim2.csv")
-        data_pr = pd.read_csv("../../theory/old_files/results/cleaned_data_dim2_errorFalse.csv")
+        data = pd.read_csv("../theory/old_files/results/spatial_integrals_dim2.csv")
+        data_pr = pd.read_csv("../theory/old_files/results/cleaned_data_dim2_errorFalse.csv")
         data_pr = data_pr.loc[data_pr['poly_type'] == '1_1']
         w_vals = data['w'].tolist()
         res_vals = data_pr['residues']
