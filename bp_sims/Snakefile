@@ -19,10 +19,9 @@ samp_type = ["uniform","gaussian_w1","gaussian_w10","gaussian_w25"]
 
 rule all:
     input:
-        expand("plots/gaussian_w{w}/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}_gaussian_w{w}.png",
+        expand("plots/{samp_type}/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}_{samp_type}.png",
                s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,maxcount=maxcount,sigma_vals=sigma_vals,seeds=seeds,num_iter=num_iter,
-               samp_rate=samp_rate,w=[1,10])
-
+               samp_rate=samp_rate,samp_type=samp_type)
 
 rule run_sims_uniform:
     input:
@@ -55,9 +54,7 @@ rule run_sims_gaussian:
         end_time=$(date +%s)
         echo "Execution time for output file {output.sfs}: $((end_time - start_time)) seconds" >> log_times.txt
         """
-    
 
-# will want to add back in! update to add gaussian
 rule plot_sfs_unif:
     input:
         sfs="results/uniform/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_uniform.sfs",
@@ -75,5 +72,5 @@ rule plot_sfs_gaussian:
         plot="plots/gaussian_w{w}/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_gaussian_w{w}.png"
     shell:
         """
-        python source/plot_sim_sfs.py --sfs_file {input.sfs} --filename {output.plot} --plot_theory --gaussian --sigma {wildcards.sigma} -w {wildcards.w}
+        python source/plot_sim_sfs.py --sfs_file {input.sfs} --filename {output.plot} --plot_theory --gaussian -w {wildcards.w}
         """

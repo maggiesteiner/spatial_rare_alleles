@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd  # type: ignore
 from matplotlib import pyplot as plt  # type: ignore
 from scipy.special import loggamma  # type: ignore
-from scipy.interpolate import interp1d
+from scipy.interpolate import interp1d # type: ignore
 
 def finite_sfs_k_unif(k,n,s,mu,N):
     gammae = s*N
@@ -75,29 +75,32 @@ def main():
     parser.add_argument('--gaussian',action='store_true',help='gaussian sampling kernel')
     parser.add_argument('-w',type=float,help='sampling width',default=None)
     parser.add_argument('--sigma', type=float, help='diffusion param', default=None)
+    parser.add_argument('--spatial_integrals_file',type=str,default="../theory/old_files/results/spatial_integrals_dim2.csv")
+    parser.add_argument('--poles_residues_file',type=str,default="../theory/old_files/results/cleaned_data_dim2_errorFalse.csv")
     args = parser.parse_args()
 
-    pattern = r"s([\d.e-]+)_n(\d+)_mu([\de.-]+)_rho(\d+)_L(\d+)"
+    pattern = r"s([\d.e-]+)_n(\d+)_mu([\de.-]+)_rho(\d+)_L(\d+)_maxcount(\d+)_sigma(\d+)"
     match = re.search(pattern, args.sfs_file)
     s = float(match.group(1))
     n = int(match.group(2))
     mu = float(match.group(3))
     rho = int(match.group(4))
     L = int(match.group(5))
+    sigma = int(match.group(7))
 
     if args.gaussian is not True:
         plot_sim_sfs_unif(args.sfs_file,args.filename,args.plot_theory,n,s,mu,rho*L**2)
 
     elif args.gaussian is True:
 
-        data = pd.read_csv("../theory/old_files/results/spatial_integrals_dim2.csv")
-        data_pr = pd.read_csv("../theory/old_files/results/cleaned_data_dim2_errorFalse.csv")
+        data = pd.read_csv(args.spatial_integrals_file)
+        data_pr = pd.read_csv(args.poles_residues_file)
         data_pr = data_pr.loc[data_pr['poly_type'] == '1_1']
         w_vals = data['w'].tolist()
         res_vals = data_pr['residues']
         pole_vals = data_pr['poles']
 
-        plot_sim_sfs_gaussian(args.sfs_file,args.filename,args.plot_theory,n,args.w,s,w_vals,pole_vals,res_vals,mu,rho,args.sigma)
+        plot_sim_sfs_gaussian(args.sfs_file,args.filename,args.plot_theory,n,args.w,s,w_vals,pole_vals,res_vals,mu,rho,sigma)
 
 if __name__ == '__main__':
     main()
