@@ -14,7 +14,8 @@ def finite_sfs_k_unif(k,n,s,mu,N):
     return(np.e**logval)
 
 def plot_sim_sfs(input_file,output_file,plot_theory,n,s,mu,N,max_x=501):
-    df = pd.read_csv(input_file)
+    df = pd.read_csv(input_file,header=None)
+    print(df)
     fig, axs = plt.subplots(1,1,figsize=(8,8))
     axs.loglog(np.arange(0,max_x),df[0:max_x],label='simulation',marker='o')
     axs.set_ylim(1e-8,1e-1)
