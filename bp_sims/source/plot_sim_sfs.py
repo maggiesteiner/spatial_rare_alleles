@@ -1,9 +1,11 @@
-import numpy as np
-from matplotlib import pyplot as plt # type: ignore
-import pandas as pd # type: ignore
 import argparse
-from scipy.special import loggamma # type: ignore
 import re
+
+import numpy as np
+import pandas as pd  # type: ignore
+from matplotlib import pyplot as plt  # type: ignore
+from scipy.special import loggamma  # type: ignore
+
 
 def finite_sfs_k_unif(k,n,s,mu,N):
     gammae = s*N
