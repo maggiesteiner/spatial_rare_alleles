@@ -67,3 +67,13 @@ rule plot_sfs_unif:
         """
         python source/plot_sim_sfs.py --sfs_file {input.sfs} --filename {output.plot} --plot_theory
         """
+
+rule plot_sfs_gaussian:
+    input:
+        sfs="results/gaussian_w{w}/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_gaussian_w{w}.sfs"
+    output:
+        plot="plots/gaussian_w{w}/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_gaussian_w{w}.png"
+    shell:
+        """
+        python source/plot_sim_sfs.py --sfs_file {input.sfs} --filename {output.plot} --plot_theory --gaussian --sigma {wildcards.sigma} -w {wildcards.w}
+        """
