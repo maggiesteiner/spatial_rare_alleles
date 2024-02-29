@@ -1,39 +1,62 @@
-s_vals = [1e-1,1e-2,1e-3,1e-4]
-n_vals = [1000]
-mu_vals = [1e-4,1e-8]
-dens_vals = [5,10]
+s_vals = [1e-1,1e-2,1e-3]
+n_vals = [1,2,100,1000]
+mu_vals = [1e-4,1e-7,1e-8]
+dens_vals = [1,2,5]
 L_vals = [50]
 maxcount = [1000]
 seeds = [0]
 sigma_vals = [0.2]
-num_iter = [50000000,100000000] #[10000000]
-#extensions = ["sfs","loc"]
+num_iter = [10000000] #[10000000]
+extensions = ["sfs","loc"]
 samp_rate = [0.1]
+samp_type = ["uniform","gaussian_w1","gaussian_w10","gaussian_w25"]
 
 rule all:
     input:
-        expand("plots/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}.png",
+        expand("results/{samp_type}/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}_{samp_type}.{extensions}",
                s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,maxcount=maxcount,sigma_vals=sigma_vals,seeds=seeds,num_iter=num_iter,
-               samp_rate=samp_rate)
+               samp_rate=samp_rate,extensions=extensions,samp_type=samp_type)
 
-rule run_sims:
+rule run_sims_uniform:
     input:
     output:
-        sfs="results/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}.sfs",
-        loc="results/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}.loc",
+        sfs="results/uniform/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_uniform.sfs",
+        loc="results/uniform/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_uniform.loc",
     shell:
         """
-        python source/simulations.py -n {wildcards.n} -s {wildcards.s} --mu {wildcards.mu} --dens {wildcards.dens} -r {wildcards.r} \
+        mkdir -p results/uniform
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n {wildcards.n} -s {wildcards.s} --mu {wildcards.mu} --dens {wildcards.dens} -r {wildcards.r} \
             --sigma {wildcards.sigma} --num_iter {wildcards.iter} --max_allele_count {wildcards.maxcount} -L {wildcards.L} --sfs_out {output.sfs} \
             --loc_out {output.loc} --seed {wildcards.seed} 
+        end_time=$(date +%s)
+        echo "Execution time for output file {output.sfs}: $((end_time - start_time)) seconds" >> log_times.txt
         """
 
-rule plot_sfs_unif:
+rule run_sims_gaussian:
     input:
-        sfs="results/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}.sfs",
     output:
-        plot="plots/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}.png",
+        sfs="results/gaussian_w{w}/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_gaussian_w{w}.sfs",
+        loc="results/gaussian_w{w}/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_gaussian_w{w}.loc",
     shell:
         """
-        python source/plot_sim_sfs.py --sfs_file {input.sfs} --filename {output.plot} --plot_theory
+        mkdir -p results/gaussian_w{wildcards.w}
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n {wildcards.n} -s {wildcards.s} --mu {wildcards.mu} --dens {wildcards.dens} -r {wildcards.r} \
+            --sigma {wildcards.sigma} --num_iter {wildcards.iter} --max_allele_count {wildcards.maxcount} -L {wildcards.L} --sfs_out {output.sfs} \
+            --loc_out {output.loc} --seed {wildcards.seed} --gaussian -w {wildcards.w}
+        end_time=$(date +%s)
+        echo "Execution time for output file {output.sfs}: $((end_time - start_time)) seconds" >> log_times.txt
         """
+    
+
+# will want to add back in! update to add gaussian
+#rule plot_sfs_unif:
+#    input:
+#        sfs="results/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}.sfs",
+#    output:
+#        plot="plots/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}.png",
+#    shell:
+#        """
+#        python source/plot_sim_sfs.py --sfs_file {input.sfs} --filename {output.plot} --plot_theory
+#        """
