@@ -6,10 +6,11 @@ L_vals = [50]
 maxcount = [1000]
 seeds = [0]
 sigma_vals = [0.2]
-num_iter = [10000000] #[10000000]
+num_iter = [100000000] #[10000000]
 extensions = ["sfs","loc"]
 samp_rate = [0.1]
-samp_type = ["uniform","gaussian_w1","gaussian_w10","gaussian_w25"]
+#samp_type = ["uniform","gaussian_w1","gaussian_w10"]
+samp_type = ["gaussian_w1","gaussian_w5","gaussian_w10"]
 
 #rule all:
 #    input:
@@ -17,11 +18,27 @@ samp_type = ["uniform","gaussian_w1","gaussian_w10","gaussian_w25"]
 #               s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,maxcount=maxcount,sigma_vals=sigma_vals,seeds=seeds,num_iter=num_iter,
 #               samp_rate=samp_rate,extensions=extensions,samp_type=samp_type)
 
+#TARGETS=expand("plots/{samp_type}/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}_{samp_type}.png",
+#               s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,maxcount=maxcount,sigma_vals=sigma_vals,seeds=seeds,num_iter=num_iter,
+#               samp_rate=samp_rate,samp_type=samp_type)
+
+dens_vals_2 = [10,100]
+L_vals_2 = [5000]
+sigma_vals_2 = [1]
+samp_type_2 = ["gaussian_w10","gaussian_w100"]
+
+#TARGETS.append(expand("plots/{samp_type}/s{w_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}_{samp_type}.png",
+#               s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals_2,L_vals=L_vals_2,maxcount=maxcount,sigma_vals=sigma_vals_2,seeds=seeds,num_iter=num_iter,
+#               samp_rate=samp_rate,samp_type=samp_type_2))
+
 rule all:
     input:
         expand("plots/{samp_type}/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}_{samp_type}.png",
                s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,maxcount=maxcount,sigma_vals=sigma_vals,seeds=seeds,num_iter=num_iter,
-               samp_rate=samp_rate,samp_type=samp_type)
+               samp_rate=samp_rate,samp_type=samp_type),
+        expand("plots/{samp_type}/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}_{samp_type}.png",
+               s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals_2,L_vals=L_vals_2,maxcount=maxcount,sigma_vals=sigma_vals_2,seeds=seeds,num_iter=num_iter,
+               samp_rate=samp_rate,samp_type=samp_type_2)
 
 rule run_sims_uniform:
     input:
