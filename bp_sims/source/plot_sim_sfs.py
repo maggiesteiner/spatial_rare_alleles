@@ -40,6 +40,12 @@ def residues(w,w_vals, res_vals):
 
 def get_gammae(w,s,w_vals,pole_vals,N=10000,sigma=1,d=1):
     l_c=np.sqrt(sigma/s)
+    #print(s)
+    #print(N)
+    #print(l_c)
+    #print(sigma)
+    #print(s)
+    #print(w)
     return(s*N*(l_c**d)*poles(w/l_c,w_vals,pole_vals))
 
 def get_thetae(w,s,w_vals,res_vals,mu=1e-8,N=10000,sigma=1,d=1):
@@ -74,19 +80,19 @@ def main():
     parser.add_argument('--plot_theory',action='store_true',help='plot theory SFS on top of sim')
     parser.add_argument('--gaussian',action='store_true',help='gaussian sampling kernel')
     parser.add_argument('-w',type=float,help='sampling width',default=None)
-    parser.add_argument('--sigma', type=float, help='diffusion param', default=None)
     parser.add_argument('--spatial_integrals_file',type=str,default="../theory/old_files/results/spatial_integrals_dim2.csv")
     parser.add_argument('--poles_residues_file',type=str,default="../theory/old_files/results/cleaned_data_dim2_errorFalse.csv")
+    parser.add_argument('--sigma',type=float,default=1.0)
     args = parser.parse_args()
 
-    pattern = r"s([\d.e-]+)_n(\d+)_mu([\de.-]+)_rho(\d+)_L(\d+)_maxcount(\d+)_sigma(\d+)"
+    pattern = r"s([\d.e-]+)_n(\d+)_mu([\de.-]+)_rho(\d+)_L(\d+)"
     match = re.search(pattern, args.sfs_file)
     s = float(match.group(1))
     n = int(match.group(2))
     mu = float(match.group(3))
     rho = int(match.group(4))
     L = int(match.group(5))
-    sigma = int(match.group(7))
+    #sigma = int(match.group(7))
 
     if args.gaussian is not True:
         plot_sim_sfs_unif(args.sfs_file,args.filename,args.plot_theory,n,s,mu,rho*L**2)
@@ -100,7 +106,7 @@ def main():
         res_vals = data_pr['residues']
         pole_vals = data_pr['poles']
 
-        plot_sim_sfs_gaussian(args.sfs_file,args.filename,args.plot_theory,n,args.w,s,w_vals,pole_vals,res_vals,mu,rho,sigma)
+        plot_sim_sfs_gaussian(args.sfs_file,args.filename,args.plot_theory,n,args.w,s,w_vals,pole_vals,res_vals,mu,rho,args.sigma)
 
 if __name__ == '__main__':
     main()
