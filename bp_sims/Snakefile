@@ -18,18 +18,10 @@ samp_type = ["gaussian_w1","gaussian_w5","gaussian_w10"]
 #               s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,maxcount=maxcount,sigma_vals=sigma_vals,seeds=seeds,num_iter=num_iter,
 #               samp_rate=samp_rate,extensions=extensions,samp_type=samp_type)
 
-#TARGETS=expand("plots/{samp_type}/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}_{samp_type}.png",
-#               s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,maxcount=maxcount,sigma_vals=sigma_vals,seeds=seeds,num_iter=num_iter,
-#               samp_rate=samp_rate,samp_type=samp_type)
-
 dens_vals_2 = [10,100]
 L_vals_2 = [5000]
 sigma_vals_2 = [1]
 samp_type_2 = ["gaussian_w10","gaussian_w100"]
-
-#TARGETS.append(expand("plots/{samp_type}/s{w_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}_{samp_type}.png",
-#               s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals_2,L_vals=L_vals_2,maxcount=maxcount,sigma_vals=sigma_vals_2,seeds=seeds,num_iter=num_iter,
-#               samp_rate=samp_rate,samp_type=samp_type_2))
 
 rule all:
     input:
@@ -89,5 +81,5 @@ rule plot_sfs_gaussian:
         plot="plots/gaussian_w{w}/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_gaussian_w{w}.png"
     shell:
         """
-        python source/plot_sim_sfs.py --sfs_file {input.sfs} --filename {output.plot} --plot_theory --gaussian -w {wildcards.w}
+        python source/plot_sim_sfs.py --sfs_file {input.sfs} --filename {output.plot} --plot_theory --gaussian -w {wildcards.w} --sigma {wildcards.sigma}
         """

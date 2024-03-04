@@ -771,3 +771,12 @@ Execution time for output file results/gaussian_w1/s0.001_n1_mu1e-08_rho5_L50_ma
 Execution time for output file results/gaussian_w10/s0.001_n100_mu1e-08_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w10.sfs: 26257 seconds
 Execution time for output file results/gaussian_w1/s0.001_n100_mu0.0001_rho1_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.sfs: 32554 seconds
 Execution time for output file results/gaussian_w5/s0.001_n1000_mu0.0001_rho1_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w5.sfs: 32803 seconds
+Execution time for output file results/gaussian_w10/s0.1_n1_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: 48424 seconds
+Execution time for output file results/gaussian_w10/s0.001_n1_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: 54616 seconds
+Execution time for output file results/gaussian_w10/s0.01_n1_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: 54737 seconds
+Execution time for output file results/gaussian_w100/s0.01_n1000_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs: 54830 seconds
+Execution time for output file results/gaussian_w100/s0.01_n1000_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs: 55052 seconds
+Execution time for output file results/gaussian_w100/s0.01_n100_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs: 55172 seconds
+Execution time for output file results/gaussian_w100/s0.01_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs: 55773 seconds
+Execution time for output file results/gaussian_w100/s0.01_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs: 56243 seconds
+Execution time for output file results/gaussian_w10/s0.01_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: 57458 seconds
