@@ -138,7 +138,7 @@ def sample_sfs(
         p = k / N
     sfs_temp[:-1] += binom.pmf(j, n, p)  # pmf, entries 0 through max_allele_count-1
     sfs_temp[-1] += binom.sf(max_allele_count - 1, n, p)  # 1 - cdf
-    return sfs_temp
+    return sfs_temp, p
 
 
 def run_sim_spatial(
@@ -189,12 +189,14 @@ def run_sim_spatial(
 
     # initialize current time at 0
     for _ in range(num_iter):
+        sampled_p_list = []
         alive_rows = get_alive(locations)
         k = len(alive_rows)  # number of alive particles
         # draw time to next event
         t_next = time_to_next(k, s, theta, r)
         if k == 0:
             t_zero += t_next
+            sampled_p_list.append(np.nan)
         # draw event type
         event = choose_event(k, s, theta, r)
 
@@ -219,9 +221,11 @@ def run_sim_spatial(
             locations[next_row] = locations[parent_index]
 
         elif event is Event.SAMPLE:
-            running_sfs += sample_sfs(
+            samp, p = sample_sfs(
                 k, N, n, max_allele_count, gaussian, w, locations, L, rho
             )
+            running_sfs += samp
+            sampled_p_list.append(p)
 
     # Simulate the zero count SFS bin
     running_sfs[0] += generate_zeros(t_zero, r)
@@ -229,7 +233,7 @@ def run_sim_spatial(
     # Normalize expected SFS to one
     expected_sfs = running_sfs / np.sum(running_sfs)
 
-    return expected_sfs, locations
+    return expected_sfs, locations, sampled_p_list
 
 
 def main():

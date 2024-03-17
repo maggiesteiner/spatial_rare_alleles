@@ -45,7 +45,7 @@ class TestEvents(unittest.TestCase):
             N = 100
             n = 10
             max_allele_count = 10
-            sample_temp = sample_sfs(k, N, n, max_allele_count)
+            sample_temp = sample_sfs(k, N, n, max_allele_count)[0]
             self.assertAlmostEqual(np.sum(sample_temp), 1, delta=1e-8)
             self.assertEqual(len(sample_temp), max_allele_count + 1)
 
@@ -67,7 +67,7 @@ class TestEvents(unittest.TestCase):
                 w=w,
                 rho=rho,
                 gaussian=True,
-            )
+            )[0]
             self.assertAlmostEqual(np.sum(sample_temp_gaussian), 1, delta=1e-8)
             self.assertEqual(len(sample_temp_gaussian), max_allele_count + 1)
 
