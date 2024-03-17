@@ -187,9 +187,11 @@ def run_sim_spatial(
     # keep a running total of the time with zero carriers alive
     t_zero = 0.0
 
+    # track values of p
+    sampled_p_list = []
+   
     # initialize current time at 0
     for _ in range(num_iter):
-        sampled_p_list = []
         alive_rows = get_alive(locations)
         k = len(alive_rows)  # number of alive particles
         # draw time to next event
