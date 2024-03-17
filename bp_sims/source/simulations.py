@@ -10,7 +10,7 @@ from scipy.stats import binom, truncnorm  # type: ignore
 
 Locations: TypeAlias = NDArray[np.float64]
 SFS: TypeAlias = NDArray[np.float64]
-
+sampled_p_list: TypeAlias = List[np.float64]
 
 class Event(Enum):
     BIRTH = 0
