@@ -154,7 +154,7 @@ def run_sim_spatial(
     max_allele_count: int = 100,
     gaussian: bool = False,
     w: float = 1.0,
-) -> tuple[Locations, SFS]:
+) -> tuple[Locations, SFS, sampled_p_list]:
     """
     * Carriers appear de novo with rate `mu`*`rho`
     * Carriers give birth (split) with rate `1-s`
