@@ -10,7 +10,7 @@ from scipy.stats import binom, truncnorm  # type: ignore
 
 Locations: TypeAlias = NDArray[np.float64]
 SFS: TypeAlias = NDArray[np.float64]
-sampled_p_list: TypeAlias = list[np.float64]
+sampled_p_list: TypeAlias = list[float]
 
 class Event(Enum):
     BIRTH = 0
@@ -126,7 +126,7 @@ def sample_sfs(
     locations=None,
     L=None,
     rho=None,
-) -> NDArray[np.float64]:
+) -> Typle[NDArray[np.float64], float]:
     sfs_temp = np.zeros(max_allele_count + 1)
     j = np.arange(max_allele_count)
     if gaussian is True:
