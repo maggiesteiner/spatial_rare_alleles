@@ -126,7 +126,7 @@ def sample_sfs(
     locations=None,
     L=None,
     rho=None,
-) -> Typle[NDArray[np.float64], float]:
+) -> Tuple[NDArray[np.float64], float]:
     sfs_temp = np.zeros(max_allele_count + 1)
     j = np.arange(max_allele_count)
     if gaussian is True:
