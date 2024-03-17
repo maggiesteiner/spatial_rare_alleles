@@ -1,7 +1,7 @@
 import argparse
 import sys
 from enum import Enum
-from typing import TypeAlias
+from typing import TypeAlias, Tuple
 
 import numpy as np
 from numpy.random import exponential, poisson
