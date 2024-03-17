@@ -269,6 +269,9 @@ def main():
         help="implement Gaussian sampling kernel",
         default=False,
     )
+    parser.add_argument(
+        "--sampled_p_out", type=str, help="output file name for sampled values of p", default="sampled_p.csv"
+    )
     parser.add_argument("-w", type=float, help="width for sampling kernel", default=1)
     args = parser.parse_args()
 
@@ -276,7 +279,7 @@ def main():
     np.random.seed(args.seed)
 
     # run simulation
-    counts, df = run_sim_spatial(
+    counts, df, sampled_p = run_sim_spatial(
         n=args.n,
         s=args.s,
         mu=args.mu,
@@ -294,7 +297,7 @@ def main():
     # save output as CSV
     np.savetxt(args.sfs_out, counts, delimiter=",")
     np.savetxt(args.loc_out, df, delimiter=",")
-
+    np.savetxt(args.sampled_p_out, sampled_p, delimiter=",")
 
 if __name__ == "__main__":
     main()
