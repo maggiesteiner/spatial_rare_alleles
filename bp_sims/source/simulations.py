@@ -1,7 +1,7 @@
 import argparse
 import sys
 from enum import Enum
-from typing import TypeAlias
+from typing import TypeAlias, Tuple
 
 import numpy as np
 from numpy.random import exponential, poisson
@@ -10,7 +10,7 @@ from scipy.stats import binom, truncnorm  # type: ignore
 
 Locations: TypeAlias = NDArray[np.float64]
 SFS: TypeAlias = NDArray[np.float64]
-
+sampled_p_list: TypeAlias = list[float]
 
 class Event(Enum):
     BIRTH = 0
@@ -126,7 +126,7 @@ def sample_sfs(
     locations=None,
     L=None,
     rho=None,
-) -> NDArray[np.float64]:
+) -> Tuple[NDArray[np.float64], float]:
     sfs_temp = np.zeros(max_allele_count + 1)
     j = np.arange(max_allele_count)
     if gaussian is True:
@@ -138,7 +138,7 @@ def sample_sfs(
         p = k / N
     sfs_temp[:-1] += binom.pmf(j, n, p)  # pmf, entries 0 through max_allele_count-1
     sfs_temp[-1] += binom.sf(max_allele_count - 1, n, p)  # 1 - cdf
-    return sfs_temp
+    return sfs_temp, p
 
 
 def run_sim_spatial(
@@ -154,7 +154,7 @@ def run_sim_spatial(
     max_allele_count: int = 100,
     gaussian: bool = False,
     w: float = 1.0,
-) -> tuple[Locations, SFS]:
+) -> tuple[Locations, SFS, sampled_p_list]:
     """
     * Carriers appear de novo with rate `mu`*`rho`
     * Carriers give birth (split) with rate `1-s`
@@ -187,6 +187,9 @@ def run_sim_spatial(
     # keep a running total of the time with zero carriers alive
     t_zero = 0.0
 
+    # track values of p
+    sampled_p_list = []
+   
     # initialize current time at 0
     for _ in range(num_iter):
         alive_rows = get_alive(locations)
@@ -195,6 +198,7 @@ def run_sim_spatial(
         t_next = time_to_next(k, s, theta, r)
         if k == 0:
             t_zero += t_next
+            sampled_p_list.append(np.nan)
         # draw event type
         event = choose_event(k, s, theta, r)
 
@@ -219,9 +223,11 @@ def run_sim_spatial(
             locations[next_row] = locations[parent_index]
 
         elif event is Event.SAMPLE:
-            running_sfs += sample_sfs(
+            samp, p = sample_sfs(
                 k, N, n, max_allele_count, gaussian, w, locations, L, rho
             )
+            running_sfs += samp
+            sampled_p_list.append(p)
 
     # Simulate the zero count SFS bin
     running_sfs[0] += generate_zeros(t_zero, r)
@@ -229,7 +235,7 @@ def run_sim_spatial(
     # Normalize expected SFS to one
     expected_sfs = running_sfs / np.sum(running_sfs)
 
-    return expected_sfs, locations
+    return expected_sfs, locations, sampled_p_list
 
 
 def main():
@@ -265,6 +271,9 @@ def main():
         help="implement Gaussian sampling kernel",
         default=False,
     )
+    parser.add_argument(
+        "--sampled_p_out", type=str, help="output file name for sampled values of p", default="sampled_p.csv"
+    )
     parser.add_argument("-w", type=float, help="width for sampling kernel", default=1)
     args = parser.parse_args()
 
@@ -272,7 +281,7 @@ def main():
     np.random.seed(args.seed)
 
     # run simulation
-    counts, df = run_sim_spatial(
+    counts, df, sampled_p = run_sim_spatial(
         n=args.n,
         s=args.s,
         mu=args.mu,
@@ -290,7 +299,7 @@ def main():
     # save output as CSV
     np.savetxt(args.sfs_out, counts, delimiter=",")
     np.savetxt(args.loc_out, df, delimiter=",")
-
+    np.savetxt(args.sampled_p_out, sampled_p, delimiter=",")
 
 if __name__ == "__main__":
     main()
