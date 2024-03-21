@@ -136,6 +136,7 @@ def sample_sfs(
         p = min(sampling_prob, 1)
     else:
         p = k / N
+    p = p if p > 1e-100 else 0.0
     sfs_temp[:-1] += binom.pmf(j, n, p)  # pmf, entries 0 through max_allele_count-1
     sfs_temp[-1] += binom.sf(max_allele_count - 1, n, p)  # 1 - cdf
     return sfs_temp, p
