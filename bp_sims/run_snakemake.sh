@@ -6,8 +6,8 @@
 
 module load python
 source /software/python-anaconda-2020.02-el7-x86_64/etc/profile.d/conda.sh
-conda activate snakemake
+conda activate snakemake310
 
-snakemake --profile slurm
+snakemake --profile slurm 
    
 

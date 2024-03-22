@@ -1,6 +1,8 @@
 s_vals = [1e-1,1e-2,1e-3]
-n_vals = [1,2,100,1000,10000]
-mu_vals = [1e-6,1e-7]
+n_vals = [1,2,100,1000,10000,100000,500000]
+#mu_vals = [1e-6,1e-7,1e-9]
+mu_vals = [1e-7,1e-8,1e-9]
+#mu_vals = [1e-9]
 dens_vals = [100]
 L_vals = [1000]
 maxcount = [10000]
@@ -11,13 +13,13 @@ num_iter = [10000000]
 samp_rate = [0.1]
 samp_type_unif = ["uniform"]
 samp_type_gaus = ["gaussian_w10","gaussian_w20","gaussian_w100","gaussian_w500","gaussian_w1000","gaussian_w10000"]
-
+#samp_type_gaus = ["gaussian_w10"]
 rule all:
     input:
-        expand("plots/{samp_type}/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}_{samp_type}.png",
+        expand("results/{samp_type}/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}_{samp_type}.sfs",
                s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,maxcount=maxcount,sigma_vals=sigma_vals,seeds=seeds,num_iter=num_iter,
                samp_rate=samp_rate,samp_type=samp_type_unif),
-        expand("plots/{samp_type}/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}_{samp_type}.png",
+        expand("results/{samp_type}/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}_{samp_type}.sfs",
                s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,maxcount=maxcount,sigma_vals=sigma_vals,seeds=seeds,num_iter=num_iter,
                samp_rate=samp_rate,samp_type=samp_type_gaus)
 
@@ -35,7 +37,7 @@ rule run_sims_uniform:
             --sigma {wildcards.sigma} --num_iter {wildcards.iter} --max_allele_count {wildcards.maxcount} -L {wildcards.L} --sfs_out {output.sfs} \
             --loc_out {output.loc} --sampled_p_out {output.samp_p} --seed {wildcards.seed} 
         end_time=$(date +%s)
-        echo "Execution time for output file {output.sfs}: $((end_time - start_time)) seconds" >> log_times_20240317.txt
+        echo "Execution time for output file {output.sfs}: $((end_time - start_time)) seconds" >> log_times_20240320.txt
         """
 
 rule run_sims_gaussian:
@@ -52,7 +54,7 @@ rule run_sims_gaussian:
             --sigma {wildcards.sigma} --num_iter {wildcards.iter} --max_allele_count {wildcards.maxcount} -L {wildcards.L} --sfs_out {output.sfs} \
             --loc_out {output.loc} --sampled_p_out {output.samp_p} --seed {wildcards.seed} --gaussian -w {wildcards.w}
         end_time=$(date +%s)
-        echo "Execution time for output file {output.sfs}: $((end_time - start_time)) seconds" >> log_times.txt
+        echo "Execution time for output file {output.sfs}: $((end_time - start_time)) seconds" >> log_times_20240320.txt
         """
 
 rule plot_sfs_unif:
