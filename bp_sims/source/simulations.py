@@ -119,16 +119,16 @@ def sampling_probability_gaussian(
 def sample_sfs(
     k: int,
     N: float,
-    n: int,
-    max_allele_count: int,
+    #n: int,
+    #max_allele_count: int,
     gaussian=None,
     w=None,
     locations=None,
     L=None,
     rho=None,
 ) -> Tuple[NDArray[np.float64], float]:
-    sfs_temp = np.zeros(max_allele_count + 1)
-    j = np.arange(max_allele_count)
+    #sfs_temp = np.zeros(max_allele_count + 1)
+    #j = np.arange(max_allele_count)
     if gaussian is True:
         sampling_prob = sampling_probability_gaussian(locations, w, L, rho)
         if sampling_prob > 1:
@@ -137,13 +137,13 @@ def sample_sfs(
     else:
         p = k / N
     p = p if p > 1e-100 else 0.0
-    sfs_temp[:-1] += binom.pmf(j, n, p)  # pmf, entries 0 through max_allele_count-1
-    sfs_temp[-1] += binom.sf(max_allele_count - 1, n, p)  # 1 - cdf
-    return sfs_temp, p
+    #sfs_temp[:-1] += binom.pmf(j, n, p)  # pmf, entries 0 through max_allele_count-1
+    #sfs_temp[-1] += binom.sf(max_allele_count - 1, n, p)  # 1 - cdf
+    return p
 
 
 def run_sim_spatial(
-    n,
+    #n,
     s: float,
     mu: float,
     rho: float,
@@ -152,10 +152,10 @@ def run_sim_spatial(
     num_iter: int,
     max_ind: int,
     L: float = 50,
-    max_allele_count: int = 100,
+    #max_allele_count: int = 100,
     gaussian: bool = False,
     w: float = 1.0,
-) -> tuple[Locations, SFS, sampled_p_list]:
+) -> tuple[sampled_p_list,zero_samples]:
     """
     * Carriers appear de novo with rate `mu`*`rho`
     * Carriers give birth (split) with rate `1-s`
@@ -199,7 +199,6 @@ def run_sim_spatial(
         t_next = time_to_next(k, s, theta, r)
         if k == 0:
             t_zero += t_next
-            sampled_p_list.append(np.nan)
         # draw event type
         event = choose_event(k, s, theta, r)
 
@@ -224,24 +223,25 @@ def run_sim_spatial(
             locations[next_row] = locations[parent_index]
 
         elif event is Event.SAMPLE:
-            samp, p = sample_sfs(
-                k, N, n, max_allele_count, gaussian, w, locations, L, rho
+            p = sample_sfs(
+                k, N, gaussian, w, locations, L, rho
             )
-            running_sfs += samp
+            #running_sfs += samp
             sampled_p_list.append(p)
 
     # Simulate the zero count SFS bin
-    running_sfs[0] += generate_zeros(t_zero, r)
+    zero_samples = generate_zeros(t_zero, r)
 
     # Normalize expected SFS to one
-    expected_sfs = running_sfs / np.sum(running_sfs)
+    #expected_sfs = running_sfs / np.sum(running_sfs)
 
-    return expected_sfs, locations, sampled_p_list
+    return sampled_p_list, zero_samples
+
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-n", type=int, help="sample size", default=1e3)
+    # parser.add_argument("-n", type=int, help="sample size", default=1e3)
     parser.add_argument("-s", type=float, help="selection coefficient", default=1e-2)
     parser.add_argument("--mu", type=float, help="mutation rate", default=1e-4)
     parser.add_argument("--dens", type=float, help="population density", default=2)
@@ -256,15 +256,15 @@ def main():
         "--max_ind", type=int, help="max number of individuals", default=1000
     )
     parser.add_argument("-L", type=float, help="habitat width", default=50)
-    parser.add_argument(
-        "--max_allele_count", type=int, help="max allele count to track", default=1000
-    )
-    parser.add_argument(
-        "--sfs_out", type=str, help="output file name for sfs", default="sfs.csv"
-    )
-    parser.add_argument(
-        "--loc_out", type=str, help="output file name for locations", default="loc.csv"
-    )
+    # parser.add_argument(
+    #     "--max_allele_count", type=int, help="max allele count to track", default=1000
+    # )
+    # parser.add_argument(
+    #     "--sfs_out", type=str, help="output file name for sfs", default="sfs.csv"
+    # )
+    # parser.add_argument(
+    #     "--loc_out", type=str, help="output file name for locations", default="loc.csv"
+    # )
     parser.add_argument("--seed", type=int, help="random string", default=2024)
     parser.add_argument(
         "--gaussian",
@@ -275,6 +275,9 @@ def main():
     parser.add_argument(
         "--sampled_p_out", type=str, help="output file name for sampled values of p", default="sampled_p.csv"
     )
+    parser.add_argument(
+        "--zero_out", type=str, help="output file name for number of zeros", default="zeros.csv"
+    )
     parser.add_argument("-w", type=float, help="width for sampling kernel", default=1)
     args = parser.parse_args()
 
@@ -282,8 +285,8 @@ def main():
     np.random.seed(args.seed)
 
     # run simulation
-    counts, df, sampled_p = run_sim_spatial(
-        n=args.n,
+    sampled_p, zero_samp = run_sim_spatial(
+        # n=args.n,
         s=args.s,
         mu=args.mu,
         rho=args.dens,
@@ -292,15 +295,16 @@ def main():
         num_iter=args.num_iter,
         max_ind=args.max_ind,
         L=args.L,
-        max_allele_count=args.max_allele_count,
+        # max_allele_count=args.max_allele_count,
         gaussian=args.gaussian,
         w=args.w,
     )
 
     # save output as CSV
-    np.savetxt(args.sfs_out, counts, delimiter=",")
-    np.savetxt(args.loc_out, df, delimiter=",")
+    # np.savetxt(args.sfs_out, counts, delimiter=",")
+    # np.savetxt(args.loc_out, df, delimiter=",")
     np.savetxt(args.sampled_p_out, sampled_p, delimiter=",")
+    np.savetxt(args.zero_out, zero_samp, delimiter=",")
 
 if __name__ == "__main__":
     main()
