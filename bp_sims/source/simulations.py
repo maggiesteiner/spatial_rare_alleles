@@ -304,7 +304,7 @@ def main():
     # np.savetxt(args.sfs_out, counts, delimiter=",")
     # np.savetxt(args.loc_out, df, delimiter=",")
     np.savetxt(args.sampled_p_out, sampled_p, delimiter=",")
-    np.savetxt(args.zero_out, zero_samp, delimiter=",")
+    np.savetxt(args.zero_out, np.array(zero_samp), delimiter=",")
 
 if __name__ == "__main__":
     main()
