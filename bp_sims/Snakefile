@@ -1,60 +1,78 @@
+from hashlib import blake2b
 s_vals = [1e-1,1e-2,1e-3]
-n_vals = [1,2,100,1000,10000,100000,500000]
+n_vals = [1,2,100,1000,10000,100000]#,500000]
 #mu_vals = [1e-6,1e-7,1e-9]
-mu_vals = [1e-7,1e-8,1e-9]
-#mu_vals = [1e-9]
+#mu_vals = [1e-7,1e-8,1e-9]
+mu_vals = [1e-9]
 dens_vals = [100]
-L_vals = [1000]
+L_vals = [10000]
 maxcount = [10000]
-seeds = [0]
+#seeds = [0]
 sigma_vals = [10]
-num_iter = [10000000]
+num_iter = [100000000]
 #extensions = ["sfs","loc"]
 samp_rate = [0.1]
 samp_type_unif = ["uniform"]
-samp_type_gaus = ["gaussian_w10","gaussian_w20","gaussian_w100","gaussian_w500","gaussian_w1000","gaussian_w10000"]
+#samp_type_gaus = ["gaussian_w10","gaussian_w20","gaussian_w100","gaussian_w500","gaussian_w1000","gaussian_w10000"]
+samp_type_gaus = ["gaussian_w10","gaussian_w1000","gaussian_w10000","gaussian_w100000"]
+
 #samp_type_gaus = ["gaussian_w10"]
+
+def wildcards2seed(w,s,n,mu,dens,L,maxcount,sigma,iter,r) -> int:
+    if w is not None:
+    	filename = "results/100M_iter/gaussian_w"+str(w)+"/s"+str(s)+"_n"+str(n)+"_mu"+str(mu)+"_rho"+str(dens)+"_L"+str(L)+"_maxcount"+str(maxcount)+"_sigma"+str(sigma)+"_iter"+str(iter)+"_r"+str(r)+"_gaussian_w"+str(w)+".sfs"
+    else:
+        filename = "results/100M_iter/uniform/s"+str(s)+"_n"+str(n)+"_mu"+str(mu)+"_rho"+str(dens)+"_L"+str(L)+"_maxcount"+str(maxcount)+"_sigma"+str(sigma)+"_iter"+str(iter)+"_r"+str(r)+"_uniform.sfs"
+    h = blake2b(filename.encode(),digest_size=4)
+    return int.from_bytes(h.digest(),"big")
+
 rule all:
     input:
-        expand("results/{samp_type}/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}_{samp_type}.sfs",
-               s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,maxcount=maxcount,sigma_vals=sigma_vals,seeds=seeds,num_iter=num_iter,
+        expand("results/100M_iter/{samp_type}/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_iter{num_iter}_r{samp_rate}_{samp_type}.sfs",
+               s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,maxcount=maxcount,sigma_vals=sigma_vals,num_iter=num_iter,
                samp_rate=samp_rate,samp_type=samp_type_unif),
-        expand("results/{samp_type}/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}_{samp_type}.sfs",
-               s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,maxcount=maxcount,sigma_vals=sigma_vals,seeds=seeds,num_iter=num_iter,
+        expand("results/100M_iter/{samp_type}/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_iter{num_iter}_r{samp_rate}_{samp_type}.sfs",
+               s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,maxcount=maxcount,sigma_vals=sigma_vals,num_iter=num_iter,
                samp_rate=samp_rate,samp_type=samp_type_gaus)
 
 rule run_sims_uniform:
     input:
     output:
-        sfs="results/uniform/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_uniform.sfs",
-        loc="results/uniform/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_uniform.loc",
-        samp_p="results/uniform/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_uniform.samp",
+        sfs="results/100M_iter/uniform/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_iter{iter}_r{r}_uniform.sfs",
+        loc="results/100M_iter/uniform/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_iter{iter}_r{r}_uniform.loc",
+        samp_p="results/100M_iter/uniform/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_iter{iter}_r{r}_uniform.samp",
+    params:
+        seed=lambda wildcards: wildcards2seed(None,wildcards.s,wildcards.n,wildcards.mu,wildcards.dens,wildcards.L,wildcards.maxcount,wildcards.sigma,wildcards.iter,wildcards.r)        
     shell:
         """
-        mkdir -p results/uniform
+        mkdir -p results/100M_iter/uniform
         start_time=$(date +%s)
+        echo "Seed for output file {output.sfs}: {params.seed}" >> seeds_20240326.txt
         ~/.conda/envs/snakemake310/bin/python source/simulations.py -n {wildcards.n} -s {wildcards.s} --mu {wildcards.mu} --dens {wildcards.dens} -r {wildcards.r} \
             --sigma {wildcards.sigma} --num_iter {wildcards.iter} --max_allele_count {wildcards.maxcount} -L {wildcards.L} --sfs_out {output.sfs} \
-            --loc_out {output.loc} --sampled_p_out {output.samp_p} --seed {wildcards.seed} 
+            --loc_out {output.loc} --sampled_p_out {output.samp_p} --seed {params.seed} 
         end_time=$(date +%s)
-        echo "Execution time for output file {output.sfs}: $((end_time - start_time)) seconds" >> log_times_20240320.txt
+        echo "Execution time for output file {output.sfs}: $((end_time - start_time)) seconds" >> log_times_20240326.txt
         """
 
 rule run_sims_gaussian:
     input:
     output:
-        sfs="results/gaussian_w{w}/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_gaussian_w{w}.sfs",
-        loc="results/gaussian_w{w}/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_gaussian_w{w}.loc",
-        samp_p="results/gaussian_w{w}/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_gaussian_w{w}.samp",
+        sfs="results/100M_iter/gaussian_w{w}/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_iter{iter}_r{r}_gaussian_w{w}.sfs",
+        loc="results/100M_iter/gaussian_w{w}/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_iter{iter}_r{r}_gaussian_w{w}.loc",
+        samp_p="results/100M_iter/gaussian_w{w}/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_iter{iter}_r{r}_gaussian_w{w}.samp",
+    params:
+       	seed=lambda wildcards: wildcards2seed(wildcards.w,wildcards.s,wildcards.n,wildcards.mu,wildcards.dens,wildcards.L,wildcards.maxcount,wildcards.sigma,wildcards.iter,wildcards.r)
     shell:
         """
-        mkdir -p results/gaussian_w{wildcards.w}
+        mkdir -p results/100M_iter/gaussian_w{wildcards.w}
         start_time=$(date +%s)
+        echo "Seed for output file {output.sfs}: {params.seed}" >> seeds_20240326.txt
         ~/.conda/envs/snakemake310/bin/python source/simulations.py -n {wildcards.n} -s {wildcards.s} --mu {wildcards.mu} --dens {wildcards.dens} -r {wildcards.r} \
             --sigma {wildcards.sigma} --num_iter {wildcards.iter} --max_allele_count {wildcards.maxcount} -L {wildcards.L} --sfs_out {output.sfs} \
-            --loc_out {output.loc} --sampled_p_out {output.samp_p} --seed {wildcards.seed} --gaussian -w {wildcards.w}
+            --loc_out {output.loc} --sampled_p_out {output.samp_p} --seed {params.seed} --gaussian -w {wildcards.w}
         end_time=$(date +%s)
-        echo "Execution time for output file {output.sfs}: $((end_time - start_time)) seconds" >> log_times_20240320.txt
+        echo "Execution time for output file {output.sfs}: $((end_time - start_time)) seconds" >> log_times_20240326.txt
         """
 
 rule plot_sfs_unif:
