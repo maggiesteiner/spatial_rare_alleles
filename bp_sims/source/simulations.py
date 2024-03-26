@@ -126,7 +126,7 @@ def sample_sfs(
     locations=None,
     L=None,
     rho=None,
-) -> Tuple[NDArray[np.float64], float]:
+) -> float:
     #sfs_temp = np.zeros(max_allele_count + 1)
     #j = np.arange(max_allele_count)
     if gaussian is True:
@@ -179,7 +179,7 @@ def run_sim_spatial(
     theta = mu * N
 
     # initialize array for SFS distribution
-    running_sfs = np.zeros(max_allele_count + 1)
+    # running_sfs = np.zeros(max_allele_count + 1)
 
     # keep track of individual level data
     # [x coord, y coord]
