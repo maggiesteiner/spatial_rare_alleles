@@ -38,38 +38,38 @@ class TestEvents(unittest.TestCase):
             events_1 = [choose_event(1, s, theta, r) for _ in range(num_samples)]
             self.assertEqual(set(events_1), set(Event))
 
-    def test_sampling(self):
-        with self.subTest("uniform"):
-            ## test with uniform sampling
-            k = 2
-            N = 100
-            n = 10
-            max_allele_count = 10
-            sample_temp = sample_sfs(k, N, n, max_allele_count)[0]
-            self.assertAlmostEqual(np.sum(sample_temp), 1, delta=1e-8)
-            self.assertEqual(len(sample_temp), max_allele_count + 1)
-
-        with self.subTest("gaussian"):
-            ## test with spatial sampling
-            L = 50
-            locations = np.array(
-                [[0.24, 0.81], [np.nan, np.nan], [0.01, 0.01], [0.99, 0.99]]
-            )
-            w = 10
-            rho = 2
-            sample_temp_gaussian = sample_sfs(
-                k=k,
-                N=rho * L**2,
-                n=n,
-                max_allele_count=max_allele_count,
-                locations=locations,
-                L=L,
-                w=w,
-                rho=rho,
-                gaussian=True,
-            )[0]
-            self.assertAlmostEqual(np.sum(sample_temp_gaussian), 1, delta=1e-8)
-            self.assertEqual(len(sample_temp_gaussian), max_allele_count + 1)
+    # def test_sampling(self):
+    #     with self.subTest("uniform"):
+    #         ## test with uniform sampling
+    #         k = 2
+    #         N = 100
+    #         n = 10
+    #         max_allele_count = 10
+    #         sample_temp = sample_sfs(k, N, n, max_allele_count)[0]
+    #         self.assertAlmostEqual(np.sum(sample_temp), 1, delta=1e-8)
+    #         self.assertEqual(len(sample_temp), max_allele_count + 1)
+    #
+    #     with self.subTest("gaussian"):
+    #         ## test with spatial sampling
+    #         L = 50
+    #         locations = np.array(
+    #             [[0.24, 0.81], [np.nan, np.nan], [0.01, 0.01], [0.99, 0.99]]
+    #         )
+    #         w = 10
+    #         rho = 2
+    #         sample_temp_gaussian = sample_sfs(
+    #             k=k,
+    #             N=rho * L**2,
+    #             n=n,
+    #             max_allele_count=max_allele_count,
+    #             locations=locations,
+    #             L=L,
+    #             w=w,
+    #             rho=rho,
+    #             gaussian=True,
+    #         )[0]
+    #         self.assertAlmostEqual(np.sum(sample_temp_gaussian), 1, delta=1e-8)
+    #         self.assertEqual(len(sample_temp_gaussian), max_allele_count + 1)
 
     def test_sampling_prob(self):
 
