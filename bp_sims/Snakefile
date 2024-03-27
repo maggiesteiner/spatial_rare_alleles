@@ -14,12 +14,9 @@ samp_type_unif = ["uniform"]
 samp_type_gaus = ["gaussian_w10","gaussian_w100","gaussian_w1000","gaussian_w10000","gaussian_w100000"]
 
 
-def wildcards2seed(w,s,mu,dens,L,sigma,iter,r,rep) -> int:
-    if w is not None:
-    	filename = "s"+str(s)+"_mu"+str(mu)+"_rho"+str(dens)+"_L"+str(L)+"_sigma"+str(sigma)+"_iter"+str(iter)+"_r"+str(r)+"_gaussian_w"+str(w)+"_rep"+str(rep)+".p"
-    else:
-        filename = "s"+str(s)+"_mu"+str(mu)+"_rho"+str(dens)+"_L"+str(L)+"_sigma"+str(sigma)+"_iter"+str(iter)+"_r"+str(r)+"_uniform_rep"+str(rep)+".p"
-    h = blake2b(filename.encode(),digest_size=4)
+def wildcards2seed(wildcards) -> int:
+    wildcard_str = str(dict(wildcards.items()))
+    h = blake2b(wildcard_str.encode(),digest_size=4)
     return int.from_bytes(h.digest(),"big")
 
 rule all:
@@ -37,7 +34,7 @@ rule run_sims_uniform:
         p="results/uniform/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_iter{iter}_r{r}_uniform_rep{rep}.p",
         zero="results/uniform/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_iter{iter}_r{r}_uniform_rep{rep}.zero",
     params:
-        seed=lambda wildcards: wildcards2seed(None,wildcards.s,wildcards.mu,wildcards.dens,wildcards.L,wildcards.sigma,wildcards.iter,wildcards.r,wildcards.rep)
+        seed=wildcards2seed
     shell:
         """
         mkdir -p results/100M_iter/uniform
@@ -56,7 +53,7 @@ rule run_sims_gaussian:
         p="results/gaussian_w{w}/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_iter{iter}_r{r}_gaussian_w{w}_rep{rep}.p",
         zero="results/gaussian_w{w}/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_iter{iter}_r{r}_gaussian_w{w}_rep{rep}.zero",
     params:
-       	seed=lambda wildcards: wildcards2seed(wildcards.w,wildcards.s,wildcards.mu,wildcards.dens,wildcards.L,wildcards.sigma,wildcards.iter,wildcards.r,wildcards.rep)
+       	seed=wildcards2seed
     shell:
         """
         mkdir -p results/100M_iter/gaussian_w{wildcards.w}
