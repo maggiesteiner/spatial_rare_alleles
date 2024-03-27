@@ -15,7 +15,7 @@ samp_type_gaus = ["gaussian_w10","gaussian_w100","gaussian_w1000","gaussian_w100
 
 
 def wildcards2seed(wildcards) -> int:
-    wildcard_str = str(dict(wildcards.items()))
+    wildcard_str = str(dict(wildcards))
     h = blake2b(wildcard_str.encode(),digest_size=4)
     return int.from_bytes(h.digest(),"big")
 
