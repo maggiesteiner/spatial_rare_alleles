@@ -199,7 +199,7 @@ def run_sim_spatial(
         k = len(alive_rows)  # number of alive particles
         # draw time to next event
         t_next = time_to_next(k, s, theta, r)
-        time_running += t_next
+        time_running += float(t_next)
         if k == 0:
             t_zero += t_next
         # draw event type
