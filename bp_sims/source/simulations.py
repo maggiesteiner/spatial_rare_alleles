@@ -151,7 +151,7 @@ def run_sim_spatial(
     sigma: float,
     # num_iter: int,
     max_ind: int,
-    time_limit: float=1e5,
+    time_limit: float,
     L: float = 50,
     #max_allele_count: int = 100,
     gaussian: bool = False,
@@ -256,7 +256,7 @@ def main():
     #     "--num_iter", type=int, help="number of iterations", default=1000
     # )
     parser.add_argument(
-        "--time_limit", type=float, help="time limit", default=1e5
+        "--time_limit", type=float, help="time limit", default=1e3
     )
     parser.add_argument(
         "--max_ind", type=int, help="max number of individuals", default=1000
