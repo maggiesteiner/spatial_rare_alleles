@@ -149,8 +149,9 @@ def run_sim_spatial(
     rho: float,
     r: float,
     sigma: float,
-    num_iter: int,
+    # num_iter: int,
     max_ind: int,
+    time_limit: float=1e5,
     L: float = 50,
     #max_allele_count: int = 100,
     gaussian: bool = False,
@@ -190,13 +191,15 @@ def run_sim_spatial(
 
     # track values of p
     sampled_p_list = []
-   
+    time_running = 0
     # initialize current time at 0
-    for _ in range(num_iter):
+    # for _ in range(num_iter):
+    while time_running < time_limit:
         alive_rows = get_alive(locations)
         k = len(alive_rows)  # number of alive particles
         # draw time to next event
         t_next = time_to_next(k, s, theta, r)
+        time_running += t_next
         if k == 0:
             t_zero += t_next
         # draw event type
@@ -249,8 +252,11 @@ def main():
     parser.add_argument(
         "--sigma", type=float, help="diffusion coefficient", default=0.2
     )
+    # parser.add_argument(
+    #     "--num_iter", type=int, help="number of iterations", default=1000
+    # )
     parser.add_argument(
-        "--num_iter", type=int, help="number of iterations", default=1000
+        "--time_limit", type=float, help="time limit", default=1e5
     )
     parser.add_argument(
         "--max_ind", type=int, help="max number of individuals", default=1000
