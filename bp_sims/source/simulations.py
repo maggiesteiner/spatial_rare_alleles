@@ -298,7 +298,7 @@ def main():
         rho=args.dens,
         r=args.r,
         sigma=args.sigma,
-        num_iter=args.num_iter,
+        time_limit=args.time_limit,
         max_ind=args.max_ind,
         L=args.L,
         # max_allele_count=args.max_allele_count,
