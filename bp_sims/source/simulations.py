@@ -191,7 +191,7 @@ def run_sim_spatial(
 
     # track values of p
     sampled_p_list = []
-    time_running = 0
+    time_running = 0.0
     # initialize current time at 0
     # for _ in range(num_iter):
     while time_running < time_limit:
@@ -199,7 +199,7 @@ def run_sim_spatial(
         k = len(alive_rows)  # number of alive particles
         # draw time to next event
         t_next = time_to_next(k, s, theta, r)
-        time_running += float(t_next)
+        time_running += t_next
         if k == 0:
             t_zero += t_next
         # draw event type
