@@ -197,9 +197,13 @@ def run_sim_spatial(
     while time_running < time_limit:
         alive_rows = get_alive(locations)
         k = len(alive_rows)  # number of alive particles
-        # draw time to next event
+        # draw time to next event & update time_running
         t_next = time_to_next(k, s, theta, r)
         time_running += t_next
+        # if next time step exceeds limit, break
+        if time_running > time_limit:
+            break
+        # if no lineages, add t_next to t_zero
         if k == 0:
             t_zero += t_next
         # draw event type
