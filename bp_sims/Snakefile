@@ -1,0 +1,79 @@
+from hashlib import blake2b
+import numpy as np
+
+s_vals = [1e-1,1e-2,1e-3]
+mu_vals = [1e-8,1e-9]
+dens_vals = [1]
+L_vals = [10000]
+sigma_vals = [10]
+time_limit = [5e4]
+replicates = np.arange(10)
+samp_rate = [0.1]
+samp_type_unif = ["uniform"]
+#samp_type_gaus = ["gaussian_w10","gaussian_w100","gaussian_w1000","gaussian_w10000","gaussian_w100000"]
+samp_type_gaus = ["gaussian_w10","gaussian_w100"]
+
+def wildcards2seed(wildcards) -> int:
+    wildcard_str = str(dict(wildcards))
+    h = blake2b(wildcard_str.encode(),digest_size=4)
+    return int.from_bytes(h.digest(),"big")
+
+rule all:
+    input:
+        expand("results/{samp_type}/s{s_vals}_mu{mu_vals}/s{s_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_sigma{sigma_vals}_time{time_limit}_r{samp_rate}_{samp_type}_all.p",
+               s_vals=s_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,sigma_vals=sigma_vals,time_limit=time_limit,
+               samp_rate=samp_rate,samp_type=samp_type_unif),
+        expand("results/{samp_type}/s{s_vals}_mu{mu_vals}/s{s_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_sigma{sigma_vals}_time{time_limit}_r{samp_rate}_{samp_type}_all.p",
+               s_vals=s_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,sigma_vals=sigma_vals,time_limit=time_limit,
+               samp_rate=samp_rate,samp_type=samp_type_gaus)
+
+rule add_sims:
+    input:
+        zeros = expand("{{prefix}}_rep{rep}.zero", rep=replicates, allow_missing=True),
+        ps = expand("{{prefix}}_rep{rep}.p", rep=replicates, allow_missing=True),
+    output:
+        zero = "{prefix}_all.zero",
+        p = "{prefix}_all.p",
+    shell:
+        """
+        cat {input.ps} > {output.p}
+        awk '{{sum+=$1}} END {{print sum}}' {input.zeros} > {output.zero}
+        """
+
+rule run_sims_uniform:
+    input:
+    output:
+        p="results/uniform/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_time{time}_r{r}_uniform_rep{rep}.p",
+        zero="results/uniform/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_time{time}_r{r}_uniform_rep{rep}.zero",
+    params:
+        seed=wildcards2seed
+    shell:
+        """
+        mkdir -p results/uniform/s{wildcards.s}_mu{wildcards.mu}
+        start_time=$(date +%s)
+        echo "Seed for output file {output.p}: {params.seed}" >> seeds_20240328.txt
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -s {wildcards.s} --mu {wildcards.mu} --dens {wildcards.dens} -r {wildcards.r} \
+            --sigma {wildcards.sigma} --time_limit {wildcards.time} -L {wildcards.L} \
+            --sampled_p_out {output.p} --seed {params.seed} --zero_out {output.zero}
+        end_time=$(date +%s)
+        echo "Execution time for output file {output.p}: $((end_time - start_time)) seconds" >> log_times_20240328.txt
+        """
+
+rule run_sims_gaussian:
+    input:
+    output:
+        p="results/gaussian_w{w}/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_time{time}_r{r}_gaussian_w{w}_rep{rep}.p",
+        zero="results/gaussian_w{w}/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_time{time}_r{r}_gaussian_w{w}_rep{rep}.zero",
+    params:
+       	seed=wildcards2seed
+    shell:
+        """
+        mkdir -p results/gaussian_w{wildcards.w}/s{wildcards.s}_mu{wildcards.mu}
+        start_time=$(date +%s)
+        echo "Seed for output file {output.p}: {params.seed}" >> seeds_20240328.txt
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -s {wildcards.s} --mu {wildcards.mu} --dens {wildcards.dens} -r {wildcards.r} \
+            --sigma {wildcards.sigma} --time_limit {wildcards.time} -L {wildcards.L} \
+            --sampled_p_out {output.p} --seed {params.seed} --gaussian -w {wildcards.w} --zero_out {output.zero}
+        end_time=$(date +%s)
+        echo "Execution time for output file {output.p}: $((end_time - start_time)) seconds" >> log_times_20240328.txt
+        """
