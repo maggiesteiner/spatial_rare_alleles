@@ -187,7 +187,6 @@ def run_sim_spatial(
         # draw time to next event & update time_running
         t_next = time_to_next(k, s, theta, r)
         time_running += t_next
-        print(time_running)
         # if next time step exceeds limit, break
         if time_running > time_limit:
             break
