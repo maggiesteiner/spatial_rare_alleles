@@ -116,26 +116,6 @@ def sampling_probability_gaussian(
     return np.sum(prod_dens) / rho
 
 
-def sample_sfs(
-    k: int,
-    N: float,
-    gaussian=None,
-    w=None,
-    locations=None,
-    L=None,
-    rho=None,
-) -> float:
-    if gaussian is True:
-        sampling_prob = sampling_probability_gaussian(locations, w, L, rho)
-        if sampling_prob > 1:
-            sys.stderr.write("Warning: p>1, parameters violate model assumptions")
-        p = min(sampling_prob, 1)
-    else:
-        p = k / N
-    p = p if p > 1e-100 else 0.0
-    return p
-
-
 def run_sim_spatial(
     s: float,
     mu: float,
@@ -217,9 +197,10 @@ def run_sim_spatial(
             locations[next_row] = locations[parent_index]
 
         elif event is Event.SAMPLE:
-            p = sample_sfs(
-                k, N, gaussian, w, locations, L, rho
-            )
+            if gaussian:
+                p = sampling_probability_gaussian(locations,w,L,rho)
+            else:
+                p = k/N
             sampled_p_list.append(p)
 
     # Simulate the zero count SFS bin
