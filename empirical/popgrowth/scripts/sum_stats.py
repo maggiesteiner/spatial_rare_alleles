@@ -3,10 +3,10 @@ import glob
 import numpy as np
 import re
 
-label = snakemake.params.label
+group = snakemake.params.group
 n = snakemake.params.nsamp
-aclab = "AC_"+label
-file_list = glob.glob("results/sfs_files/*merged*"+label+"*")
+aclab = "AC_"+group
+file_list = glob.glob("results/sfs_files/*merged*"+group+"*nsamp"+str(n)+'_*')#glob.glob("results/sfs_files/*merged*"+label+"*")
 segsites_list = []
 mono_list = []
 ac_mean_list = []

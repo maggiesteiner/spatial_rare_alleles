@@ -126,7 +126,7 @@ rule sum_stats:
         sum_stats_file="results/sum_stats/group{group}_nsamp{n}.tsv",
     params:
         nsamp=lambda wildcards: int(wildcards.n),
-        label=lambda wildcards: wildcards.group,
+        group=lambda wildcards: wildcards.group,
     script:
         "scripts/sum_stats.py"
 
@@ -141,6 +141,6 @@ rule sfs:
         sum_stats_file="results/sfs/group{group}_nsamp{n}.tsv",
     params:
         nsamp=lambda wildcards: int(wildcards.n),
-        label=lambda wildcards: wildcards.group,
+        group=lambda wildcards: wildcards.group,
     script:
         "scripts/sfs.py"
