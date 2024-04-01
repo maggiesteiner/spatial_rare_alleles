@@ -2,16 +2,16 @@ from hashlib import blake2b
 import numpy as np
 
 s_vals = [1e-1,1e-2,1e-3]
-mu_vals = [1e-8,1e-9]
+mu_vals = [1e-9]
 dens_vals = [1]
 L_vals = [10000]
 sigma_vals = [10]
-time_limit = [5e4]
-replicates = np.arange(10)
+time_limit = [1e5]
+replicates = np.arange(100)
 samp_rate = [0.1]
 samp_type_unif = ["uniform"]
 #samp_type_gaus = ["gaussian_w10","gaussian_w100","gaussian_w1000","gaussian_w10000","gaussian_w100000"]
-samp_type_gaus = ["gaussian_w10","gaussian_w100"]
+samp_type_gaus = ["gaussian_w10","gaussian_w100","gaussian_w1000"]
 
 def wildcards2seed(wildcards) -> int:
     wildcard_str = str(dict(wildcards))
