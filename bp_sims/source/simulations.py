@@ -159,6 +159,8 @@ def run_sim_spatial(
     # check that num_centers is a square
     if is_square(num_centers) is not True:
         raise ValueError('num_centers must be a square')
+    if num_centers < 4:
+        raise ValueError('num_centers must be at least 4')
 
     # parameter for total mutation rate
     N = rho * (L**2)

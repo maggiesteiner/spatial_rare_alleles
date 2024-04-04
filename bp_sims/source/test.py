@@ -133,7 +133,7 @@ class TestEvents(unittest.TestCase):
             locations = np.array([[1 - epsilon, 1 - epsilon]])
             p_temp = sampling_probability_gaussian(locations, 4,w, L, rho)
             p_new = sampling_probability_gaussian(locations, 4,w * 2, L, rho)
-            self.assertGreater(p_new[3], p_temp[3])
+            self.assertGreater(p_new[0], p_temp[0])
 
 
 class TestLocations(unittest.TestCase):
