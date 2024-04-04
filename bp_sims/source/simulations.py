@@ -106,7 +106,7 @@ def update_locations(
 
 def sampling_probability_gaussian(
     locations: Locations, num_centers:int, w: float, L: float, rho: float
-) -> float:
+) -> list[float]:
     locations = locations[~np.isnan(locations).any(axis=1)]
     k = int(np.sqrt(num_centers))
     coords = [i*L/(k-1) for i in range(k)]
