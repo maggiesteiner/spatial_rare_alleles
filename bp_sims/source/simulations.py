@@ -137,7 +137,7 @@ def run_sim_spatial(
     gaussian: bool = False,
     w: float = 1.0,
     num_centers: int = 1,
-) -> tuple[list[float],int]:
+) -> tuple[list[list[float]],int]:
     """
     * Carriers appear de novo with rate `mu`*`rho`
     * Carriers give birth (split) with rate `1-s`
