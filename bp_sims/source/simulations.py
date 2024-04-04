@@ -256,7 +256,7 @@ def main():
         "--zero_out", type=str, help="output file name for number of zeros", default="zeros.csv"
     )
     parser.add_argument("-w", type=float, help="width for sampling kernel", default=1)
-    parser.add_argument("--num_centers", type=int, help="number of centers (should be a square number)", default=1)
+    parser.add_argument("--num_centers", type=int, help="number of centers (should be a square number)", default=4)
     args = parser.parse_args()
 
     # set seed
