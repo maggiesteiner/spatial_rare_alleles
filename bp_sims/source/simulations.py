@@ -2,7 +2,7 @@ import argparse
 import sys
 from enum import Enum
 from typing import TypeAlias, Tuple
-
+import math
 import numpy as np
 from numpy.random import exponential, poisson
 from numpy.typing import NDArray
@@ -18,6 +18,8 @@ class Event(Enum):
     MUTATION = 2
     SAMPLE = 3
 
+def is_square(n: int) -> bool:
+    return n == math.isqrt(n)**2
 
 def event_rates(k: int, s: float, theta: float, r: float) -> dict[Event, float]:
     """Calculate the rate of each event type."""
@@ -103,18 +105,25 @@ def update_locations(
 
 
 def sampling_probability_gaussian(
-    locations: Locations, w: float, L: float, rho: float
+    locations: Locations, num_centers:int, w: float, L: float, rho: float
 ) -> float:
     locations = locations[~np.isnan(locations).any(axis=1)]
-    x1_dens = truncnorm.pdf(
-        locations[:, 0], loc=L / 2, scale=w, a=(-L / 2) / w, b=(L / 2) / w
-    )
-    x2_dens = truncnorm.pdf(
-        locations[:, 1], loc=L / 2, scale=w, a=(-L / 2) / w, b=(L / 2) / w
-    )
-    prod_dens = x1_dens * x2_dens
-    return np.sum(prod_dens) / rho
-
+    k = int(np.sqrt(num_centers))
+    coords = [i*L/(k-1) for i in range(k)]
+    centers = [(x,y) for x in coords for y in coords]
+    print(centers)
+    sampling_probs = []
+    for c in centers:
+        x1_dens = truncnorm.pdf(
+            locations[:, 0], loc=c[0], scale=w, a=(-c[0]) / w, b=(L-c[0]) / w
+        )
+        x2_dens = truncnorm.pdf(
+            locations[:, 1], loc=c[1], scale=w, a=(-c[1]) / w, b=(L-c[1]) / w
+        )
+        prod_dens = x1_dens * x2_dens
+        sampling_probs.append(np.sum(prod_dens)/rho)
+    print(sampling_probs)
+    return sampling_probs
 
 def run_sim_spatial(
     s: float,
@@ -127,6 +136,7 @@ def run_sim_spatial(
     L: float = 50,
     gaussian: bool = False,
     w: float = 1.0,
+    num_centers: int = 1,
 ) -> tuple[list[float],int]:
     """
     * Carriers appear de novo with rate `mu`*`rho`
@@ -145,6 +155,10 @@ def run_sim_spatial(
     * At each sample point update the SFS distribution (array w/ pre-specified length)
     * Output SFS distribution
     """
+
+    # check that num_centers is a square
+    if is_square(num_centers) is not True:
+        raise ValueError('num_centers must be a square')
 
     # parameter for total mutation rate
     N = rho * (L**2)
@@ -198,9 +212,9 @@ def run_sim_spatial(
 
         elif event is Event.SAMPLE:
             if gaussian:
-                p = sampling_probability_gaussian(locations,w,L,rho)
+                p = sampling_probability_gaussian(locations,num_centers,w,L,rho)
             else:
-                p = k/N
+                p = [k/N]*num_centers
             sampled_p_list.append(p)
 
     # Simulate the zero count SFS bin
@@ -240,6 +254,7 @@ def main():
         "--zero_out", type=str, help="output file name for number of zeros", default="zeros.csv"
     )
     parser.add_argument("-w", type=float, help="width for sampling kernel", default=1)
+    parser.add_argument("--num_centers", type=int, help="number of centers (should be a square number)", default=1)
     args = parser.parse_args()
 
     # set seed
@@ -257,6 +272,7 @@ def main():
         L=args.L,
         gaussian=args.gaussian,
         w=args.w,
+        num_centers=args.num_centers,
     )
 
     # save output as CSV
