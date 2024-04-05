@@ -146,6 +146,8 @@ def run_sim_spatial(
     * Output SFS distribution
     """
 
+    burnin=10/s
+
     # parameter for total mutation rate
     N = rho * (L**2)
     theta = mu * N
@@ -168,11 +170,12 @@ def run_sim_spatial(
         t_next = time_to_next(k, s, theta, r)
         time_running += t_next
         # if next time step exceeds limit, break
-        if time_running > time_limit:
+        if time_running > time_limit+burnin:
             break
         # if no lineages, add t_next to t_zero
-        if k == 0:
-            t_zero += t_next
+        if time_running > burnin:
+            if k == 0:
+                t_zero += t_next
         # draw event type
         event = choose_event(k, s, theta, r)
 
@@ -201,7 +204,8 @@ def run_sim_spatial(
                 p = sampling_probability_gaussian(locations,w,L,rho)
             else:
                 p = k/N
-            sampled_p_list.append(p)
+            if time_running>burnin:
+                sampled_p_list.append(p)
 
     # Simulate the zero count SFS bin
     zero_samples = generate_zeros(t_zero, r)
