@@ -23,9 +23,9 @@ rule all:
         expand("results/{samp_type}/s{s_vals}_mu{mu_vals}/s{s_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_sigma{sigma_vals}_time{time_limit}_r{samp_rate}_burnin_{samp_type}_all.p",
                s_vals=s_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,sigma_vals=sigma_vals,time_limit=time_limit,
                samp_rate=samp_rate,samp_type=samp_type_unif),
-        #expand("results/{samp_type}/s{s_vals}_mu{mu_vals}/s{s_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_sigma{sigma_vals}_time{time_limit}_r{samp_rate}_{samp_type}_all.p",
-        #       s_vals=s_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,sigma_vals=sigma_vals,time_limit=time_limit,
-        #       samp_rate=samp_rate,samp_type=samp_type_gaus)
+        expand("results/{samp_type}/s{s_vals}_mu{mu_vals}/s{s_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_sigma{sigma_vals}_time{time_limit}_r{samp_rate}_{samp_type}_all.p",
+               s_vals=s_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,sigma_vals=sigma_vals,time_limit=time_limit,
+               samp_rate=samp_rate,samp_type=samp_type_gaus)
 
 rule add_sims:
     input:
