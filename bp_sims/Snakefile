@@ -1,7 +1,7 @@
 from hashlib import blake2b
 import numpy as np
 
-s_vals = [1e-1,1e-2]#,1e-2,1e-3]
+s_vals = [1e-1,1e-2,1e-3]
 mu_vals = [1e-9]
 dens_vals = [1]
 L_vals = [10000]
