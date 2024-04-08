@@ -100,13 +100,15 @@ def update_locations(
     locations = wrap_locations(locations, L)
     return locations
 
+def get_centers_grid(L,n_side):
+    coords = [i * L / n_side for i in range(n_side)]
+    centers = [(x, y) for x in coords for y in coords]
+    return centers
 
 def sampling_probability_gaussian(
-    locations: Locations, n_side:int, w: float, L: float, rho: float
+    locations: Locations, centers:list[float], w: float, L: float, rho: float
 ) -> list[float]:
     locations = locations[~np.isnan(locations).any(axis=1)]
-    coords = [i*L/n_side for i in range(n_side)]
-    centers = [(x,y) for x in coords for y in coords]
     sampling_probs = []
     for c in centers:
         x1_dens = truncnorm.pdf(
@@ -131,6 +133,7 @@ def run_sim_spatial(
     gaussian: bool = False,
     w: float = 1.0,
     n_side: int = 1,
+    grid: bool=False,
 ) -> tuple[list[list[float]],int]:
     """
     * Carriers appear de novo with rate `mu`*`rho`
@@ -162,6 +165,12 @@ def run_sim_spatial(
 
     # keep a running total of the time with zero carriers alive
     t_zero = 0.0
+
+    # if using grid sampling option, generate centers, otherwise sample from middle of habitat as before
+    if grid:
+        centers = get_centers_grid(L,n_side)
+    else:
+        centers = [(L/2,L/2)]
 
     # track values of p
     sampled_p_list = []
@@ -205,7 +214,7 @@ def run_sim_spatial(
 
         elif event is Event.SAMPLE:
             if gaussian:
-                p = sampling_probability_gaussian(locations,n_side,w,L,rho)
+                p = sampling_probability_gaussian(locations,centers,w,L,rho)
             else:
                 p = [k/N]
             if time_running>burnin:
@@ -247,7 +256,8 @@ def main():
         "--zero_out", type=str, help="output file name for number of zeros", default="zeros.csv"
     )
     parser.add_argument("-w", type=float, help="width for sampling kernel", default=1)
-    parser.add_argument("--n_side", type=int, help="number of centers per side", default=4)
+    parser.add_argument("--n_side", type=int, help="number of centers per side, if using grid option", default=4)
+    parser.add_argument("--grid",action="store_true",help="sample from grid of centers",default=False)
     args = parser.parse_args()
 
     # set seed
@@ -266,6 +276,7 @@ def main():
         gaussian=args.gaussian,
         w=args.w,
         n_side=args.n_side,
+        grid=args.grid,
     )
 
     # save output as CSV
