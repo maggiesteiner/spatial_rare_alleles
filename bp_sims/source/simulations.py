@@ -107,7 +107,6 @@ def sampling_probability_gaussian(
     locations = locations[~np.isnan(locations).any(axis=1)]
     coords = [i*L/n_side for i in range(n_side)]
     centers = [(x,y) for x in coords for y in coords]
-    print(centers)
     sampling_probs = []
     for c in centers:
         x1_dens = truncnorm.pdf(
@@ -118,7 +117,6 @@ def sampling_probability_gaussian(
         )
         prod_dens = x1_dens * x2_dens
         sampling_probs.append(np.sum(prod_dens)/rho)
-    print(sampling_probs)
     return sampling_probs
 
 def run_sim_spatial(
