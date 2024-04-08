@@ -70,7 +70,7 @@ class TestEvents(unittest.TestCase):
             p_temp = sampling_probability_gaussian(locations, centers, w, L, rho)
             loc_new = np.append(locations, [[0, 0]], axis=0)
             p_new = sampling_probability_gaussian(loc_new, centers, w, L, rho)
-            self.assertGreater(p_new, p_temp)
+            self.assertGreater(p_new[0], p_temp[0])
 
         with self.subTest("farther away"):
             L = 1.0
@@ -81,7 +81,7 @@ class TestEvents(unittest.TestCase):
             p_temp = sampling_probability_gaussian(locations, centers, w, L, rho)
             loc_new = locations + 0.2
             p_new = sampling_probability_gaussian(loc_new, centers, w, L, rho)
-            self.assertLess(p_new, p_temp)
+            self.assertLess(p_new[0], p_temp[0])
 
         with self.subTest("increase w"):
             L = 1.0
@@ -91,7 +91,7 @@ class TestEvents(unittest.TestCase):
             locations = np.array([[0.1, 0.1]])
             p_temp = sampling_probability_gaussian(locations, centers,w, L, rho)
             p_new = sampling_probability_gaussian(locations, centers,w * 2, L, rho)
-            self.assertLess(p_new, p_temp)
+            self.assertLess(p_new[0], p_temp[0])
 
         with self.subTest("one at boundary: 0"):
             L = 1.0
@@ -100,7 +100,7 @@ class TestEvents(unittest.TestCase):
             locations = np.array([[0, 0]])
             centers = [(L / 2, L / 2)]
             p_temp = sampling_probability_gaussian(locations, centers,w, L, rho)
-            self.assertGreater(p_temp, 0)
+            self.assertGreater(p_temp[0], 0)
 
         with self.subTest("one at boundary: 1"):
             L = 1.0
@@ -109,7 +109,7 @@ class TestEvents(unittest.TestCase):
             locations = np.array([[1, 1]])
             centers = [(L / 2, L / 2)]
             p_temp = sampling_probability_gaussian(locations, centers,w, L, rho)
-            self.assertGreater(p_temp, 0)
+            self.assertGreater(p_temp[0], 0)
 
         with self.subTest("one at boundary: epsilon away"):
             L = 1.0
@@ -119,7 +119,7 @@ class TestEvents(unittest.TestCase):
             locations = np.array([[1 - epsilon, 1 - epsilon]])
             centers = [(L / 2, L / 2)]
             p_temp = sampling_probability_gaussian(locations, centers,w, L, rho)
-            self.assertGreater(p_temp, 0)
+            self.assertGreater(p_temp[0], 0)
 
         with self.subTest("no carriers"):
             L = 1.0
@@ -128,7 +128,7 @@ class TestEvents(unittest.TestCase):
             locations = np.array([[np.nan, np.nan], [np.nan, np.nan]])
             centers = [(L / 2, L / 2)]
             p_temp = sampling_probability_gaussian(locations, centers,w, L, rho)
-            self.assertEqual(p_temp, 0)
+            self.assertEqual(p_temp[0], 0)
 
         with self.subTest("near edge"):
             L = 1.0
@@ -139,7 +139,7 @@ class TestEvents(unittest.TestCase):
             centers = [(L / 2, L / 2)]
             p_temp = sampling_probability_gaussian(locations, centers,w, L, rho)
             p_new = sampling_probability_gaussian(locations, centers,w * 2, L, rho)
-            self.assertGreater(p_new, p_temp)
+            self.assertGreater(p_new[0], p_temp[0])
 
 
 class TestLocations(unittest.TestCase):
