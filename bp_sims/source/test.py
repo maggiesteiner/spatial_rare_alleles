@@ -235,6 +235,16 @@ class TestLocations(unittest.TestCase):
                         )
                     )
 
+    def test_grid_centers(self):
+        L = 50
+        with self.subtest("return origin for single center"):
+            self.assertEqual(
+                get_centers_grid(self.L,1),[0,0]
+            )
+        with self.subtest("correct length"):
+            self.assertEqual(
+                len(get_centers_grid(self.L,12)),144
+            )
 
 if __name__ == "__main__":
     unittest.main()
