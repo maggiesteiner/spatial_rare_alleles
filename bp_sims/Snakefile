@@ -6,8 +6,8 @@ mu_vals = [1e-9]
 dens_vals = [1]
 L_vals = [10000]
 sigma_vals = [10]
-time_limit = [1e5]
-replicates = np.arange(100)
+time_limit = [1e6]
+replicates = np.arange(10)
 samp_rate = [0.1]
 samp_type_unif = ["uniform"]
 #samp_type_gaus = ["gaussian_w10","gaussian_w100","gaussian_w1000","gaussian_w10000","gaussian_w100000"]
@@ -20,7 +20,7 @@ def wildcards2seed(wildcards) -> int:
 
 rule all:
     input:
-        expand("results/{samp_type}/s{s_vals}_mu{mu_vals}/s{s_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_sigma{sigma_vals}_time{time_limit}_r{samp_rate}_{samp_type}_all.p",
+        expand("results/{samp_type}/s{s_vals}_mu{mu_vals}/s{s_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_sigma{sigma_vals}_time{time_limit}_r{samp_rate}_burnin_{samp_type}_all.p",
                s_vals=s_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,sigma_vals=sigma_vals,time_limit=time_limit,
                samp_rate=samp_rate,samp_type=samp_type_unif),
         expand("results/{samp_type}/s{s_vals}_mu{mu_vals}/s{s_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_sigma{sigma_vals}_time{time_limit}_r{samp_rate}_{samp_type}_all.p",
@@ -43,8 +43,8 @@ rule add_sims:
 rule run_sims_uniform:
     input:
     output:
-        p="results/uniform/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_time{time}_r{r}_uniform_rep{rep}.p",
-        zero="results/uniform/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_time{time}_r{r}_uniform_rep{rep}.zero",
+        p="results/uniform/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_time{time}_r{r}_burnin_uniform_rep{rep}.p",
+        zero="results/uniform/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_time{time}_r{r}_burnin_uniform_rep{rep}.zero",
     params:
         seed=wildcards2seed
     shell:
