@@ -2,7 +2,7 @@ import argparse
 import sys
 from enum import Enum
 from typing import TypeAlias, Tuple
-
+import math
 import numpy as np
 from numpy.random import exponential, poisson
 from numpy.typing import NDArray
@@ -17,7 +17,6 @@ class Event(Enum):
     DEATH = 1
     MUTATION = 2
     SAMPLE = 3
-
 
 def event_rates(k: int, s: float, theta: float, r: float) -> dict[Event, float]:
     """Calculate the rate of each event type."""
@@ -101,20 +100,26 @@ def update_locations(
     locations = wrap_locations(locations, L)
     return locations
 
+def get_centers_grid(L,n_side):
+    coords = [i * L / n_side for i in range(n_side)]
+    centers = [(x, y) for x in coords for y in coords]
+    return centers
 
 def sampling_probability_gaussian(
-    locations: Locations, w: float, L: float, rho: float
-) -> float:
+    locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float
+) -> list[float]:
     locations = locations[~np.isnan(locations).any(axis=1)]
-    x1_dens = truncnorm.pdf(
-        locations[:, 0], loc=L / 2, scale=w, a=(-L / 2) / w, b=(L / 2) / w
-    )
-    x2_dens = truncnorm.pdf(
-        locations[:, 1], loc=L / 2, scale=w, a=(-L / 2) / w, b=(L / 2) / w
-    )
-    prod_dens = x1_dens * x2_dens
-    return np.sum(prod_dens) / rho
-
+    sampling_probs = []
+    for c in centers:
+        x1_dens = truncnorm.pdf(
+            locations[:, 0], loc=c[0], scale=w, a=(-c[0]) / w, b=(L-c[0]) / w
+        )
+        x2_dens = truncnorm.pdf(
+            locations[:, 1], loc=c[1], scale=w, a=(-c[1]) / w, b=(L-c[1]) / w
+        )
+        prod_dens = x1_dens * x2_dens
+        sampling_probs.append(np.sum(prod_dens)/rho)
+    return sampling_probs
 
 def run_sim_spatial(
     s: float,
@@ -127,7 +132,9 @@ def run_sim_spatial(
     L: float = 50,
     gaussian: bool = False,
     w: float = 1.0,
-) -> tuple[list[float],int]:
+    n_side: int = 1,
+    grid: bool=False,
+) -> tuple[list[list[float]],int]:
     """
     * Carriers appear de novo with rate `mu`*`rho`
     * Carriers give birth (split) with rate `1-s`
@@ -158,6 +165,12 @@ def run_sim_spatial(
 
     # keep a running total of the time with zero carriers alive
     t_zero = 0.0
+
+    # if using grid sampling option, generate centers, otherwise sample from middle of habitat as before
+    if grid:
+        centers = get_centers_grid(L,n_side)
+    else:
+        centers = [(L/2,L/2)]
 
     # track values of p
     sampled_p_list = []
@@ -201,15 +214,14 @@ def run_sim_spatial(
 
         elif event is Event.SAMPLE:
             if gaussian:
-                p = sampling_probability_gaussian(locations,w,L,rho)
+                p = sampling_probability_gaussian(locations,centers,w,L,rho)
             else:
-                p = k/N
+                p = [k/N]
             if time_running>burnin:
                 sampled_p_list.append(p)
 
     # Simulate the zero count SFS bin
     zero_samples = generate_zeros(t_zero, r)
-
     return sampled_p_list, zero_samples
 
 
@@ -244,6 +256,8 @@ def main():
         "--zero_out", type=str, help="output file name for number of zeros", default="zeros.csv"
     )
     parser.add_argument("-w", type=float, help="width for sampling kernel", default=1)
+    parser.add_argument("--n_side", type=int, help="number of centers per side, if using grid option", default=4)
+    parser.add_argument("--grid",action="store_true",help="sample from grid of centers",default=False)
     args = parser.parse_args()
 
     # set seed
@@ -261,6 +275,8 @@ def main():
         L=args.L,
         gaussian=args.gaussian,
         w=args.w,
+        n_side=args.n_side,
+        grid=args.grid,
     )
 
     # save output as CSV
