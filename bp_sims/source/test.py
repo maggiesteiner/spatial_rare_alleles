@@ -149,7 +149,7 @@ class TestEvents(unittest.TestCase):
             )
         with self.subTest("correct length"):
             self.assertEqual(
-                len(get_centers_grid(self.L, 12)), 144
+                len(get_centers_grid(L, 12)), 144
             )
 
 class TestLocations(unittest.TestCase):
