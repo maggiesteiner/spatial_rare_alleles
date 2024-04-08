@@ -88,7 +88,7 @@ class TestEvents(unittest.TestCase):
             w = 0.1
             rho = 2
             centers = [(L / 2, L / 2)]
-            locations = np.array([[0.1, 0.1]])
+            locations = np.array([[0.45, 0.45]])
             p_temp = sampling_probability_gaussian(locations, centers,w, L, rho)
             p_new = sampling_probability_gaussian(locations, centers,w * 2, L, rho)
             self.assertLess(p_new[0], p_temp[0])
@@ -143,11 +143,11 @@ class TestEvents(unittest.TestCase):
 
     def test_grid_centers(self):
         L = 50
-        with self.subtest("return origin for single center"):
+        with self.subTest("return origin for single center"):
             self.assertEqual(
                 get_centers_grid(L, 1), [(0, 0)]
             )
-        with self.subtest("correct length"):
+        with self.subTest("correct length"):
             self.assertEqual(
                 len(get_centers_grid(self.L, 12)), 144
             )
