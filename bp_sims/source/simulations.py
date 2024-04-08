@@ -106,7 +106,7 @@ def get_centers_grid(L,n_side):
     return centers
 
 def sampling_probability_gaussian(
-    locations: Locations, centers:list[tuple(float)], w: float, L: float, rho: float
+    locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float
 ) -> list[float]:
     locations = locations[~np.isnan(locations).any(axis=1)]
     sampling_probs = []
