@@ -105,6 +105,22 @@ def get_centers_grid(L,n_side):
     centers = [(x, y) for x in coords for y in coords]
     return centers
 
+def sampling_probability_gaussian(
+    locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float
+) -> list[float]:
+    locations = locations[~np.isnan(locations).any(axis=1)]
+    sampling_probs = []
+    for c in centers:
+        x1_dens = truncnorm.pdf(
+            locations[:, 0], loc=c[0], scale=w, a=(-c[0]) / w, b=(L-c[0]) / w
+        )
+        x2_dens = truncnorm.pdf(
+            locations[:, 1], loc=c[1], scale=w, a=(-c[1]) / w, b=(L-c[1]) / w
+        )
+        prod_dens = x1_dens * x2_dens
+        sampling_probs.append(np.sum(prod_dens)/rho)
+    return sampling_probs
+
 def map_to_circle(x,a,b):
     return ((x-a)/(b-a))*2*np.pi - np.pi
 
