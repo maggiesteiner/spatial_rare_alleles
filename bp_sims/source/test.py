@@ -9,7 +9,7 @@ from simulations import *
 
 
 class TestMapping(unittest.TestCase):
-    with self.subTest("expected behavior"):
+   def expected_behavior(self):
         a = 0
         b = 50
         y1 = map_to_circle(a,a,b)
