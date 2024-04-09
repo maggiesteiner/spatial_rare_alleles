@@ -289,7 +289,6 @@ def main():
         time_limit=args.time_limit,
         max_ind=args.max_ind,
         L=args.L,
-        gaussian=args.gaussian,
         w=args.w,
         n_side=args.n_side,
         grid=args.grid,
