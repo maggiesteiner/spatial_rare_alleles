@@ -134,7 +134,6 @@ def sampling_probability_vonmises(
         dens = vonmises.pdf(locations_m,loc=center_m,kappa=1/w)
         prod_dens = np.prod(dens,axis=1)
         sampling_probs.append(np.sum(prod_dens,axis=0)/(rho*4*np.pi**2))
-    print(sampling_probs)
     return sampling_probs
 
 def run_sim_spatial(
