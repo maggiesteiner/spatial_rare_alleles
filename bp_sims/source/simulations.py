@@ -149,8 +149,8 @@ def run_sim_spatial(
     max_ind: int,
     time_limit: float,
     L: float = 50,
-    gaussian: bool = False,
     w: float = 1.0,
+    sampling_scheme: str='uniform',
     n_side: int = 1,
     grid: bool=False,
 ) -> tuple[list[list[float]],int]:
@@ -232,9 +232,11 @@ def run_sim_spatial(
             locations[next_row] = locations[parent_index]
 
         elif event is Event.SAMPLE:
-            if gaussian:
+            if sampling_scheme is 'von_mises':
                 p = sampling_probability_vonmises(locations,centers,w,L,rho)
-            else:
+            elif sampling_scheme is 'trunc_normal':
+                p = sampling_probability_gaussian(locations, centers, w, L, rho)
+            elif sampling_scheme is 'uniform':
                 p = [k/N]
             if time_running>burnin:
                 sampled_p_list.append(p)
@@ -263,12 +265,6 @@ def main():
     parser.add_argument("-L", type=float, help="habitat width", default=50)
     parser.add_argument("--seed", type=int, help="random string", default=2024)
     parser.add_argument(
-        "--gaussian",
-        action="store_true",
-        help="implement Gaussian sampling kernel",
-        default=False,
-    )
-    parser.add_argument(
         "--sampled_p_out", type=str, help="output file name for sampled values of p", default="sampled_p.csv"
     )
     parser.add_argument(
@@ -277,6 +273,7 @@ def main():
     parser.add_argument("-w", type=float, help="width for sampling kernel", default=1)
     parser.add_argument("--n_side", type=int, help="number of centers per side, if using grid option", default=4)
     parser.add_argument("--grid",action="store_true",help="sample from grid of centers",default=False)
+    parser.add_argument("--sampling_scheme", type=str, help="choice of 'uniform','trunc_normal', 'von_mises'", default='uniform')
     args = parser.parse_args()
 
     # set seed
@@ -296,6 +293,7 @@ def main():
         w=args.w,
         n_side=args.n_side,
         grid=args.grid,
+        sampling_scheme=args.sampling_scheme,
     )
 
     # save output as CSV
