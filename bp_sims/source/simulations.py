@@ -6,7 +6,7 @@ import math
 import numpy as np
 from numpy.random import exponential, poisson
 from numpy.typing import NDArray
-from scipy.stats import binom, truncnorm  # type: ignore
+from scipy.stats import vonmises, truncnorm  # type: ignore
 
 Locations: TypeAlias = NDArray[np.float64]
 SFS: TypeAlias = NDArray[np.float64]
@@ -105,17 +105,20 @@ def get_centers_grid(L,n_side):
     centers = [(x, y) for x in coords for y in coords]
     return centers
 
-def sampling_probability_gaussian(
+def map_to_circle(x,a,b):
+    return ((x-a)/(b-a))*2*np.pi - np.pi
+
+def sampling_probability_vonmises(
     locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float
 ) -> list[float]:
     locations = locations[~np.isnan(locations).any(axis=1)]
     sampling_probs = []
     for c in centers:
-        x1_dens = truncnorm.pdf(
-            locations[:, 0], loc=c[0], scale=w, a=(-c[0]) / w, b=(L-c[0]) / w
+        x1_dens = vonmises.pdf(
+            locations[:, 0], loc=map_to_circle(c[0],0,L), kappa=1/w
         )
-        x2_dens = truncnorm.pdf(
-            locations[:, 1], loc=c[1], scale=w, a=(-c[1]) / w, b=(L-c[1]) / w
+        x2_dens = vonmises.pdf(
+            locations[:, 1], loc=map_to_circle(c[1],0,L), kappa=1/w
         )
         prod_dens = x1_dens * x2_dens
         sampling_probs.append(np.sum(prod_dens)/rho)
@@ -214,7 +217,7 @@ def run_sim_spatial(
 
         elif event is Event.SAMPLE:
             if gaussian:
-                p = sampling_probability_gaussian(locations,centers,w,L,rho)
+                p = sampling_probability_vonmises(locations,centers,w,L,rho)
             else:
                 p = [k/N]
             if time_running>burnin:
