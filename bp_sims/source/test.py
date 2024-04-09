@@ -8,6 +8,17 @@ import numpy as np
 from simulations import *
 
 
+class TestMapping(unittest.TestCase):
+    with self.subTest("expected behavior"):
+        a = 0
+        b = 50
+        y1 = map_to_circle(a,a,b)
+        self.assertEqual(y1,-1*np.pi)
+        y2 = map_to_circle(b, a, b)
+        self.assertEqual(y2, np.pi)
+        y3 = map_to_circle((b-a)/2, a, b)
+        self.assertEqual(y3, 0)
+
 class TestEvents(unittest.TestCase):
     def setUp(self):
         np.random.seed(2024)

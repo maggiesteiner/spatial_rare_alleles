@@ -131,7 +131,7 @@ def sampling_probability_vonmises(
     sampling_probs = []
     for c in centers:
         center_m = [map_to_circle(c[0],0,L),map_to_circle(c[1],0,L)]
-        dens = vonmises.pdf(locations_m,loc=center_m,kappa=1/w)
+        dens = vonmises.pdf(locations_m,loc=center_m,kappa=1/w**2)
         prod_dens = np.prod(dens,axis=1)
         sampling_probs.append(np.sum(prod_dens,axis=0)/(rho*4*np.pi**2))
     return sampling_probs
