@@ -232,11 +232,11 @@ def run_sim_spatial(
             locations[next_row] = locations[parent_index]
 
         elif event is Event.SAMPLE:
-            if sampling_scheme is 'von_mises':
+            if sampling_scheme == 'von_mises':
                 p = sampling_probability_vonmises(locations,centers,w,L,rho)
-            elif sampling_scheme is 'trunc_normal':
+            elif sampling_scheme == 'trunc_normal':
                 p = sampling_probability_gaussian(locations, centers, w, L, rho)
-            elif sampling_scheme is 'uniform':
+            elif sampling_scheme == 'uniform':
                 p = [k/N]
             if time_running>burnin:
                 sampled_p_list.append(p)
