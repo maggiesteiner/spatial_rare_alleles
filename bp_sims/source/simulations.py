@@ -127,17 +127,14 @@ def map_to_circle(x,a,b):
 def sampling_probability_vonmises(
     locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float
 ) -> list[float]:
-    locations = locations[~np.isnan(locations).any(axis=1)]
+    locations_m = map_to_circle(locations[~np.isnan(locations).any(axis=1)],0,L)
     sampling_probs = []
     for c in centers:
-        x1_dens = vonmises.pdf(
-            locations[:, 0], loc=map_to_circle(c[0],0,L), kappa=1/w
-        )
-        x2_dens = vonmises.pdf(
-            locations[:, 1], loc=map_to_circle(c[1],0,L), kappa=1/w
-        )
-        prod_dens = x1_dens * x2_dens
-        sampling_probs.append(np.sum(prod_dens)/rho)
+        center_m = [map_to_circle(c[0],0,L),map_to_circle(c[1],0,L)]
+        dens = vonmises.pdf(locations_m,loc=center_m,kappa=1/w)
+        prod_dens = np.prod(dens,axis=1)
+        sampling_probs.append(np.sum(prod_dens,axis=0)/(rho*4*np.pi**2))
+    print(sampling_probs)
     return sampling_probs
 
 def run_sim_spatial(
