@@ -125,13 +125,14 @@ def map_to_circle(x,a,b):
     return ((x-a)/(b-a))*2*np.pi - np.pi
 
 def sampling_probability_vonmises(
-    locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float
+    locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float, sigma: float=10, s:float=0.1,
 ) -> list[float]:
     locations_m = map_to_circle(locations[~np.isnan(locations).any(axis=1)],0,L)
     sampling_probs = []
+    wt = w/(np.sqrt(sigma/s))
     for c in centers:
         center_m = [map_to_circle(c[0],0,L),map_to_circle(c[1],0,L)]
-        dens = vonmises.pdf(locations_m,loc=center_m,kappa=1/w**2)
+        dens = vonmises.pdf(locations_m,loc=center_m,kappa=1/wt**2)
         prod_dens = np.prod(dens,axis=1)
         sampling_probs.append(np.sum(prod_dens,axis=0)/(rho*4*np.pi**2))
     return sampling_probs
@@ -229,7 +230,7 @@ def run_sim_spatial(
 
         elif event is Event.SAMPLE:
             if sampling_scheme == 'von_mises':
-                p = sampling_probability_vonmises(locations,centers,w,L,rho)
+                p = sampling_probability_vonmises(locations,centers,w,L,rho,sigma,s)
             elif sampling_scheme == 'trunc_normal':
                 p = sampling_probability_gaussian(locations, centers, w, L, rho)
             elif sampling_scheme == 'uniform':
