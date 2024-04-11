@@ -156,11 +156,13 @@ class TestEvents(unittest.TestCase):
             L = 50
             w = 10
             rho = 2
+            sigma=10
+            s=0.01
             locations = np.array(
                 [[0.24, 0.81], [np.nan, np.nan], [0.01, 0.01], [0.99, 0.99]]
             )
             centers = get_centers_grid(L,2)
-            p_temp = sampling_probability_vonmises(locations, centers, w, L, rho)
+            p_temp = sampling_probability_vonmises(locations, centers, w, L, rho,sigma,s)
             self.assertGreaterEqual(p_temp[0], 0)
             self.assertGreaterEqual(p_temp[1], 0)
             self.assertGreaterEqual(p_temp[2], 0)
@@ -175,82 +177,98 @@ class TestEvents(unittest.TestCase):
             L = 1.0
             w = 0.1
             rho = 2
+            sigma = 0.2
+            s=0.01
             locations = np.array(
                 [[0.24, 0.81], [np.nan, np.nan], [0.01, 0.01], [0.99, 0.99]]
             )
             centers=[(L/2,L/2)]
-            p_temp = sampling_probability_vonmises(locations, centers, w, L, rho)
+            p_temp = sampling_probability_vonmises(locations, centers, w, L, rho,sigma,s)
             loc_new = np.append(locations, [[0, 0]], axis=0)
-            p_new = sampling_probability_vonmises(loc_new, centers, w, L, rho)
+            p_new = sampling_probability_vonmises(loc_new, centers, w, L, rho,sigma,s)
             self.assertGreater(p_new[0], p_temp[0])
 
         with self.subTest("farther away"):
             L = 1.0
             w = 0.1
             rho = 2
+            sigma = 0.2
+            s = 0.01
             centers = [(L/2, L/2)]
             locations = np.array([[0.5, 0.5], [0.5, 0.5], [0.4, 0.4]])
-            p_temp = sampling_probability_vonmises(locations, centers, w, L, rho)
+            p_temp = sampling_probability_vonmises(locations, centers, w, L, rho,sigma,s)
             loc_new = locations - 0.2
-            p_new = sampling_probability_vonmises(loc_new, centers, w, L, rho)
+            p_new = sampling_probability_vonmises(loc_new, centers, w, L, rho,sigma,s)
             self.assertLess(p_new[0], p_temp[0])
 
         with self.subTest("increase w"):
             L = 1.0
             w = 0.1
             rho = 2
+            sigma = 0.2
+            s = 0.01
             centers = [(L / 2, L / 2)]
             locations = np.array([[0.45, 0.45]])
-            p_temp = sampling_probability_vonmises(locations, centers,w, L, rho)
-            p_new = sampling_probability_vonmises(locations, centers,w * 2, L, rho)
+            p_temp = sampling_probability_vonmises(locations, centers,w, L, rho,sigma,s)
+            p_new = sampling_probability_vonmises(locations, centers,w * 2, L, rho,sigma,s)
             self.assertLess(p_new[0], p_temp[0])
 
         with self.subTest("one at boundary: 0"):
             L = 1.0
             w = 0.1
             rho = 2
+            sigma = 0.2
+            s = 0.01
             locations = np.array([[0, 0]])
             centers = [(L / 2, L / 2)]
-            p_temp = sampling_probability_vonmises(locations, centers,w, L, rho)
+            p_temp = sampling_probability_vonmises(locations, centers,w, L, rho, sigma, s)
             self.assertGreater(p_temp[0], 0)
 
         with self.subTest("one at boundary: 1"):
             L = 1.0
             w = 0.1
             rho = 2
+            sigma = 0.2
+            s = 0.01
             locations = np.array([[1, 1]])
             centers = [(L / 2, L / 2)]
-            p_temp = sampling_probability_vonmises(locations, centers,w, L, rho)
+            p_temp = sampling_probability_vonmises(locations, centers,w, L, rho, sigma,s)
             self.assertGreater(p_temp[0], 0)
 
         with self.subTest("one at boundary: epsilon away"):
             L = 1.0
             w = 0.1
             rho = 2
+            sigma = 0.2
+            s = 0.01
             epsilon = 1e-12
             locations = np.array([[1 - epsilon, 1 - epsilon]])
             centers = [(L / 2, L / 2)]
-            p_temp = sampling_probability_vonmises(locations, centers,w, L, rho)
+            p_temp = sampling_probability_vonmises(locations, centers,w, L, rho, sigma, s)
             self.assertGreater(p_temp[0], 0)
 
         with self.subTest("no carriers"):
             L = 1.0
             w = 0.1
             rho = 2
+            sigma = 0.2
+            s = 0.01
             locations = np.array([[np.nan, np.nan], [np.nan, np.nan]])
             centers = [(L / 2, L / 2)]
-            p_temp = sampling_probability_vonmises(locations, centers,w, L, rho)
+            p_temp = sampling_probability_vonmises(locations, centers,w, L, rho, sigma, s)
             self.assertEqual(p_temp[0], 0)
 
         with self.subTest("near edge"):
             L = 1.0
             w = 0.1
             rho = 2
+            sigma = 0.2
+            s = 0.01
             epsilon = 1e-12
             locations = np.array([[1 - epsilon, 1 - epsilon]])
             centers = [(L / 2, L / 2)]
-            p_temp = sampling_probability_vonmises(locations, centers,w, L, rho)
-            p_new = sampling_probability_vonmises(locations, centers,w * 2, L, rho)
+            p_temp = sampling_probability_vonmises(locations, centers,w, L, rho, sigma, s)
+            p_new = sampling_probability_vonmises(locations, centers,w * 2, L, rho, sigma, s)
             self.assertGreater(p_new[0], p_temp[0])
 
     def test_grid_centers(self):
