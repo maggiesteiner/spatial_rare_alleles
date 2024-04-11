@@ -150,7 +150,7 @@ def run_sim_spatial(
     sampling_scheme: str='uniform',
     n_side: int = 1,
     grid: bool=False,
-) -> tuple[list[list[float]],int]:
+) -> tuple[list[float],int]:
     """
     * Carriers appear de novo with rate `mu`*`rho`
     * Carriers give birth (split) with rate `1-s`
