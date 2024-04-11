@@ -240,7 +240,8 @@ def run_sim_spatial(
 
     # Simulate the zero count SFS bin
     zero_samples = generate_zeros(t_zero, r)
-    return sampled_p_list, zero_samples
+    sampled_p_flattened = [item for sublist in sampled_p_list for item in sublist]
+    return sampled_p_flattened, zero_samples
 
 
 
