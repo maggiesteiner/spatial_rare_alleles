@@ -184,7 +184,7 @@ class TestEvents(unittest.TestCase):
             )
             centers=[(L/2,L/2)]
             p_temp = sampling_probability_vonmises(locations, centers, w, L, rho,sigma,s)
-            loc_new = np.append(locations, [[0, 0]], axis=0)
+            loc_new = np.append(locations, [[L/2,L/2]], axis=0) # with [0,0], sampling prob is 0 in both cases
             p_new = sampling_probability_vonmises(loc_new, centers, w, L, rho,sigma,s)
             self.assertGreater(p_new[0], p_temp[0])
 
@@ -203,19 +203,19 @@ class TestEvents(unittest.TestCase):
 
         with self.subTest("increase w"):
             L = 1.0
-            w = 0.1
+            w = 0.4
             rho = 2
             sigma = 0.2
             s = 0.01
             centers = [(L / 2, L / 2)]
-            locations = np.array([[0.45, 0.45]])
+            locations = np.array([[0.5, 0.5]]) # test at center
             p_temp = sampling_probability_vonmises(locations, centers,w, L, rho,sigma,s)
             p_new = sampling_probability_vonmises(locations, centers,w * 2, L, rho,sigma,s)
             self.assertLess(p_new[0], p_temp[0])
 
         with self.subTest("one at boundary: 0"):
             L = 1.0
-            w = 0.1
+            w = 1 # need larger w
             rho = 2
             sigma = 0.2
             s = 0.01
@@ -226,7 +226,7 @@ class TestEvents(unittest.TestCase):
 
         with self.subTest("one at boundary: 1"):
             L = 1.0
-            w = 0.1
+            w = 1 # need larger w
             rho = 2
             sigma = 0.2
             s = 0.01
@@ -237,7 +237,7 @@ class TestEvents(unittest.TestCase):
 
         with self.subTest("one at boundary: epsilon away"):
             L = 1.0
-            w = 0.1
+            w = 1 # need larger w
             rho = 2
             sigma = 0.2
             s = 0.01
@@ -260,7 +260,7 @@ class TestEvents(unittest.TestCase):
 
         with self.subTest("near edge"):
             L = 1.0
-            w = 0.1
+            w = 1
             rho = 2
             sigma = 0.2
             s = 0.01
