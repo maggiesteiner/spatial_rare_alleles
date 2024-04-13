@@ -6,7 +6,7 @@ import math
 import numpy as np
 from numpy.random import exponential, poisson
 from numpy.typing import NDArray
-from scipy.stats import binom, truncnorm  # type: ignore
+from scipy.stats import norm, truncnorm  # type: ignore
 
 Locations: TypeAlias = NDArray[np.float64]
 SFS: TypeAlias = NDArray[np.float64]
@@ -121,6 +121,37 @@ def sampling_probability_gaussian(
         sampling_probs.append(np.sum(prod_dens)/rho)
     return sampling_probs
 
+def sampling_probability_wrapped(
+    locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float
+) -> list[float]:
+    locations = locations[~np.isnan(locations).any(axis=1)]
+    sampling_probs = []
+    for c in centers:
+        # k = 0
+        x1_dens = norm.pdf(
+            locations[:, 0], loc=c[0], scale=w
+        )
+        x2_dens = norm.pdf(
+            locations[:, 1], loc=c[1], scale=w
+        )
+        # k = -1
+        # x1_dens += norm.pdf(
+        #     locations[:, 0], loc=c[0] - L, scale=w
+        # )
+        # x2_dens += norm.pdf(
+        #     locations[:, 1], loc=c[1] - L, scale=w,
+        # )
+        # # k = 1
+        # x1_dens += norm.pdf(
+        #     locations[:, 0], loc=c[0] + L, scale=w
+        # )
+        # x2_dens += norm.pdf(
+        #     locations[:, 1], loc=c[1] + L, scale=w
+        # )
+        prod_dens = x1_dens * x2_dens
+        sampling_probs.append(np.sum(prod_dens)/rho)
+    return sampling_probs
+
 def run_sim_spatial(
     s: float,
     mu: float,
@@ -130,11 +161,11 @@ def run_sim_spatial(
     max_ind: int,
     time_limit: float,
     L: float = 50,
-    gaussian: bool = False,
     w: float = 1.0,
     n_side: int = 1,
     grid: bool=False,
-) -> tuple[list[list[float]],int]:
+    sampling_scheme: str="uniform",
+) -> tuple[list[float],int]:
     """
     * Carriers appear de novo with rate `mu`*`rho`
     * Carriers give birth (split) with rate `1-s`
@@ -213,16 +244,19 @@ def run_sim_spatial(
             locations[next_row] = locations[parent_index]
 
         elif event is Event.SAMPLE:
-            if gaussian:
-                p = sampling_probability_gaussian(locations,centers,w,L,rho)
-            else:
-                p = [k/N]
-            if time_running>burnin:
+            if sampling_scheme == 'wrapped_norm':
+                p = sampling_probability_wrapped(locations, centers, w, L, rho)
+            elif sampling_scheme == 'trunc_norm':
+                p = sampling_probability_gaussian(locations, centers, w, L, rho)
+            elif sampling_scheme == 'uniform':
+                p = [k / N]
+            if time_running > burnin:
                 sampled_p_list.append(p)
 
     # Simulate the zero count SFS bin
     zero_samples = generate_zeros(t_zero, r)
-    return sampled_p_list, zero_samples
+    sampled_p_flattened = [item for sublist in sampled_p_list for item in sublist]
+    return sampled_p_flattened, zero_samples
 
 
 
@@ -244,12 +278,6 @@ def main():
     parser.add_argument("-L", type=float, help="habitat width", default=50)
     parser.add_argument("--seed", type=int, help="random string", default=2024)
     parser.add_argument(
-        "--gaussian",
-        action="store_true",
-        help="implement Gaussian sampling kernel",
-        default=False,
-    )
-    parser.add_argument(
         "--sampled_p_out", type=str, help="output file name for sampled values of p", default="sampled_p.csv"
     )
     parser.add_argument(
@@ -258,6 +286,7 @@ def main():
     parser.add_argument("-w", type=float, help="width for sampling kernel", default=1)
     parser.add_argument("--n_side", type=int, help="number of centers per side, if using grid option", default=4)
     parser.add_argument("--grid",action="store_true",help="sample from grid of centers",default=False)
+    parser.add_argument("--sampling_scheme",type=str,help="uniform, trunc_norm, or wrapped_norm",default="uniform")
     args = parser.parse_args()
 
     # set seed
@@ -273,10 +302,10 @@ def main():
         time_limit=args.time_limit,
         max_ind=args.max_ind,
         L=args.L,
-        gaussian=args.gaussian,
         w=args.w,
         n_side=args.n_side,
         grid=args.grid,
+        sampling_scheme=args.sampling_scheme,
     )
 
     # save output as CSV

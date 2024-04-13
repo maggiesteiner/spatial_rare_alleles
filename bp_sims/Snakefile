@@ -12,6 +12,7 @@ samp_rate = [0.1]
 samp_type_unif = ["uniform"]
 #samp_type_gaus = ["gaussian_w10","gaussian_w100","gaussian_w1000","gaussian_w10000","gaussian_w100000"]
 samp_type_gaus = ["gaussian_w10","gaussian_w100","gaussian_w1000"]
+sampling_schemes = ["trunc_norm","wrapped_norm"]
 
 def wildcards2seed(wildcards) -> int:
     wildcard_str = str(dict(wildcards))
@@ -23,9 +24,9 @@ rule all:
         expand("results/{samp_type}/s{s_vals}_mu{mu_vals}/s{s_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_sigma{sigma_vals}_time{time_limit}_r{samp_rate}_burnin_{samp_type}_all.p",
                s_vals=s_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,sigma_vals=sigma_vals,time_limit=time_limit,
                samp_rate=samp_rate,samp_type=samp_type_unif),
-        expand("results/{samp_type}/s{s_vals}_mu{mu_vals}/s{s_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_sigma{sigma_vals}_time{time_limit}_r{samp_rate}_{samp_type}_all.p",
+        expand("results/{samp_type}/s{s_vals}_mu{mu_vals}/s{s_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_sigma{sigma_vals}_time{time_limit}_r{samp_rate}_burnin_{sampling_scheme}_{samp_type}_all.p",
                s_vals=s_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,sigma_vals=sigma_vals,time_limit=time_limit,
-               samp_rate=samp_rate,samp_type=samp_type_gaus)
+               samp_rate=samp_rate,samp_type=samp_type_gaus,sampling_scheme=sampling_schemes)
 
 rule add_sims:
     input:
@@ -62,8 +63,8 @@ rule run_sims_uniform:
 rule run_sims_gaussian:
     input:
     output:
-        p="results/gaussian_w{w}/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_time{time}_r{r}_gaussian_w{w}_rep{rep}.p",
-        zero="results/gaussian_w{w}/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_time{time}_r{r}_gaussian_w{w}_rep{rep}.zero",
+        p="results/gaussian_w{w}/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_time{time}_r{r}_burnin_{sampling_scheme}_gaussian_w{w}_rep{rep}.p",
+        zero="results/gaussian_w{w}/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_time{time}_r{r}_burnin_{sampling_scheme}_gaussian_w{w}_rep{rep}.zero",
     params:
        	seed=wildcards2seed
     shell:
@@ -73,7 +74,7 @@ rule run_sims_gaussian:
         echo "Seed for output file {output.p}: {params.seed}" >> seeds_20240328.txt
         ~/.conda/envs/snakemake310/bin/python source/simulations.py -s {wildcards.s} --mu {wildcards.mu} --dens {wildcards.dens} -r {wildcards.r} \
             --sigma {wildcards.sigma} --time_limit {wildcards.time} -L {wildcards.L} \
-            --sampled_p_out {output.p} --seed {params.seed} --gaussian -w {wildcards.w} --zero_out {output.zero}
+            --sampled_p_out {output.p} --seed {params.seed} --sampling_scheme {wildcards.sampling_scheme} -w {wildcards.w} --zero_out {output.zero}
         end_time=$(date +%s)
         echo "Execution time for output file {output.p}: $((end_time - start_time)) seconds" >> log_times_20240328.txt
         """
