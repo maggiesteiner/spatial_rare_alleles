@@ -135,19 +135,19 @@ def sampling_probability_wrapped(
             locations[:, 1], loc=c[1], scale=w
         )
         # k = -1
-        # x1_dens += norm.pdf(
-        #     locations[:, 0], loc=c[0] - L, scale=w
-        # )
-        # x2_dens += norm.pdf(
-        #     locations[:, 1], loc=c[1] - L, scale=w,
-        # )
-        # # k = 1
-        # x1_dens += norm.pdf(
-        #     locations[:, 0], loc=c[0] + L, scale=w
-        # )
-        # x2_dens += norm.pdf(
-        #     locations[:, 1], loc=c[1] + L, scale=w
-        # )
+        x1_dens += norm.pdf(
+            locations[:, 0], loc=c[0] - L, scale=w
+        )
+        x2_dens += norm.pdf(
+            locations[:, 1], loc=c[1] - L, scale=w,
+        )
+        # k = 1
+        x1_dens += norm.pdf(
+            locations[:, 0], loc=c[0] + L, scale=w
+        )
+        x2_dens += norm.pdf(
+            locations[:, 1], loc=c[1] + L, scale=w
+        )
         prod_dens = x1_dens * x2_dens
         sampling_probs.append(np.sum(prod_dens)/rho)
     return sampling_probs
