@@ -12,25 +12,27 @@ seeds = range(1, 2) #21
 chroms = range(1,23)
 TARGETS = []
 groups = ['whitebritish']
-n_vals = ['10000','50000','100000','300000']
+n_vals = ['1000','3000','10000','50000','100000','300000']
 numiter_list = [0]
+type_list = ['all','lof']
 for seed in seeds:
     for g in groups:
         for n in n_vals:
             for i in numiter_list:
-                TARGETS.append(
-                    f"results/sfs/group{g}_nsamp{n}_numiter{i}.tsv",
-                )
-                TARGETS.append(
-                    f"results/sum_stats/group{g}_nsamp{n}_numiter{i}.tsv",
-                )
+                for t in type_list:
+                    TARGETS.append(
+                        f"results/sfs/group{g}_nsamp{n}_numiter{i}_{t}.tsv",
+                    )
+                    TARGETS.append(
+                        f"results/sum_stats/group{g}_nsamp{n}_numiter{i}_{t}.tsv",
+                    )
             
 TARGETS = np.unique(TARGETS).tolist()
 
 rule all:
     input:
-        expand("results/sfs/group{g}_nsamp{n}.tsv",g=groups,n=n_vals),
-        expand("results/sum_stats/group{g}_nsamp{n}.tsv",g=groups,n=n_vals),
+        expand("results/sfs/group{g}_nsamp{n}_{t}.tsv",g=groups,n=n_vals,t=type_list),
+        expand("results/sum_stats/group{g}_nsamp{n}_{t}.tsv",g=groups,n=n_vals,t=type_list),
  
 ### --------- Functions --------- ###
 
@@ -123,10 +125,11 @@ rule sum_stats:
             numiter=numiter_list,
         ),
     output:
-        sum_stats_file="results/sum_stats/group{group}_nsamp{n}.tsv",
+        sum_stats_file="results/sum_stats/group{group}_nsamp{n}_{type}.tsv",
     params:
         nsamp=lambda wildcards: int(wildcards.n),
         group=lambda wildcards: wildcards.group,
+        type=lambda wildcards: wildcards.type,
     script:
         "scripts/sum_stats.py"
 
@@ -138,9 +141,10 @@ rule sfs:
             numiter=numiter_list,
         ),
     output:
-        sum_stats_file="results/sfs/group{group}_nsamp{n}.tsv",
+        sum_stats_file="results/sfs/group{group}_nsamp{n}_{type}.tsv",
     params:
         nsamp=lambda wildcards: int(wildcards.n),
         group=lambda wildcards: wildcards.group,
+        type=lambda wildcards: wildcards.type,
     script:
         "scripts/sfs.py"

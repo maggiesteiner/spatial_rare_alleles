@@ -5,8 +5,10 @@ import re
 
 group = snakemake.params.group
 n = snakemake.params.nsamp
+type = snakemake.params.type
+
 aclab = "AC_"+group
-file_list = glob.glob("results/sfs_files/*merged*"+group+"*nsamp"+str(n)+'_*')#glob.glob("results/sfs_files/*merged*"+label+"*")
+file_list = glob.glob("results/sfs_files/*merged*"+group+"*nsamp"+str(n)+'_*')#glob.glob("results/sfs_files/*merged*"+label+"*.gz")
 segsites_list = []
 mono_list = []
 ac_mean_list = []
@@ -19,13 +21,25 @@ for file in file_list:
     data = pd.read_csv(file,sep='\t',compression='gzip')
     data[aclab] = pd.to_numeric(data[aclab], errors='coerce')
     iter_list.append(int(re.search(r'_iter(\d+)_', file).group(1)) if re.search(r'_iter(\d+)_', file) else [])
-    segsites_list.append(data[(data[aclab]>0) & (data[aclab]<n)].groupby(['CHROM','POS']).size().shape[0])
-    mono_list.append(data[data[aclab]==0].groupby(['CHROM','POS']).size().shape[0])
-    ac_mean_list.append(np.mean(data[aclab]))
-    ac_sd_list.append(np.std(data[aclab]))    
-    seg_ac_mean_list.append(np.mean(data[aclab][data[aclab]>0]))
-    seg_ac_sd_list.append(np.std(data[aclab][data[aclab]>0]))    
-    singletons_list.append(data[data[aclab]==1].groupby(['CHROM','POS']).size().shape[0])
+    if type == "all":
+    	segsites_list.append(data[(data[aclab]>0) & (data[aclab]<n)].groupby(['CHROM','POS']).size().shape[0])
+    	mono_list.append(data[data[aclab]==0].groupby(['CHROM','POS']).size().shape[0])
+    	ac_mean_list.append(np.mean(data[aclab]))
+    	ac_sd_list.append(np.std(data[aclab]))    
+    	seg_ac_mean_list.append(np.mean(data[aclab][data[aclab]>0]))
+    	seg_ac_sd_list.append(np.std(data[aclab][data[aclab]>0]))    
+    	singletons_list.append(data[data[aclab]==1].groupby(['CHROM','POS']).size().shape[0])
+    elif type == "lof":
+        filtered_data = data[data['Annot'] == 'LoF']
+        segsites_list.append(filtered_data[(filtered_data[aclab]>0) & (filtered_data[aclab]<n)].groupby(['CHROM','POS']).size().shape[0])
+        mono_list.append(filtered_data[filtered_data[aclab]==0].groupby(['CHROM','POS']).size().shape[0])
+        ac_mean_list.append(np.mean(filtered_data[aclab]))
+        ac_sd_list.append(np.std(filtered_data[aclab]))
+        seg_ac_mean_list.append(np.mean(filtered_data[aclab][filtered_data[aclab]>0]))
+        seg_ac_sd_list.append(np.std(filtered_data[aclab][filtered_data[aclab]>0]))
+        singletons_list.append(filtered_data[filtered_data[aclab]==1].groupby(['CHROM','POS']).size().shape[0])
+
+
 
 df = pd.DataFrame({
     'iter':iter_list,
