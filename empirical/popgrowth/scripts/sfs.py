@@ -17,10 +17,11 @@ for file in file_list:
     #print(file)
     data = pd.read_csv(file,sep='\t',compression='gzip')
     data[aclab] = pd.to_numeric(data[aclab], errors='coerce')
+    point_mutations = data[(data['REF'].apply(len) == 1) & (data['ALT'].apply(len) == 1)]
     if type == "all":
-        ac, ac_counts = np.unique(data[aclab], return_counts=True)
+        ac, ac_counts = np.unique(point_mutations[aclab], return_counts=True)
     elif type == "lof":
-        ac, ac_counts = np.unique(data.loc[data['Annot']=="LoF",aclab], return_counts=True)
+        ac, ac_counts = np.unique(point_mutations.loc[point_mutations['Annot']=="LoF",aclab], return_counts=True)
     #ac, ac_counts = np.unique(data[aclab], return_counts=True)
     counts_truc = ac_counts[:1001]
     row_temp = np.insert(counts_truc,0,iter)
