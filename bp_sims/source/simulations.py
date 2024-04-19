@@ -122,32 +122,20 @@ def sampling_probability_gaussian(
     return sampling_probs
 
 def sampling_probability_wrapped(
-    locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float
+    locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float, k_max: int=1
 ) -> list[float]:
     locations = locations[~np.isnan(locations).any(axis=1)]
     sampling_probs = []
     for c in centers:
-        # k = 0
-        x1_dens = norm.pdf(
-            locations[:, 0], loc=c[0], scale=w
-        )
-        x2_dens = norm.pdf(
-            locations[:, 1], loc=c[1], scale=w
-        )
-        # k = -1
-        x1_dens += norm.pdf(
-            locations[:, 0], loc=c[0] - L, scale=w
-        )
-        x2_dens += norm.pdf(
-            locations[:, 1], loc=c[1] - L, scale=w,
-        )
-        # k = 1
-        x1_dens += norm.pdf(
-            locations[:, 0], loc=c[0] + L, scale=w
-        )
-        x2_dens += norm.pdf(
-            locations[:, 1], loc=c[1] + L, scale=w
-        )
+        x1_dens = 0
+        x2_dens = 0
+        for k in np.arange(-k_max,k_max+1):
+            x1_dens += norm.pdf(
+                locations[:, 0], loc=c[0] + k*L, scale=w
+            )
+            x2_dens += norm.pdf(
+                locations[:, 1], loc=c[1] + k*L, scale=w,
+            )
         prod_dens = x1_dens * x2_dens
         sampling_probs.append(np.sum(prod_dens)/rho)
     return sampling_probs
@@ -241,13 +229,13 @@ def run_sim_spatial(
             locations[next_row] = locations[parent_index]
 
         elif event is Event.SAMPLE:
-            if sampling_scheme == 'wrapped_norm':
-                p = sampling_probability_wrapped(locations, centers, w, L, rho)
-            elif sampling_scheme == 'trunc_norm':
-                p = sampling_probability_gaussian(locations, centers, w, L, rho)
-            elif sampling_scheme == 'uniform':
-                p = [k / N]
             if time_running > burnin:
+                if sampling_scheme == 'wrapped_norm':
+                    p = sampling_probability_wrapped(locations, centers, w, L, rho)
+                elif sampling_scheme == 'trunc_norm':
+                    p = sampling_probability_gaussian(locations, centers, w, L, rho)
+                elif sampling_scheme == 'uniform':
+                    p = [k / N]
                 sampled_p_list.append(p)
 
     # Simulate the zero count SFS bin
