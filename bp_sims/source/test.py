@@ -140,6 +140,17 @@ class TestEvents(unittest.TestCase):
             p_temp = sampling_probability_gaussian(locations, centers,w, L, rho)
             p_new = sampling_probability_gaussian(locations, centers,w * 2, L, rho)
             self.assertGreater(p_new[0], p_temp[0])
+        
+        with self.subTest("correct length for sampling probabilities"):
+            L = 1.0
+            w = 0.1
+            rho = 2
+            locations = np.array(
+                [[0.24, 0.81], [np.nan, np.nan], [0.01, 0.01], [0.99, 0.99]]
+            )
+            centers = get_centers_grid(L,5)
+            p_temp = sampling_probability_wrapped(locations,centers,w,L,rho)          
+            self.assertEqual(len(p_temp),len(centers)) 
 
         with self.subTest("in range"):
             L = 50

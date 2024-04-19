@@ -197,11 +197,8 @@ def run_sim_spatial(
     # keep a running total of the time with zero carriers alive
     t_zero = 0.0
 
-    # if using grid sampling option, generate centers, otherwise sample from middle of habitat as before
-    if grid:
-        centers = get_centers_grid(L,n_side)
-    else:
-        centers = [(L/2,L/2)]
+    # calculate centers
+    centers = get_centers_grid(L,n_side)
 
     # track values of p
     sampled_p_list = []
