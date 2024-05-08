@@ -122,7 +122,7 @@ def sampling_probability_gaussian(
     return sampling_probs
 
 def sampling_probability_wrapped(
-    locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float, k_max: int=1
+    locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float, k_max: int
 ) -> list[float]:
     locations = locations[~np.isnan(locations).any(axis=1)]
     sampling_probs = []
@@ -148,11 +148,10 @@ def run_sim_spatial(
     sigma: float,
     max_ind: int,
     time_limit: float,
-    L: float = 50,
-    w: float = 1.0,
-    n_side: int = 1,
-    grid: bool=False,
-    sampling_scheme: str="uniform",
+    L: float,
+    w: float,
+    n_side: int,
+    sampling_scheme: str,
 ) -> tuple[list[float],int]:
     """
     * Carriers appear de novo with rate `mu`*`rho`
@@ -247,31 +246,31 @@ def run_sim_spatial(
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-s", type=float, help="selection coefficient", default=1e-2)
-    parser.add_argument("--mu", type=float, help="mutation rate", default=1e-4)
-    parser.add_argument("--dens", type=float, help="population density", default=2)
-    parser.add_argument("-r", type=float, help="sampling rate", default=0.1)
+    parser.add_argument("-s", type=float, help="selection coefficient")
+    parser.add_argument("--mu", type=float, help="mutation rate")
+    parser.add_argument("--dens", type=float, help="population density")
+    parser.add_argument("-r", type=float, help="sampling rate")
     parser.add_argument(
-        "--sigma", type=float, help="diffusion coefficient", default=0.2
+        "--sigma", type=float, help="diffusion coefficient"
     )
     parser.add_argument(
-        "--time_limit", type=float, help="time limit", default=1e3
+        "--time_limit", type=float, help="time limit"
     )
     parser.add_argument(
-        "--max_ind", type=int, help="max number of individuals", default=1000
+        "--max_ind", type=int, help="max number of individuals"
     )
-    parser.add_argument("-L", type=float, help="habitat width", default=50)
-    parser.add_argument("--seed", type=int, help="random string", default=2024)
+    parser.add_argument("-L", type=float, help="habitat width")
+    parser.add_argument("--seed", type=int, help="random string")
     parser.add_argument(
-        "--sampled_p_out", type=str, help="output file name for sampled values of p", default="sampled_p.csv"
+        "--sampled_p_out", type=str, help="output file name for sampled values of p"
     )
     parser.add_argument(
-        "--zero_out", type=str, help="output file name for number of zeros", default="zeros.csv"
+        "--zero_out", type=str, help="output file name for number of zeros"
     )
-    parser.add_argument("-w", type=float, help="width for sampling kernel", default=1)
-    parser.add_argument("--n_side", type=int, help="number of centers per side, if using grid option", default=4)
-    parser.add_argument("--grid",action="store_true",help="sample from grid of centers",default=False)
-    parser.add_argument("--sampling_scheme",type=str,help="uniform, trunc_norm, or wrapped_norm",default="uniform")
+    parser.add_argument("-w", type=float, help="width for sampling kernel")
+    parser.add_argument("--n_side", type=int, help="number of centers per side, if using grid option")
+    parser.add_argument("--grid",action="store_true",help="sample from grid of centers")
+    parser.add_argument("--sampling_scheme",type=str,help="uniform, trunc_norm, or wrapped_norm")
     args = parser.parse_args()
 
     # set seed
@@ -289,7 +288,6 @@ def main():
         L=args.L,
         w=args.w,
         n_side=args.n_side,
-        grid=args.grid,
         sampling_scheme=args.sampling_scheme,
     )
 
