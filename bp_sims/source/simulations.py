@@ -230,7 +230,7 @@ def run_sim_spatial(
         elif event is Event.SAMPLE:
             if time_running > burnin:
                 if sampling_scheme == 'wrapped_norm':
-                    p = sampling_probability_wrapped(locations, centers, w, L, rho)
+                    p = sampling_probability_wrapped(locations, centers, w, L, rho, k_max=1)
                 elif sampling_scheme == 'trunc_norm':
                     p = sampling_probability_gaussian(locations, centers, w, L, rho)
                 elif sampling_scheme == 'uniform':
