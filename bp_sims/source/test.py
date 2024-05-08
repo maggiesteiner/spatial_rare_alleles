@@ -149,7 +149,7 @@ class TestEvents(unittest.TestCase):
                 [[0.24, 0.81], [np.nan, np.nan], [0.01, 0.01], [0.99, 0.99]]
             )
             centers = get_centers_grid(L,5)
-            p_temp = sampling_probability_wrapped(locations,centers,w,L,rho)          
+            p_temp = sampling_probability_wrapped(locations,centers,w,L,rho,k_max=1)
             self.assertEqual(len(p_temp),len(centers)) 
 
         with self.subTest("in range"):
@@ -160,7 +160,7 @@ class TestEvents(unittest.TestCase):
                 [[0.24, 0.81], [np.nan, np.nan], [0.01, 0.01], [0.99, 0.99]]
             )
             centers = get_centers_grid(L,2)
-            p_temp = sampling_probability_wrapped(locations, centers, w, L, rho)
+            p_temp = sampling_probability_wrapped(locations, centers, w, L, rho,k_max=1)
             self.assertGreaterEqual(p_temp[0], 0)
             self.assertGreaterEqual(p_temp[1], 0)
             self.assertGreaterEqual(p_temp[2], 0)
@@ -179,9 +179,9 @@ class TestEvents(unittest.TestCase):
                 [[0.24, 0.81], [np.nan, np.nan], [0.01, 0.01], [0.99, 0.99]]
             )
             centers=[(L/2,L/2)]
-            p_temp = sampling_probability_wrapped(locations, centers, w, L, rho)
+            p_temp = sampling_probability_wrapped(locations, centers, w, L, rho,k_max=1)
             loc_new = np.append(locations, [[0, 0]], axis=0)
-            p_new = sampling_probability_wrapped(loc_new, centers, w, L, rho)
+            p_new = sampling_probability_wrapped(loc_new, centers, w, L, rho,k_max=1)
             self.assertGreater(p_new[0], p_temp[0])
 
         with self.subTest("farther away"):
@@ -190,9 +190,9 @@ class TestEvents(unittest.TestCase):
             rho = 2
             centers = [(L/2, L/2)]
             locations = np.array([[0.5, 0.5], [0.5, 0.5], [0.4, 0.4]])
-            p_temp = sampling_probability_wrapped(locations, centers, w, L, rho)
+            p_temp = sampling_probability_wrapped(locations, centers, w, L, rho,k_max=1)
             loc_new = locations - 0.2
-            p_new = sampling_probability_wrapped(loc_new, centers, w, L, rho)
+            p_new = sampling_probability_wrapped(loc_new, centers, w, L, rho,k_max=1)
             self.assertLess(p_new[0], p_temp[0])
 
         with self.subTest("increase w"):
@@ -201,8 +201,8 @@ class TestEvents(unittest.TestCase):
             rho = 2
             centers = [(L / 2, L / 2)]
             locations = np.array([[0.45, 0.45]])
-            p_temp = sampling_probability_wrapped(locations, centers,w, L, rho)
-            p_new = sampling_probability_wrapped(locations, centers,w * 2, L, rho)
+            p_temp = sampling_probability_wrapped(locations, centers,w, L, rho,k_max=1)
+            p_new = sampling_probability_wrapped(locations, centers,w * 2, L, rho,k_max=1)
             self.assertLess(p_new[0], p_temp[0])
 
         with self.subTest("one at boundary: 0"):
@@ -211,7 +211,7 @@ class TestEvents(unittest.TestCase):
             rho = 2
             locations = np.array([[0, 0]])
             centers = [(L / 2, L / 2)]
-            p_temp = sampling_probability_wrapped(locations, centers,w, L, rho)
+            p_temp = sampling_probability_wrapped(locations, centers,w, L, rho,k_max=1)
             self.assertGreater(p_temp[0], 0)
 
         with self.subTest("one at boundary: 1"):
@@ -220,7 +220,7 @@ class TestEvents(unittest.TestCase):
             rho = 2
             locations = np.array([[1, 1]])
             centers = [(L / 2, L / 2)]
-            p_temp = sampling_probability_wrapped(locations, centers,w, L, rho)
+            p_temp = sampling_probability_wrapped(locations, centers,w, L, rho,k_max=1)
             self.assertGreater(p_temp[0], 0)
 
         with self.subTest("one at boundary: epsilon away"):
@@ -230,7 +230,7 @@ class TestEvents(unittest.TestCase):
             epsilon = 1e-12
             locations = np.array([[1 - epsilon, 1 - epsilon]])
             centers = [(L / 2, L / 2)]
-            p_temp = sampling_probability_wrapped(locations, centers,w, L, rho)
+            p_temp = sampling_probability_wrapped(locations, centers,w, L, rho,k_max=1)
             self.assertGreater(p_temp[0], 0)
 
         with self.subTest("no carriers"):
@@ -239,7 +239,7 @@ class TestEvents(unittest.TestCase):
             rho = 2
             locations = np.array([[np.nan, np.nan], [np.nan, np.nan]])
             centers = [(L / 2, L / 2)]
-            p_temp = sampling_probability_wrapped(locations, centers,w, L, rho)
+            p_temp = sampling_probability_wrapped(locations, centers,w, L, rho,k_max=1)
             self.assertEqual(p_temp[0], 0)
 
         with self.subTest("near edge"):
@@ -249,8 +249,8 @@ class TestEvents(unittest.TestCase):
             epsilon = 1e-12
             locations = np.array([[1 - epsilon, 1 - epsilon]])
             centers = [(L / 2, L / 2)]
-            p_temp = sampling_probability_wrapped(locations, centers,w, L, rho)
-            p_new = sampling_probability_wrapped(locations, centers,w * 2, L, rho)
+            p_temp = sampling_probability_wrapped(locations, centers,w, L, rho,k_max=1)
+            p_new = sampling_probability_wrapped(locations, centers,w * 2, L, rho,k_max=1)
             self.assertGreater(p_new[0], p_temp[0])
 
     def test_grid_centers(self):
