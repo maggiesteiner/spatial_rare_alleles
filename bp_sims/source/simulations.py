@@ -146,7 +146,6 @@ def run_sim_spatial(
     rho: float,
     r: float,
     sigma: float,
-    max_ind: int,
     time_limit: float,
     L: float,
     w: float,
@@ -179,6 +178,7 @@ def run_sim_spatial(
 
     # keep track of individual level data
     # [x coord, y coord]
+    max_ind=10000
     locations = np.full((max_ind, 2), np.nan)
 
     # keep a running total of the time with zero carriers alive
