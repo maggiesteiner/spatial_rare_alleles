@@ -256,9 +256,6 @@ def main():
     parser.add_argument(
         "--time_limit", type=float, help="time limit"
     )
-    parser.add_argument(
-        "--max_ind", type=int, help="max number of individuals"
-    )
     parser.add_argument("-L", type=float, help="habitat width")
     parser.add_argument("--seed", type=int, help="random string")
     parser.add_argument(
@@ -284,7 +281,6 @@ def main():
         r=args.r,
         sigma=args.sigma,
         time_limit=args.time_limit,
-        max_ind=args.max_ind,
         L=args.L,
         w=args.w,
         n_side=args.n_side,
