@@ -1,11 +1,11 @@
 from hashlib import blake2b
 import numpy as np
 
-s_vals = [1e-1,1e-2]#,1e-3]
+s_vals = [1e-1]#,1e-3]
 mu_vals = [1e-9]
 dens_vals = [1]
 L_vals = [10000]
-sigma_vals = [10]
+sigma_vals = [10,100,1000]
 time_limit = [1e6]
 replicates = np.arange(10)
 samp_rate = [0.1]

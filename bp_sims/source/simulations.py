@@ -122,19 +122,21 @@ def sampling_probability_gaussian(
     return sampling_probs
 
 def sampling_probability_wrapped(
-    locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float, k_max: int=1
+    locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float, sigma: float, k_max: int=1
 ) -> list[float]:
     locations = locations[~np.isnan(locations).any(axis=1)]
     sampling_probs = []
+    lc = np.sqrt(sigma**2/s)
+    wtilde = w/lc
     for c in centers:
         x1_dens = 0
         x2_dens = 0
         for k in np.arange(-k_max,k_max+1):
             x1_dens += norm.pdf(
-                locations[:, 0], loc=c[0] + k*L, scale=w
+                locations[:, 0], loc=c[0] + k*L, scale=wtilde
             )
             x2_dens += norm.pdf(
-                locations[:, 1], loc=c[1] + k*L, scale=w,
+                locations[:, 1], loc=c[1] + k*L, scale=wtilde,
             )
         prod_dens = x1_dens * x2_dens
         sampling_probs.append(np.sum(prod_dens)/rho)
