@@ -1,0 +1,495 @@
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma100_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w10_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 100
+w: 10
+
+EP (sim): 1.0488267194319056e-08
+EP (theory): 1e-08
+
+EP2 (sim): 9.630152483817144e-12
+EP2 (theory): 7.963977418343839e-13
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma10_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w10_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 10
+w: 10
+
+EP (sim): 9.114723120939962e-09
+EP (theory): 1e-08
+
+EP2 (sim): 2.2664100916617084e-11
+EP2 (theory): 4.311008077165365e-11
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma1_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w10_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 1
+w: 10
+
+EP (sim): 9.748696240482662e-09
+EP (theory): 1e-08
+
+EP2 (sim): 5.653375155134705e-11
+EP2 (theory): 1.060110953728464e-09
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma30_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w10_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 30
+w: 10
+
+EP (sim): 9.182867972890606e-09
+EP (theory): 1e-08
+
+EP2 (sim): 1.1923241055474197e-11
+EP2 (theory): 6.720654864226836e-12
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma60_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w10_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 60
+w: 10
+
+EP (sim): 1.0174413570968055e-08
+EP (theory): 1e-08
+
+EP2 (sim): 9.627610764827153e-12
+EP2 (theory): 1.986297336573545e-12
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma100_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w100_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 100
+w: 100
+
+EP (sim): 1.002887143024811e-08
+EP (theory): 1e-08
+
+EP2 (sim): 2.946553305428741e-13
+EP2 (theory): 4.3119980771653646e-13
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma10_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w100_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 10
+w: 100
+
+EP (sim): 1.0123729254507879e-08
+EP (theory): 1e-08
+
+EP2 (sim): 8.038237222663174e-13
+EP2 (theory): 1.0601208537284634e-11
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma10_time10000000.0_r0.1_burnin_wrapped_norm_gaussian_w100_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 10
+w: 100
+
+EP (sim): 9.949150003152817e-09
+EP (theory): 1e-08
+
+EP2 (sim): 7.573642450460148e-13
+EP2 (theory): 1.0601208537284634e-11
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma1_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w100_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 1
+w: 100
+
+EP (sim): 9.87653018054621e-09
+EP (theory): 1e-08
+
+EP2 (sim): 7.680094789398677e-13
+EP2 (theory): 3.026364131859407e-11
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma30_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w100_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 30
+w: 100
+
+EP (sim): 9.80488944853781e-09
+EP (theory): 1e-08
+
+EP2 (sim): 5.86011009310593e-13
+EP2 (theory): 2.7476118487211357e-12
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma60_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w100_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 60
+w: 100
+
+EP (sim): 1.0088870464448466e-08
+EP (theory): 1e-08
+
+EP2 (sim): 4.3687905053852483e-13
+EP2 (theory): 9.765750870725815e-13
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma100_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w1000_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 100
+w: 1000
+
+EP (sim): 9.916781441805485e-09
+EP (theory): 1e-08
+
+EP2 (sim): 7.580951312298043e-15
+EP2 (theory): 1.0611108537284637e-13
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma10_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w1000_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 10
+w: 1000
+
+EP (sim): 1.0051497930653477e-08
+EP (theory): 1e-08
+
+EP2 (sim): 8.184316218871434e-15
+EP2 (theory): 3.0273541318594074e-13
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma10_time10000000.0_r0.1_burnin_wrapped_norm_gaussian_w1000_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 10
+w: 1000
+
+EP (sim): 1.0012668349350022e-08
+EP (theory): 1e-08
+
+EP2 (sim): 8.052909690696401e-15
+EP2 (theory): 3.0273541318594074e-13
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma1_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w1000_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 1
+w: 1000
+
+EP (sim): 1.0046090780096989e-08
+EP (theory): 1e-08
+
+EP2 (sim): 8.099268832469818e-15
+EP2 (theory): nan
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma30_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w1000_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 30
+w: 1000
+
+EP (sim): 1.0067007048575247e-08
+EP (theory): 1e-08
+
+EP2 (sim): 8.124479366000531e-15
+EP2 (theory): 2.4416113234010256e-13
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma60_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w1000_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 60
+w: 1000
+
+EP (sim): 1.0029800534907103e-08
+EP (theory): 1e-08
+
+EP2 (sim): 8.106973836578587e-15
+EP2 (theory): 1.6593959282782735e-13
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma100_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w30_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 100
+w: 30
+
+EP (sim): 1.0152199942448551e-08
+EP (theory): 1e-08
+
+EP2 (sim): 1.4473692635166279e-12
+EP2 (theory): 6.21685808516488e-13
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma10_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w30_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 10
+w: 30
+
+EP (sim): 9.725564542014779e-09
+EP (theory): 1e-08
+
+EP2 (sim): 5.640336279245537e-12
+EP2 (theory): 2.626837459223475e-11
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma30_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w30_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 30
+w: 30
+
+EP (sim): 1.0240417813814474e-08
+EP (theory): 1e-08
+
+EP2 (sim): 3.232466235179532e-12
+EP2 (theory): 4.790097863517073e-12
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma60_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w30_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 60
+w: 30
+
+EP (sim): 1.0189773902549716e-08
+EP (theory): 1e-08
+
+EP2 (sim): 1.969270829002976e-12
+EP2 (theory): 1.5015392231942018e-12
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma100_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w300_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 100
+w: 300
+
+EP (sim): 9.90614484752852e-09
+EP (theory): 1e-08
+
+EP2 (sim): 6.419972686432549e-14
+EP2 (theory): 2.627827459223475e-13
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma10_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w300_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 10
+w: 300
+
+EP (sim): 9.909787120430224e-09
+EP (theory): 1e-08
+
+EP2 (sim): 8.535829731322875e-14
+EP2 (theory): 2.5978428802305124e-12
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma30_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w300_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 30
+w: 300
+
+EP (sim): 1.0030355112731723e-08
+EP (theory): 1e-08
+
+EP2 (sim): 8.568362821992499e-14
+EP2 (theory): 1.1780009485871815e-12
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma60_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w300_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 60
+w: 300
+
+EP (sim): 9.893963535885106e-09
+EP (theory): 1e-08
+
+EP2 (sim): 7.60688243467518e-14
+EP2 (theory): 5.286982095801451e-13
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma100_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w60_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 100
+w: 60
+
+EP (sim): 1.006683104342345e-08
+EP (theory): 1e-08
+
+EP2 (sim): 5.540213439633647e-13
+EP2 (theory): 5.117470825057221e-13
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma10_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w60_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 10
+w: 60
+
+EP (sim): 1.0235525933199293e-08
+EP (theory): 1e-08
+
+EP2 (sim): 1.9716229550579543e-12
+EP2 (theory): 1.6622289182089226e-11
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma30_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w60_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 30
+w: 60
+
+EP (sim): 1.0201952715908325e-08
+EP (theory): 1e-08
+
+EP2 (sim): 1.392719221532795e-12
+EP2 (theory): 3.595166246264457e-12
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma60_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w60_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 60
+w: 60
+
+EP (sim): 9.999390434470227e-09
+EP (theory): 1e-08
+
+EP2 (sim): 8.21012372992155e-13
+EP2 (theory): 1.197599465879268e-12
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma100_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w600_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 100
+w: 600
+
+EP (sim): 1.0002096300347876e-08
+EP (theory): 1e-08
+
+EP2 (sim): 2.0037265117697898e-14
+EP2 (theory): 1.6632189182089223e-13
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma10_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w600_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 10
+w: 600
+
+EP (sim): 9.910965174989062e-09
+EP (theory): 1e-08
+
+EP2 (sim): 2.1891386042185295e-14
+EP2 (theory): 7.931524189462742e-13
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma30_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w600_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 30
+w: 600
+
+EP (sim): 1.00774716517847e-08
+EP (theory): 1e-08
+
+EP2 (sim): 2.2034223754214688e-14
+EP2 (theory): 5.227169831472892e-13
+
+-----------------------
+
+File prefix: s0.1_mu1e-09_rho1_L10000_sigma60_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w600_nside10_all
+s: 0.1
+mu: 1e-09
+rho: 1
+sigma: 60
+w: 600
+
+EP (sim): 9.961561576586386e-09
+EP (theory): 1e-08
+
+EP2 (sim): 2.1283181840580277e-14
+EP2 (theory): 2.945752371467954e-13
+
+-----------------------
+
