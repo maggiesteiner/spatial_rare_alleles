@@ -265,6 +265,8 @@ def run_sim_spatial(
     with open(json_out,"w") as file:
         json.dump(results,file)
 
+    return None
+
 
 def main():
     parser = argparse.ArgumentParser()
