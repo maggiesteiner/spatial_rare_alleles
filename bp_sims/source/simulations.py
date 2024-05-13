@@ -2,11 +2,11 @@ import argparse
 import sys
 from enum import Enum
 from typing import TypeAlias, Tuple
-import math
 import numpy as np
 from numpy.random import exponential, poisson
 from numpy.typing import NDArray
 from scipy.stats import norm, truncnorm  # type: ignore
+import json
 
 Locations: TypeAlias = NDArray[np.float64]
 SFS: TypeAlias = NDArray[np.float64]
@@ -107,7 +107,7 @@ def get_centers_grid(L,n_side):
 
 def sampling_probability_gaussian(
     locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float
-) -> list[float]:
+):
     locations = locations[~np.isnan(locations).any(axis=1)]
     sampling_probs = []
     for c in centers:
@@ -151,8 +151,8 @@ def run_sim_spatial(
     L: float = 50,
     w: float = 1.0,
     n_side: int = 1,
-    grid: bool=False,
     sampling_scheme: str="uniform",
+    json_out: str="output.json"
 ) -> tuple[list[float],int]:
     """
     * Carriers appear de novo with rate `mu`*`rho`
@@ -209,7 +209,7 @@ def run_sim_spatial(
         event = choose_event(k, s, theta, r)
 
         ### update spatial coordinates
-        locations = update_locations(locations, sigma, t_next, L)
+        locations = update_locations(locations=locations, sigma=sigma, t_next=t_next, L=L)
 
         if event is Event.MUTATION:
             # add a new lineage at a random location
@@ -231,7 +231,7 @@ def run_sim_spatial(
         elif event is Event.SAMPLE:
             if time_running > burnin:
                 if sampling_scheme == 'wrapped_norm':
-                    p = sampling_probability_wrapped(locations, centers, w, L, rho)
+                    p = sampling_probability_wrapped(locations=locations, centers=centers, w=w, L=L, rho=rho)
                 elif sampling_scheme == 'trunc_norm':
                     p = sampling_probability_gaussian(locations, centers, w, L, rho)
                 elif sampling_scheme == 'uniform':
@@ -241,8 +241,29 @@ def run_sim_spatial(
     # Simulate the zero count SFS bin
     zero_samples = generate_zeros(t_zero, r)*n_side**2
     sampled_p_flattened = [item for sublist in sampled_p_list for item in sublist]
-    return sampled_p_flattened, zero_samples
 
+    results = {
+        "s": s,
+        "mu": mu,
+        "rho": rho,
+        "r": r,
+        "sigma": sigma,
+        "max_ind": max_ind,
+        "time_limit": time_limit,
+        "L": L,
+        "w": w,
+        "n_side": n_side,
+        "sampling_scheme": sampling_scheme,
+        "sampled_p_flattened": sampled_p_flattened,
+        "zero_samples": zero_samples,
+        "centers": centers,
+        "burnin": burnin,
+        "N": N,
+        "theta": theta
+    }
+
+    with open(json_out,"w") as file:
+        json.dump(results,file)
 
 
 def main():
@@ -262,23 +283,17 @@ def main():
     )
     parser.add_argument("-L", type=float, help="habitat width", default=50)
     parser.add_argument("--seed", type=int, help="random string", default=2024)
-    parser.add_argument(
-        "--sampled_p_out", type=str, help="output file name for sampled values of p", default="sampled_p.csv"
-    )
-    parser.add_argument(
-        "--zero_out", type=str, help="output file name for number of zeros", default="zeros.csv"
-    )
     parser.add_argument("-w", type=float, help="width for sampling kernel", default=1)
     parser.add_argument("--n_side", type=int, help="number of centers per side, if using grid option", default=4)
-    parser.add_argument("--grid",action="store_true",help="sample from grid of centers",default=False)
     parser.add_argument("--sampling_scheme",type=str,help="uniform, trunc_norm, or wrapped_norm",default="uniform")
+    parser.add_argument("--json_out", type=str, help="json output filename", default="results.json")
     args = parser.parse_args()
 
     # set seed
     np.random.seed(args.seed)
 
     # run simulation
-    sampled_p, zero_samp = run_sim_spatial(
+    run_sim_spatial(
         s=args.s,
         mu=args.mu,
         rho=args.dens,
@@ -289,13 +304,12 @@ def main():
         L=args.L,
         w=args.w,
         n_side=args.n_side,
-        grid=args.grid,
         sampling_scheme=args.sampling_scheme,
+        json_out = args.json_out
     )
 
     # save output as CSV
-    np.savetxt(args.sampled_p_out, sampled_p, delimiter=",")
-    np.savetxt(args.zero_out, [zero_samp], delimiter=",")
+
 
 if __name__ == "__main__":
     main()
