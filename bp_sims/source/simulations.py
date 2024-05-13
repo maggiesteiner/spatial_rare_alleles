@@ -107,7 +107,7 @@ def get_centers_grid(L,n_side):
 
 def sampling_probability_gaussian(
     locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float
-):
+) -> list[float]:
     locations = locations[~np.isnan(locations).any(axis=1)]
     sampling_probs = []
     for c in centers:
@@ -153,7 +153,7 @@ def run_sim_spatial(
     n_side: int = 1,
     sampling_scheme: str="uniform",
     json_out: str="output.json"
-) -> tuple[list[float],int]:
+):
     """
     * Carriers appear de novo with rate `mu`*`rho`
     * Carriers give birth (split) with rate `1-s`
@@ -264,8 +264,6 @@ def run_sim_spatial(
 
     with open(json_out,"w") as file:
         json.dump(results,file)
-
-    return None
 
 
 def main():
