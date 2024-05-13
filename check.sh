@@ -13,7 +13,7 @@ if ! mypy --pretty bp_sims/source/; then
 fi
 
 echo Fuzzing simulations.py...
-if ! python bp_sims/source/simulations.py --sampled_p_out /dev/null --zero_out /dev/null; then
+if ! python bp_sims/source/simulations.py --json_out /dev/null; then
     echo "FAIL: simulations.py"
     exit 1
 fi
