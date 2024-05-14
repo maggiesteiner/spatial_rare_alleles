@@ -38,18 +38,47 @@ class TestEvents(unittest.TestCase):
             events_1 = [choose_event(1, s, theta, r) for _ in range(num_samples)]
             self.assertEqual(set(events_1), set(Event))
 
-    def test_sampling_prob(self):
+    def test_wrapped_norm(self):
 
-        with self.subTest("test wrapped_norm_pdf"):
+        with self.subTest("test wrapped_norm_pdf w<<L"):
+            L = 1.0
+            w = 0.01
+            x = np.linspace(0,L,20)
+            c = [0.5,0.5]
+            dens_wrap = wrapped_norm_pdf(x, loc=c[0], k_max=1, period=L, scale=w)
+            dens = norm.pdf(x, loc=c[0], scale=w)
+            # print(dens)
+            # print(dens_wrap)
+            # print(np.abs((dens-dens_wrap)/dens_wrap))
+            self.assertLessEqual(np.nanmax(np.abs((dens-dens_wrap)/dens_wrap)),1e-4)
+
+        with self.subTest("test wrapped_norm_pdf w>>L"):
+            L = 1.0
+            w = 100.0
+            x = np.linspace(0,L,20)
+            c = 0.5
+            dens_wrap = wrapped_norm_pdf(x, loc=c, k_max=1, period=L, scale=w)
+            relative_diffs = np.abs(np.diff(dens_wrap) / dens_wrap[:-1])
+            self.assertLessEqual(max(relative_diffs),1e-4)
+
+        with self.subTest("test wrapped_norm_pdf on edges"):
             L = 1.0
             w = 0.1
-            locations = np.array(
-                [[0.24, 0.81], [0.1, 0.1], [0.89, 0.32]]
-            )
-            c = [0.5,0.5]
-            dens_wrap = wrapped_norm_pdf(locations[:,0], loc=c[0], k_max=1, period=L, scale=w)
-            dens = norm.pdf(locations[:,0], loc=c[0],scale=w)
-            self.assertLessEqual(max(np.abs(dens-dens_wrap)),1e-4)
+            c = 0.5
+            dens_wrap = wrapped_norm_pdf(0, loc=c, k_max=1, period=L, scale=w)
+            dens = norm.pdf(0, loc=c, scale=w)
+            self.assertEqual(dens_wrap,2*dens)
+
+        with self.subTest("test wrapped_norm_pdf periodicity"):
+            L = 1.0
+            w = 0.1
+            c = 0.5
+            x = 0.2
+            dens_wrap = wrapped_norm_pdf(x, loc=c, k_max=1, period=L, scale=w)
+            dens_wrap_2 = wrapped_norm_pdf(x+L, loc=c, k_max=1, period=L, scale=w)
+            self.assertLessEqual(np.abs((dens_wrap-dens_wrap_2)/dens_wrap_2),1e-4)
+
+    def test_sampling_prob(self):
 
         with self.subTest("correct length for sampling probabilities"):
             L = 1.0
