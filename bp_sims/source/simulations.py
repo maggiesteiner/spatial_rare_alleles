@@ -262,7 +262,7 @@ def main():
     parser.add_argument("-L", type=float, help="habitat width")
     parser.add_argument("--seed", type=int, help="random string")
     parser.add_argument("-w", type=float, help="width for sampling kernel")
-    parser.add_argument("--n_side", type=int, help="number of centers per side, if using grid option")
+    parser.add_argument("--n_side", type=int, help="number of centers per side")
     parser.add_argument("--sampling_scheme",type=str,help="uniform or wrapped_norm")
     parser.add_argument("--json_out", type=str, help="json output filename")
     args = parser.parse_args()
