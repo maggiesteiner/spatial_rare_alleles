@@ -10,10 +10,10 @@ time_limit = [1e6]
 replicates = np.arange(10)
 samp_rate = [0.1]
 samp_type_unif = ["uniform"]
-#samp_type_gaus = ["gaussian_w10","gaussian_w100","gaussian_w1000","gaussian_w10000","gaussian_w100000"]
 samp_type_gaus = ["gaussian_w10","gaussian_w100","gaussian_w1000"]
 sampling_schemes = ["wrapped_norm"]
 n_sides = [10]
+out_dir = ["20240513"]
 
 def wildcards2seed(wildcards) -> int:
     wildcard_str = str(dict(wildcards))
@@ -22,60 +22,43 @@ def wildcards2seed(wildcards) -> int:
 
 rule all:
     input:
-        expand("results/{samp_type}/s{s_vals}_mu{mu_vals}/s{s_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_sigma{sigma_vals}_time{time_limit}_r{samp_rate}_burnin_{samp_type}_all.p",
+        expand("results/{out_dir}/s{s_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_sigma{sigma_vals}_time{time_limit}_r{samp_rate}_burnin_{samp_type}_rep{rep}.json",
                s_vals=s_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,sigma_vals=sigma_vals,time_limit=time_limit,
-               samp_rate=samp_rate,samp_type=samp_type_unif),
-        expand("results/{samp_type}/s{s_vals}_mu{mu_vals}/s{s_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_sigma{sigma_vals}_time{time_limit}_r{samp_rate}_burnin_{sampling_scheme}_{samp_type}_nside{n_side}_all.p",
+               samp_rate=samp_rate,samp_type=samp_type_unif,rep=replicates,out_dir = out_dir),
+        expand("results/{out_dir}/s{s_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_sigma{sigma_vals}_time{time_limit}_r{samp_rate}_burnin_{sampling_scheme}_{samp_type}_nside{n_side}_rep{rep}.json",
                s_vals=s_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,sigma_vals=sigma_vals,time_limit=time_limit,
-               samp_rate=samp_rate,samp_type=samp_type_gaus,sampling_scheme=sampling_schemes,n_side=n_sides)
-
-rule add_sims:
-    input:
-        zeros = expand("{{prefix}}_rep{rep}.zero", rep=replicates, allow_missing=True),
-        ps = expand("{{prefix}}_rep{rep}.p", rep=replicates, allow_missing=True),
-    output:
-        zero = "{prefix}_all.zero",
-        p = "{prefix}_all.p",
-    shell:
-        """
-        cat {input.ps} > {output.p}
-        awk '{{sum+=$1}} END {{print sum}}' {input.zeros} > {output.zero}
-        """
+               samp_rate=samp_rate,samp_type=samp_type_gaus,sampling_scheme=sampling_schemes,n_side=n_sides,rep=replicates, out_dir = out_dir)
 
 rule run_sims_uniform:
     input:
     output:
-        p="results/uniform/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_time{time}_r{r}_burnin_uniform_rep{rep}.p",
-        zero="results/uniform/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_time{time}_r{r}_burnin_uniform_rep{rep}.zero",
+        json="results/{out_dir}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_time{time}_r{r}_burnin_uniform_rep{rep}.json",
     params:
         seed=wildcards2seed
     shell:
         """
         mkdir -p results/uniform/s{wildcards.s}_mu{wildcards.mu}
         start_time=$(date +%s)
-        echo "Seed for output file {output.p}: {params.seed}" >> seeds_20240413.txt
         ~/.conda/envs/snakemake310/bin/python source/simulations.py -s {wildcards.s} --mu {wildcards.mu} --dens {wildcards.dens} -r {wildcards.r} \
             --sigma {wildcards.sigma} --time_limit {wildcards.time} -L {wildcards.L} \
-            --sampled_p_out {output.p} --seed {params.seed} --zero_out {output.zero}
+            --seed {params.seed} --json_out {output.json} --max_ind 1000
         end_time=$(date +%s)
-        echo "Execution time for output file {output.p}: $((end_time - start_time)) seconds" >> log_times_20240413.txt
+        echo "Execution time for output file {output.json}: $((end_time - start_time)) seconds" >> log_times_20240513.txt
         """
 
 rule run_sims_gaussian:
     input:
     output:
-        p="results/gaussian_w{w}/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_time{time}_r{r}_burnin_{sampling_scheme}_gaussian_w{w}_nside{n_side}_rep{rep}.p",
-        zero="results/gaussian_w{w}/s{s}_mu{mu}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_time{time}_r{r}_burnin_{sampling_scheme}_gaussian_w{w}_nside{n_side}_rep{rep}.zero",
+        json="results/{out_dir}/s{s}_mu{mu}_rho{dens}_L{L}_sigma{sigma}_time{time}_r{r}_burnin_{sampling_scheme}_gaussian_w{w}_nside{n_side}_rep{rep}.json",
     params:
        	seed=wildcards2seed
     shell:
         """
         mkdir -p results/gaussian_w{wildcards.w}/s{wildcards.s}_mu{wildcards.mu}
         start_time=$(date +%s)
-        echo "Seed for output file {output.p}: {params.seed}" >> seeds_20240415.txt
         ~/.conda/envs/snakemake310/bin/python source/simulations.py -s {wildcards.s} --mu {wildcards.mu} --dens {wildcards.dens} -r {wildcards.r} \
             --sigma {wildcards.sigma} --time_limit {wildcards.time} -L {wildcards.L} --n_side {wildcards.n_side} \
-            --sampled_p_out {output.p} --seed {params.seed} --sampling_scheme {wildcards.sampling_scheme} -w {wildcards.w} --zero_out {output.zero}
+            --seed {params.seed} --sampling_scheme {wildcards.sampling_scheme} -w {wildcards.w} --json_out {output.json} --max_ind 1000
         end_time=$(date +%s)
-        echo "Execution time for output file {output.p}: $((end_time - start_time)) seconds" >> log_times_20240415.txt
+        echo "Execution time for output file {output.json}: $((end_time - start_time)) seconds" >> log_times_20240513.txt
         """

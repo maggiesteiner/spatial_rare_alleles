@@ -1,16 +1,15 @@
 import argparse
 import sys
 from enum import Enum
-from typing import TypeAlias, Tuple
-import math
+from typing import TypeAlias
 import numpy as np
 from numpy.random import exponential, poisson
 from numpy.typing import NDArray
 from scipy.stats import norm, truncnorm  # type: ignore
+import json
 
 Locations: TypeAlias = NDArray[np.float64]
-SFS: TypeAlias = NDArray[np.float64]
-sampled_p_list: TypeAlias = list[float]
+
 
 class Event(Enum):
     BIRTH = 0
@@ -148,12 +147,11 @@ def run_sim_spatial(
     sigma: float,
     max_ind: int,
     time_limit: float,
-    L: float = 50,
-    w: float = 1.0,
-    n_side: int = 1,
-    grid: bool=False,
-    sampling_scheme: str="uniform",
-) -> tuple[list[float],int]:
+    L: float,
+    w: float,
+    n_side: int,
+    sampling_scheme: str,
+) -> dict:
     """
     * Carriers appear de novo with rate `mu`*`rho`
     * Carriers give birth (split) with rate `1-s`
@@ -209,7 +207,7 @@ def run_sim_spatial(
         event = choose_event(k, s, theta, r)
 
         ### update spatial coordinates
-        locations = update_locations(locations, sigma, t_next, L)
+        locations = update_locations(locations=locations, sigma=sigma, t_next=t_next, L=L)
 
         if event is Event.MUTATION:
             # add a new lineage at a random location
@@ -231,7 +229,7 @@ def run_sim_spatial(
         elif event is Event.SAMPLE:
             if time_running > burnin:
                 if sampling_scheme == 'wrapped_norm':
-                    p = sampling_probability_wrapped(locations, centers, w, L, rho)
+                    p = sampling_probability_wrapped(locations=locations, centers=centers, w=w, L=L, rho=rho)
                 elif sampling_scheme == 'trunc_norm':
                     p = sampling_probability_gaussian(locations, centers, w, L, rho)
                 elif sampling_scheme == 'uniform':
@@ -241,44 +239,58 @@ def run_sim_spatial(
     # Simulate the zero count SFS bin
     zero_samples = generate_zeros(t_zero, r)*n_side**2
     sampled_p_flattened = [item for sublist in sampled_p_list for item in sublist]
-    return sampled_p_flattened, zero_samples
 
+    results = {
+        "s": s,
+        "mu": mu,
+        "rho": rho,
+        "r": r,
+        "sigma": sigma,
+        "max_ind": max_ind,
+        "time_limit": time_limit,
+        "L": L,
+        "w": w,
+        "n_side": n_side,
+        "sampling_scheme": sampling_scheme,
+        "sampled_p_flattened": sampled_p_flattened,
+        "zero_samples": zero_samples,
+        "centers": centers,
+        "burnin": burnin,
+        "N": N,
+        "theta": theta
+    }
+
+    return results
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-s", type=float, help="selection coefficient", default=1e-2)
-    parser.add_argument("--mu", type=float, help="mutation rate", default=1e-4)
-    parser.add_argument("--dens", type=float, help="population density", default=2)
-    parser.add_argument("-r", type=float, help="sampling rate", default=0.1)
+    parser.add_argument("-s", type=float, help="selection coefficient")
+    parser.add_argument("--mu", type=float, help="mutation rate")
+    parser.add_argument("--dens", type=float, help="population density")
+    parser.add_argument("-r", type=float, help="sampling rate")
     parser.add_argument(
-        "--sigma", type=float, help="diffusion coefficient", default=0.2
+        "--sigma", type=float, help="diffusion coefficient"
     )
     parser.add_argument(
-        "--time_limit", type=float, help="time limit", default=1e3
+        "--time_limit", type=float, help="time limit"
     )
     parser.add_argument(
-        "--max_ind", type=int, help="max number of individuals", default=1000
+        "--max_ind", type=int, help="max number of individuals"
     )
-    parser.add_argument("-L", type=float, help="habitat width", default=50)
-    parser.add_argument("--seed", type=int, help="random string", default=2024)
-    parser.add_argument(
-        "--sampled_p_out", type=str, help="output file name for sampled values of p", default="sampled_p.csv"
-    )
-    parser.add_argument(
-        "--zero_out", type=str, help="output file name for number of zeros", default="zeros.csv"
-    )
-    parser.add_argument("-w", type=float, help="width for sampling kernel", default=1)
-    parser.add_argument("--n_side", type=int, help="number of centers per side, if using grid option", default=4)
-    parser.add_argument("--grid",action="store_true",help="sample from grid of centers",default=False)
-    parser.add_argument("--sampling_scheme",type=str,help="uniform, trunc_norm, or wrapped_norm",default="uniform")
+    parser.add_argument("-L", type=float, help="habitat width")
+    parser.add_argument("--seed", type=int, help="random string")
+    parser.add_argument("-w", type=float, help="width for sampling kernel")
+    parser.add_argument("--n_side", type=int, help="number of centers per side, if using grid option")
+    parser.add_argument("--sampling_scheme",type=str,help="uniform or wrapped_norm")
+    parser.add_argument("--json_out", type=str, help="json output filename")
     args = parser.parse_args()
 
     # set seed
     np.random.seed(args.seed)
 
     # run simulation
-    sampled_p, zero_samp = run_sim_spatial(
+    results = run_sim_spatial(
         s=args.s,
         mu=args.mu,
         rho=args.dens,
@@ -289,13 +301,15 @@ def main():
         L=args.L,
         w=args.w,
         n_side=args.n_side,
-        grid=args.grid,
-        sampling_scheme=args.sampling_scheme,
+        sampling_scheme=args.sampling_scheme
     )
+    # add seed to results
+    results['seed'] = args.seed
 
-    # save output as CSV
-    np.savetxt(args.sampled_p_out, sampled_p, delimiter=",")
-    np.savetxt(args.zero_out, [zero_samp], delimiter=",")
+    # save output as json
+    with open(args.json_out,"w") as file:
+        json.dump(results,file)
+
 
 if __name__ == "__main__":
     main()
