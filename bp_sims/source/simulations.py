@@ -1,7 +1,7 @@
 import argparse
 import sys
 from enum import Enum
-from typing import TypeAlias, Tuple
+from typing import TypeAlias
 import numpy as np
 from numpy.random import exponential, poisson
 from numpy.typing import NDArray
@@ -9,8 +9,7 @@ from scipy.stats import norm, truncnorm  # type: ignore
 import json
 
 Locations: TypeAlias = NDArray[np.float64]
-SFS: TypeAlias = NDArray[np.float64]
-sampled_p_list: TypeAlias = list[float]
+
 
 class Event(Enum):
     BIRTH = 0
@@ -148,12 +147,11 @@ def run_sim_spatial(
     sigma: float,
     max_ind: int,
     time_limit: float,
-    L: float = 50,
-    w: float = 1.0,
-    n_side: int = 1,
-    sampling_scheme: str="uniform",
-    json_out: str="output.json"
-):
+    L: float,
+    w: float,
+    n_side: int,
+    sampling_scheme: str,
+) -> dict:
     """
     * Carriers appear de novo with rate `mu`*`rho`
     * Carriers give birth (split) with rate `1-s`
@@ -262,38 +260,37 @@ def run_sim_spatial(
         "theta": theta
     }
 
-    with open(json_out,"w") as file:
-        json.dump(results,file)
+    return results
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-s", type=float, help="selection coefficient", default=1e-2)
-    parser.add_argument("--mu", type=float, help="mutation rate", default=1e-4)
-    parser.add_argument("--dens", type=float, help="population density", default=2)
-    parser.add_argument("-r", type=float, help="sampling rate", default=0.1)
+    parser.add_argument("-s", type=float, help="selection coefficient")
+    parser.add_argument("--mu", type=float, help="mutation rate")
+    parser.add_argument("--dens", type=float, help="population density")
+    parser.add_argument("-r", type=float, help="sampling rate")
     parser.add_argument(
-        "--sigma", type=float, help="diffusion coefficient", default=0.2
+        "--sigma", type=float, help="diffusion coefficient"
     )
     parser.add_argument(
-        "--time_limit", type=float, help="time limit", default=1e3
+        "--time_limit", type=float, help="time limit"
     )
     parser.add_argument(
-        "--max_ind", type=int, help="max number of individuals", default=1000
+        "--max_ind", type=int, help="max number of individuals"
     )
-    parser.add_argument("-L", type=float, help="habitat width", default=50)
-    parser.add_argument("--seed", type=int, help="random string", default=2024)
-    parser.add_argument("-w", type=float, help="width for sampling kernel", default=1)
-    parser.add_argument("--n_side", type=int, help="number of centers per side, if using grid option", default=4)
-    parser.add_argument("--sampling_scheme",type=str,help="uniform, trunc_norm, or wrapped_norm",default="uniform")
-    parser.add_argument("--json_out", type=str, help="json output filename", default="results.json")
+    parser.add_argument("-L", type=float, help="habitat width")
+    parser.add_argument("--seed", type=int, help="random string")
+    parser.add_argument("-w", type=float, help="width for sampling kernel")
+    parser.add_argument("--n_side", type=int, help="number of centers per side, if using grid option")
+    parser.add_argument("--sampling_scheme",type=str,help="uniform or wrapped_norm")
+    parser.add_argument("--json_out", type=str, help="json output filename")
     args = parser.parse_args()
 
     # set seed
     np.random.seed(args.seed)
 
     # run simulation
-    run_sim_spatial(
+    results = run_sim_spatial(
         s=args.s,
         mu=args.mu,
         rho=args.dens,
@@ -304,11 +301,14 @@ def main():
         L=args.L,
         w=args.w,
         n_side=args.n_side,
-        sampling_scheme=args.sampling_scheme,
-        json_out = args.json_out
+        sampling_scheme=args.sampling_scheme
     )
+    # add seed to results
+    results['seed'] = args.seed
 
-    # save output as CSV
+    # save output as json
+    with open(args.json_out,"w") as file:
+        json.dump(results,file)
 
 
 if __name__ == "__main__":

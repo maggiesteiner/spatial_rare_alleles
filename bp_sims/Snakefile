@@ -39,10 +39,9 @@ rule run_sims_uniform:
         """
         mkdir -p results/uniform/s{wildcards.s}_mu{wildcards.mu}
         start_time=$(date +%s)
-        echo "Seed for output file {output.json}: {params.seed}" >> seeds_20240513.txt
         ~/.conda/envs/snakemake310/bin/python source/simulations.py -s {wildcards.s} --mu {wildcards.mu} --dens {wildcards.dens} -r {wildcards.r} \
             --sigma {wildcards.sigma} --time_limit {wildcards.time} -L {wildcards.L} \
-            --seed {params.seed} --json_out {output.json}
+            --seed {params.seed} --json_out {output.json} --max_ind 1000
         end_time=$(date +%s)
         echo "Execution time for output file {output.json}: $((end_time - start_time)) seconds" >> log_times_20240513.txt
         """
@@ -57,10 +56,9 @@ rule run_sims_gaussian:
         """
         mkdir -p results/gaussian_w{wildcards.w}/s{wildcards.s}_mu{wildcards.mu}
         start_time=$(date +%s)
-        echo "Seed for output file {output.json}: {params.seed}" >> seeds_20240513.txt
         ~/.conda/envs/snakemake310/bin/python source/simulations.py -s {wildcards.s} --mu {wildcards.mu} --dens {wildcards.dens} -r {wildcards.r} \
             --sigma {wildcards.sigma} --time_limit {wildcards.time} -L {wildcards.L} --n_side {wildcards.n_side} \
-            --seed {params.seed} --sampling_scheme {wildcards.sampling_scheme} -w {wildcards.w} --json_out {output.json}
+            --seed {params.seed} --sampling_scheme {wildcards.sampling_scheme} -w {wildcards.w} --json_out {output.json} --max_ind 1000
         end_time=$(date +%s)
         echo "Execution time for output file {output.json}: $((end_time - start_time)) seconds" >> log_times_20240513.txt
         """
