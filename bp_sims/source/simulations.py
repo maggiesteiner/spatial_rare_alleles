@@ -5,11 +5,10 @@ from typing import TypeAlias
 import numpy as np
 from numpy.random import exponential, poisson
 from numpy.typing import NDArray
-from scipy.stats import norm, truncnorm  # type: ignore
+from scipy.stats import norm  # type: ignore
 import json
 
 Locations: TypeAlias = NDArray[np.float64]
-
 
 class Event(Enum):
     BIRTH = 0
@@ -104,22 +103,6 @@ def get_centers_grid(L,n_side):
     centers = [(x, y) for x in coords for y in coords]
     return centers
 
-def sampling_probability_gaussian(
-    locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float
-) -> list[float]:
-    locations = locations[~np.isnan(locations).any(axis=1)]
-    sampling_probs = []
-    for c in centers:
-        x1_dens = truncnorm.pdf(
-            locations[:, 0], loc=c[0], scale=w, a=(-c[0]) / w, b=(L-c[0]) / w
-        )
-        x2_dens = truncnorm.pdf(
-            locations[:, 1], loc=c[1], scale=w, a=(-c[1]) / w, b=(L-c[1]) / w
-        )
-        prod_dens = x1_dens * x2_dens
-        sampling_probs.append(np.sum(prod_dens)/rho)
-    return sampling_probs
-
 def sampling_probability_wrapped(
     locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float, k_max: int=1
 ) -> list[float]:
@@ -145,7 +128,6 @@ def run_sim_spatial(
     rho: float,
     r: float,
     sigma: float,
-    max_ind: int,
     time_limit: float,
     L: float,
     w: float,
@@ -170,7 +152,8 @@ def run_sim_spatial(
     * Output SFS distribution
     """
 
-    burnin=10/s
+    max_ind = 1000
+    burnin = 10/s
 
     # parameter for total mutation rate
     N = rho * (L**2)
@@ -212,7 +195,7 @@ def run_sim_spatial(
         if event is Event.MUTATION:
             # add a new lineage at a random location
             next_row = get_free_row(locations)
-            locations[next_row] = np.random.uniform(0, L, size=2)
+            locations[next_row] = np.random.uniform(low=0.0, high=L, size=2)
 
         elif event is Event.DEATH:
             ## choose a random individual to die
@@ -230,8 +213,6 @@ def run_sim_spatial(
             if time_running > burnin:
                 if sampling_scheme == 'wrapped_norm':
                     p = sampling_probability_wrapped(locations=locations, centers=centers, w=w, L=L, rho=rho)
-                elif sampling_scheme == 'trunc_norm':
-                    p = sampling_probability_gaussian(locations, centers, w, L, rho)
                 elif sampling_scheme == 'uniform':
                     p = [k / N]
                 sampled_p_list.append(p)
@@ -281,7 +262,7 @@ def main():
     parser.add_argument("-L", type=float, help="habitat width")
     parser.add_argument("--seed", type=int, help="random string")
     parser.add_argument("-w", type=float, help="width for sampling kernel")
-    parser.add_argument("--n_side", type=int, help="number of centers per side, if using grid option")
+    parser.add_argument("--n_side", type=int, help="number of centers per side")
     parser.add_argument("--sampling_scheme",type=str,help="uniform or wrapped_norm")
     parser.add_argument("--json_out", type=str, help="json output filename")
     args = parser.parse_args()
@@ -297,7 +278,6 @@ def main():
         r=args.r,
         sigma=args.sigma,
         time_limit=args.time_limit,
-        max_ind=args.max_ind,
         L=args.L,
         w=args.w,
         n_side=args.n_side,
