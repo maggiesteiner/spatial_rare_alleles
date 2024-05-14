@@ -42,15 +42,15 @@ class TestEvents(unittest.TestCase):
 
         with self.subTest("test wrapped_norm_pdf w<<L"):
             L = 1.0
-            w = 0.01
-            x = np.linspace(0,L,20)
+            w = L/10
+            x = np.linspace(0,L,int(1/w))
             c = [0.5,0.5]
             dens_wrap = wrapped_norm_pdf(x, loc=c[0], k_max=1, period=L, scale=w)
             dens = norm.pdf(x, loc=c[0], scale=w)
-            # print(dens)
-            # print(dens_wrap)
-            # print(np.abs((dens-dens_wrap)/dens_wrap))
-            self.assertLessEqual(np.nanmax(np.abs((dens-dens_wrap)/dens_wrap)),1e-4)
+
+            self.assertEqual(dens_wrap[0] / 2, dens[0])
+            self.assertEqual(dens_wrap[-1] / 2, dens[-1])
+            self.assertLessEqual(np.nanmax(np.abs((dens[1:-1]-dens_wrap[1:-1])/dens_wrap[1:-1])),1e-4)
 
         with self.subTest("test wrapped_norm_pdf w>>L"):
             L = 1.0
@@ -61,13 +61,6 @@ class TestEvents(unittest.TestCase):
             relative_diffs = np.abs(np.diff(dens_wrap) / dens_wrap[:-1])
             self.assertLessEqual(max(relative_diffs),1e-4)
 
-        with self.subTest("test wrapped_norm_pdf on edges"):
-            L = 1.0
-            w = 0.1
-            c = 0.5
-            dens_wrap = wrapped_norm_pdf(0, loc=c, k_max=1, period=L, scale=w)
-            dens = norm.pdf(0, loc=c, scale=w)
-            self.assertEqual(dens_wrap,2*dens)
 
         with self.subTest("test wrapped_norm_pdf periodicity"):
             L = 1.0
