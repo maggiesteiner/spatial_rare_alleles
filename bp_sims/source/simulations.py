@@ -103,29 +103,25 @@ def get_centers_grid(L,n_side):
     centers = [(x, y) for x in coords for y in coords]
     return centers
 
-
-def wrapped_norm_pdf(x: Locations, loc: tuple[float,float],scale: float, period: float,k_max: int=1):
-    x1_dens = 0
-    x2_dens = 0
-
+def wrapped_norm_pdf(x,loc,k_max:int,period: float, scale: float):
+    dens = 0
     for k in np.arange(-k_max, k_max + 1):
-        x1_dens += norm.pdf(
-            x[:, 0], loc=loc[0] + k * period, scale=scale
+        dens += norm.pdf(
+            x, loc=loc + k * period, scale=scale
         )
-        x2_dens += norm.pdf(
-            x[:, 1], loc=loc[1] + k * period, scale=scale,
-        )
-    prod_dens = x1_dens * x2_dens
-    return prod_dens
+    return dens
+
 
 def sampling_probability_wrapped(
     locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float, k_max: int=1
 ) -> list[float]:
-    loc_alive = locations[get_alive(locations)]
     sampling_probs = []
+    loc_alive = locations[get_alive(locations)]
     for c in centers:
-        dens = wrapped_norm_pdf(x=loc_alive,loc=c,k_max=k_max,period=L,scale=w)
-        sampling_probs.append(np.sum(dens)/rho)
+        x1_dens = wrapped_norm_pdf(x=loc_alive[:,0],loc=c[0],scale=w,k_max=1,period=L)
+        x2_dens = wrapped_norm_pdf(x=loc_alive[:,1],loc=c[1],scale=w,k_max=1,period=L)
+        prod_dens = x1_dens * x2_dens
+        sampling_probs.append(np.sum(prod_dens)/rho)
     return sampling_probs
 
 def run_sim_spatial(

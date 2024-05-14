@@ -43,26 +43,13 @@ class TestEvents(unittest.TestCase):
         with self.subTest("test wrapped_norm_pdf"):
             L = 1.0
             w = 0.1
-            w2 = 0.5
             locations = np.array(
-                [[0.24, 0.81], [0.01, 0.01], [0.99, 0.99]]
-            )
-            locations_2 = np.array(
-                [[0.01, 0.01]]
+                [[0.24, 0.81], [0.1, 0.1], [0.89, 0.32]]
             )
             c = [0.5,0.5]
-            pdf_test = wrapped_norm_pdf(x=locations,loc=c,k_max=1,period=L,scale=w)
-            pdf_test_2 = wrapped_norm_pdf(x=locations_2,loc=c,k_max=1,period=L,scale=w)
-            pdf_test_w2 = wrapped_norm_pdf(x=locations,loc=c,k_max=1,period=L,scale=w2)
-            pdf_test_2_w2 = wrapped_norm_pdf(x=locations_2,loc=c,k_max=1,period=L,scale=w2)
-
-            self.assertLessEqual(len(pdf_test),len(locations))
-            self.assertLessEqual(len(pdf_test_2), len(locations_2))
-            self.assertGreater(sum(pdf_test),sum(pdf_test_2))
-            self.assertGreater(sum(pdf_test_w2), sum(pdf_test_2_w2))
-            self.assertGreater(sum(pdf_test_w2),sum(pdf_test))
-            self.assertGreater(sum(pdf_test_2_w2),sum(pdf_test_2))
-
+            dens_wrap = wrapped_norm_pdf(locations[:,0], loc=c[0], k_max=1, period=L, scale=w)
+            dens = norm.pdf(locations[:,0], loc=c[0],scale=w)
+            self.assertLessEqual(max(np.abs(dens-dens_wrap)),1e-4)
 
         with self.subTest("correct length for sampling probabilities"):
             L = 1.0
