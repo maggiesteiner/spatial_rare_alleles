@@ -35,27 +35,33 @@ def get_EP_sim(ps, zeros):
 def print_moments(f):
     with open(f,"r") as json_file:
         data = json.load(json_file)
-
+    s = data["s"]
+    mu = data["mu"]
+    rho = data["rho"]
+    sigma = data["sigma"]
+    w = data["w"]
+    sampled_p_flattened = np.array(data['sampled_p_flattened'])
+    zero_samples = data['zero_samples']
 
     print(f"File path: {f}")
-    print(f"s: {data["s"]}")
-    print(f"mu: {data["mu"]}")
-    print(f"rho: {data["rho"]}")
-    print(f"sigma: {data["sigma"]}")
-    print(f"w: {data["w"]}\n")
+    print(f"s: {s}")
+    print(f"mu: {mu}")
+    print(f"rho: {rho}")
+    print(f"sigma: {sigma}")
+    print(f"w: {w}\n")
 
     # first moment
-    sim_EP = get_EP_sim(np.array(data['sampled_p_flattened']),data['zero_samples'])
-    theory_EP = get_EP_theory(data["mu"],data["s"])
+    sim_EP = get_EP_sim(sampled_p_flattened, zero_samples)
+    theory_EP = get_EP_theory(mu, s)
 
     print(f"EP (sim): {sim_EP}")
     print(f"EP (theory): {theory_EP}\n")
 
     # second moment
-    sim_EP2 = get_EPsquared_sim(np.array(data['sampled_p_flattened']),data['zero_samples'])
-    theory_EP2 = get_EPsquared_theory(mu=data["mu"], s=data["s"], rho=data["rho"], sigma=data["sigma"], w=data["w"])
-    theory_EP2_2 = get_EPsquared_theory(mu=data["mu"], s=data["s"], rho=data["rho"], sigma=data["w"], w=data["sigma"])
-    theory_EP2_3 = get_EPsquared_theory_swap(mu=data["mu"], s=data["s"], rho=data["rho"], sigma=data["sigma"], w=data["w"])
+    sim_EP2 = get_EPsquared_sim(sampled_p_flattened, zero_samples)
+    theory_EP2 = get_EPsquared_theory(mu=mu, s=s, rho=rho, sigma=sigma, w=w)
+    theory_EP2_2 = get_EPsquared_theory(mu=mu, s=s, rho=rho, sigma=w, w=sigma)
+    theory_EP2_3 = get_EPsquared_theory_swap(mu=mu, s=s, rho=rho, sigma=sigma, w=w)
 
     print(f"EP2 (sim): {sim_EP2}")
     print(f"EP2 (theory): {theory_EP2}")
