@@ -170,7 +170,7 @@ def run_sim_spatial(
     * Output SFS distribution
     """
 
-    burnin=10/s
+    burnin=10.0/s
 
     # parameter for total mutation rate
     N = rho * (L**2)
