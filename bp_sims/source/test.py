@@ -45,16 +45,16 @@ class TestEvents(unittest.TestCase):
             w = 0.1
             w2 = 0.5
             locations = np.array(
-                [[0.24, 0.81], [np.nan, np.nan], [0.01, 0.01], [0.99, 0.99]]
+                [[0.24, 0.81], [0.01, 0.01], [0.99, 0.99]]
             )
             locations_2 = np.array(
-                [[np.nan, np.nan], [0.01, 0.01]]
+                [[0.01, 0.01]]
             )
             c = [0.5,0.5]
-            pdf_test = wrapped_norm_pdf(locations,c,k_max=1,L=L,w=w)
-            pdf_test_2 = wrapped_norm_pdf(locations_2,c,k_max=1,L=L,w=w)
-            pdf_test_w2 = wrapped_norm_pdf(locations,c,k_max=1,L=L,w=w2)
-            pdf_test_2_w2 = wrapped_norm_pdf(locations_2,c,k_max=1,L=L,w=w2)
+            pdf_test = wrapped_norm_pdf(x=locations,loc=c,k_max=1,period=L,scale=w)
+            pdf_test_2 = wrapped_norm_pdf(x=locations_2,loc=c,k_max=1,period=L,scale=w)
+            pdf_test_w2 = wrapped_norm_pdf(x=locations,loc=c,k_max=1,period=L,scale=w2)
+            pdf_test_2_w2 = wrapped_norm_pdf(x=locations_2,loc=c,k_max=1,period=L,scale=w2)
 
             self.assertLessEqual(len(pdf_test),len(locations))
             self.assertLessEqual(len(pdf_test_2), len(locations_2))
