@@ -41,25 +41,28 @@ class TestEvents(unittest.TestCase):
     def test_wrapped_norm(self):
 
         with self.subTest("test wrapped_norm_pdf w<<L"):
+            # For every case but x == loc + period / 2, wrapped pdf should be close to gaussian pdf
+            # For that case it should be close to 2*gaussian (equidistant from the center & its translation by one period)
             L = 1.0
             w = L/10
             x = np.linspace(0,L,int(1/w))
-            c = [0.5,0.5]
-            dens_wrap = wrapped_norm_pdf(x, loc=c[0], k_max=1, period=L, scale=w)
-            dens = norm.pdf(x, loc=c[0], scale=w)
-
-            self.assertEqual(dens_wrap[0] / 2, dens[0])
-            self.assertEqual(dens_wrap[-1] / 2, dens[-1])
+            c = 0.5
+            dens_wrap = wrapped_norm_pdf(x, loc=c, k_max=1, period=L, scale=w)
+            dens = norm.pdf(x, loc=c, scale=w)
+            self.assertAlmostEqual(dens_wrap[0] / 2, dens[0])
+            self.assertAlmostEqual(dens_wrap[-1] / 2, dens[-1])
             self.assertLessEqual(np.nanmax(np.abs((dens[1:-1]-dens_wrap[1:-1])/dens_wrap[1:-1])),1e-4)
 
         with self.subTest("test wrapped_norm_pdf w>>L"):
-            L = 1.0
-            w = 100.0
+            L = 20.0
+            w = 10000.0
             x = np.linspace(0,L,20)
             c = 0.5
             dens_wrap = wrapped_norm_pdf(x, loc=c, k_max=1, period=L, scale=w)
+            dens = np.repeat(1/L,20)
             relative_diffs = np.abs(np.diff(dens_wrap) / dens_wrap[:-1])
             self.assertLessEqual(max(relative_diffs),1e-4)
+            self.assertLessEqual(np.nanmax(np.abs((dens[1:-1] - dens_wrap[1:-1]) / dens_wrap[1:-1])), 1e-4)
 
 
         with self.subTest("test wrapped_norm_pdf periodicity"):

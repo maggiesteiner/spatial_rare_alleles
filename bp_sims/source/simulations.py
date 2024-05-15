@@ -7,6 +7,7 @@ from numpy.random import exponential, poisson
 from numpy.typing import NDArray
 from scipy.stats import norm  # type: ignore
 import json
+from scipy.integrate import quad # type: ignore
 
 Locations: TypeAlias = NDArray[np.float64]
 
@@ -109,7 +110,8 @@ def wrapped_norm_pdf(x,loc,k_max:int,period: float, scale: float):
         dens += norm.pdf(
             x, loc=loc + k * period, scale=scale
         )
-    return dens
+    normalization_factor, _ = quad(lambda x: sum(norm.pdf(x, loc=loc + k * period, scale=scale) for k in np.arange(-k_max, k_max + 1)), 0, period)
+    return dens/normalization_factor
 
 
 def sampling_probability_wrapped(
