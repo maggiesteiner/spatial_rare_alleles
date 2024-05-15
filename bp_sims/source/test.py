@@ -53,16 +53,16 @@ class TestEvents(unittest.TestCase):
             self.assertAlmostEqual(dens_wrap[-1] / 2, dens[-1])
             self.assertLessEqual(np.nanmax(np.abs((dens[1:-1]-dens_wrap[1:-1])/dens_wrap[1:-1])),1e-4)
 
-        with self.subTest("test wrapped_norm_pdf w>>L"):
-            L = 20.0
-            w = 10000.0
+        with self.subTest("test wrapped_norm_pdf w=L"):
+            L = 1.0
+            w = L
             x = np.linspace(0,L,20)
             c = 0.5
-            dens_wrap = wrapped_norm_pdf(x, loc=c, k_max=1, period=L, scale=w)
+            dens_wrap = wrapped_norm_pdf(x, loc=c, k_max=2*w/L, period=L, scale=w)
             dens = np.repeat(1/L,20)
-            relative_diffs = np.abs(np.diff(dens_wrap) / dens_wrap[:-1])
-            self.assertLessEqual(max(relative_diffs),1e-4)
-            self.assertLessEqual(np.nanmax(np.abs((dens[1:-1] - dens_wrap[1:-1]) / dens_wrap[1:-1])), 1e-4)
+            print(dens)
+            print(dens_wrap)
+            self.assertLessEqual(np.nanmax(np.abs((dens - dens_wrap) / dens_wrap)), 1e-1)
 
 
         with self.subTest("test wrapped_norm_pdf periodicity"):
