@@ -156,7 +156,6 @@ def run_sim_spatial(
     * Output SFS distribution
     """
 
-    max_ind = 1000
     burnin = 10/s
 
     # parameter for total mutation rate
@@ -165,7 +164,8 @@ def run_sim_spatial(
 
     # keep track of individual level data
     # [x coord, y coord]
-    locations = np.full((max_ind, 2), np.nan)
+    n_start = 1000
+    locations = np.full((n_start, 2), np.nan)
 
     # keep a running total of the time with zero carriers alive
     t_zero = 0.0
@@ -231,7 +231,6 @@ def run_sim_spatial(
         "rho": rho,
         "r": r,
         "sigma": sigma,
-        "max_ind": max_ind,
         "time_limit": time_limit,
         "L": L,
         "w": w,
@@ -259,9 +258,6 @@ def main():
     )
     parser.add_argument(
         "--time_limit", type=float, help="time limit"
-    )
-    parser.add_argument(
-        "--max_ind", type=int, help="max number of individuals"
     )
     parser.add_argument("-L", type=float, help="habitat width")
     parser.add_argument("--seed", type=int, help="random string")
