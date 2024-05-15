@@ -1,7 +1,7 @@
 from hashlib import blake2b
 import numpy as np
 
-s_vals = [1e-1,1e-2]#,1e-3]
+s_vals = [1e-1]#,1e-3]
 mu_vals = [1e-9]
 dens_vals = [1]
 L_vals = [10000]
@@ -10,10 +10,11 @@ time_limit = [1e6]
 replicates = np.arange(10)
 samp_rate = [0.1]
 samp_type_unif = ["uniform"]
-samp_type_gaus = ["gaussian_w10","gaussian_w100","gaussian_w1000"]
+w_list = np.linspace(10,10000,num=10,dtype=int)
+samp_type_gaus = [f"gaussian_w{w}" for w in w_list]
 sampling_schemes = ["wrapped_norm"]
 n_sides = [10]
-out_dir = ["20240513"]
+out_dir = ["20240515"]
 
 def wildcards2seed(wildcards) -> int:
     wildcard_str = str(dict(wildcards))
