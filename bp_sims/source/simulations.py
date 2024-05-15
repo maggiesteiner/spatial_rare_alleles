@@ -104,24 +104,29 @@ def get_centers_grid(L,n_side):
     centers = [(x, y) for x in coords for y in coords]
     return centers
 
-def wrapped_norm_pdf(x,loc,k_max:int,period: float, scale: float):
+def precompute_normalization_factor(k_max: int, period: float, scale: float) -> float:
+    normalization_factor, _ = quad(lambda x: sum(norm.pdf(x, loc=k * period, scale=scale) for k in np.arange(-k_max, k_max + 1)), 0, period)
+    return normalization_factor
+
+def wrapped_norm_pdf(x,loc,k_max:int,period: float, scale: float, normalization_factor = None):
     dens = 0
     for k in np.arange(-k_max, k_max + 1):
         dens += norm.pdf(
             x, loc=loc + k * period, scale=scale
         )
-    normalization_factor, _ = quad(lambda x: sum(norm.pdf(x, loc=loc + k * period, scale=scale) for k in np.arange(-k_max, k_max + 1)), 0, period)
+    if normalization_factor is None:
+        normalization_factor, _ = quad(lambda x: sum(norm.pdf(x, loc=loc + k * period, scale=scale) for k in np.arange(-k_max, k_max + 1)), 0, period)
     return dens/normalization_factor
 
 
 def sampling_probability_wrapped(
-    locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float, k_max: int=1
+    locations: Locations, centers:list[tuple[float,float]], w: float, L: float, rho: float, normalization_factor=None
 ) -> list[float]:
     sampling_probs = []
     loc_alive = locations[get_alive(locations)]
     for c in centers:
-        x1_dens = wrapped_norm_pdf(x=loc_alive[:,0],loc=c[0],scale=w,k_max=1,period=L)
-        x2_dens = wrapped_norm_pdf(x=loc_alive[:,1],loc=c[1],scale=w,k_max=1,period=L)
+        x1_dens = wrapped_norm_pdf(x=loc_alive[:,0],loc=c[0],scale=w,k_max=1,period=L,normalization_factor=normalization_factor)
+        x2_dens = wrapped_norm_pdf(x=loc_alive[:,1],loc=c[1],scale=w,k_max=1,period=L,normalization_factor=normalization_factor)
         prod_dens = x1_dens * x2_dens
         sampling_probs.append(np.sum(prod_dens)/rho)
     return sampling_probs
@@ -173,6 +178,9 @@ def run_sim_spatial(
     # calculate centers
     centers = get_centers_grid(L,n_side)
 
+    if sampling_scheme == "wrapped_norm":
+        normalization_factor = precompute_normalization_factor(k_max=1, period=L, scale=w)
+
     # track values of p
     sampled_p_list = []
     # initialize current time at 0
@@ -216,7 +224,7 @@ def run_sim_spatial(
         elif event is Event.SAMPLE:
             if time_running > burnin:
                 if sampling_scheme == 'wrapped_norm':
-                    p = sampling_probability_wrapped(locations=locations, centers=centers, w=w, L=L, rho=rho)
+                    p = sampling_probability_wrapped(locations=locations, centers=centers, w=w, L=L, rho=rho, normalization_factor=normalization_factor)
                 elif sampling_scheme == 'uniform':
                     p = [k / N]
                 sampled_p_list.append(p)
