@@ -7,7 +7,6 @@ from numpy.random import exponential, poisson
 from numpy.typing import NDArray
 from scipy.stats import norm  # type: ignore
 import json
-from scipy.integrate import quad # type: ignore
 
 Locations: TypeAlias = NDArray[np.float64]
 
@@ -104,7 +103,9 @@ def get_centers_grid(L,n_side):
     centers = [(x, y) for x in coords for y in coords]
     return centers
 
-def wrapped_norm_pdf(x,loc,k_max:int,period: float, scale: float):
+def wrapped_norm_pdf(x, loc, period: float, scale: float):
+    # Include enough terms in the sum for good accuracy
+    k_max = int(np.ceil(5 * scale / period))
     dens = 0
     for k in np.arange(-k_max, k_max + 1):
         dens += norm.pdf(
@@ -119,8 +120,8 @@ def sampling_probability_wrapped(
     sampling_probs = []
     loc_alive = locations[get_alive(locations)]
     for c in centers:
-        x1_dens = wrapped_norm_pdf(x=loc_alive[:,0],loc=c[0],scale=w,k_max=1,period=L)
-        x2_dens = wrapped_norm_pdf(x=loc_alive[:,1],loc=c[1],scale=w,k_max=1,period=L)
+        x1_dens = wrapped_norm_pdf(x=loc_alive[:,0],loc=c[0],scale=w,period=L)
+        x2_dens = wrapped_norm_pdf(x=loc_alive[:,1],loc=c[1],scale=w,period=L)
         prod_dens = x1_dens * x2_dens
         sampling_probs.append(np.sum(prod_dens)/rho)
     return sampling_probs
