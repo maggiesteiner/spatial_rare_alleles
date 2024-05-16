@@ -171,7 +171,11 @@ def run_sim_spatial(
     t_zero = 0.0
 
     # calculate centers
-    centers = get_centers_grid(L,n_side)
+    if sampling_scheme == "wrapped_norm":
+        centers = get_centers_grid(L,n_side)
+    elif sampling_scheme == "uniform":
+        centers = np.nan
+        n_side = 1
 
     # track values of p
     sampled_p_list = []
