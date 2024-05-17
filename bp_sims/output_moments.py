@@ -20,7 +20,7 @@ def get_EPsquared_theory(mu, s, rho, sigma, w):
 
 def get_EPsquared_theory_finitehabitat(mu, s, rho, sigma, w):
     lcs = get_lc_squared(sigma, s)
-    return (mu/(s**2*rho*4*np.pi*lcs))*np.exp(-(w/np.sqrt(lcs))**2)*exp1((w/np.sqrt(lcs))**2)+mu**2/s**2
+    return (mu/(s**2*rho*4*np.pi*lcs))*np.exp((w/np.sqrt(lcs))**2)*exp1((w/np.sqrt(lcs))**2)+mu**2/s**2
 
 def get_EPsquared_theory_swap(mu, s, rho, sigma, w):
     lcs = get_lc_squared(w, s)
