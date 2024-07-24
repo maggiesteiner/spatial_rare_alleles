@@ -1,0 +1,123 @@
+#!python3
+
+import pandas as pd
+import numpy as np
+import itertools
+
+
+### --------- Configuration Information ---------- ###
+configfile: "config.yml"
+
+### --------- Set Up Targets --------- ###
+
+seeds = range(1, 2) #21
+chroms = range(1,23)
+TARGETS = []
+scenarios = config["UKBB"]["scenarios"]
+for seed in seeds:
+    for s in scenarios:
+        for c in chroms:
+            TARGETS.append(
+                f"results/sfs_files/merged_{s}_seed{seed}_n10000.sfs.tsv.gz",
+            )
+            TARGETS.append(
+                f"results/sum_stats/{s}_n10000.tsv",
+            )
+            TARGETS.append(
+                f"results/sfs/{s}_n10000_all.tsv",
+            )
+            TARGETS.append(
+                f"results/sfs/{s}_n10000_LOF.tsv",
+            )
+
+# Just get the unique targets for the pipeline if possible.
+TARGETS = np.unique(TARGETS).tolist()
+
+rule all:
+    input:
+        TARGETS,
+
+### --------- Download Metadata --------- ###
+   
+rule generate_fam_file:
+    input:
+        metadata_filtered="metadata/meta_wes_pcs_centroid.csv",
+    output: 
+        fam_file="data/id_lists/{scenario}_seed{seed}_n{n}.tsv",
+    params:
+        numsamp=lambda wildcards: int(wildcards.n),
+        label=lambda wildcards: wildcards.scenario,
+        seed=lambda wildcards: int(wildcards.seed), 
+       
+    script:
+        "scripts/gen_fam.py"
+        
+### NOTE: after this step, upload the fam files to directory maggie_pipeline_v4 and cd into this directory
+
+rule plink_frq:
+    input:
+        fam_file="data/id_lists/{scenario}_seed{seed}_n{n}.tsv",
+    output:
+        frq_file="data/frq/chr{chrom}_{scenario}_seed{seed}_n{n}.frq.strat"
+    shell:
+        """
+        dx run app-swiss-army-knife -y --wait \
+            -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bed \
+            -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bim \
+            -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.fam \
+            -iin={wildcards.scenario}_seed{wildcards.seed}_n{wildcards.n}.tsv \
+            -icmd='plink --bfile ukb23158_c{wildcards.chrom}_b0_v1 --keep {wildcards.scenario}_seed{wildcards.seed}_n{wildcards.n}.tsv --freq --within {wildcards.scenario}_seed{wildcards.seed}_n{wildcards.n}.tsv --out chr{wildcards.chrom}_{wildcards.scenario}_seed{wildcards.seed}_n{wildcards.n}'
+        dx download chr{wildcards.chrom}_{wildcards.scenario}_seed{wildcards.seed}_n{wildcards.n}.frq.strat
+        mv chr{wildcards.chrom}_{wildcards.scenario}_seed{wildcards.seed}_n{wildcards.n}.frq.strat data/frq
+        """
+
+rule format_tables_UKB_exomes:
+    input:
+        ukb_jsfs="data/frq/chr{chrom}_{scenario}_seed{seed}_n{n}.frq.strat",
+        script="scripts/format_data_UKB.R",
+        meta="metadata/ukb23158_500k_OQFE.annotations.txt"
+    output:
+        formatted_sfs="results/sfs_files/chr{chrom}_{scenario}_seed{seed}_n{n}.sfs.formatted.tsv.gz",
+    run:
+        shell("Rscript {input.script} {input.ukb_jsfs} {output.formatted_sfs} {input.meta}")
+
+rule concat_join_sfs_UKB:
+    input:
+        expand(
+            "results/sfs_files/chr{chrom}_{{scenario}}_seed{{seed}}_n{{n}}.sfs.formatted.tsv.gz",
+            chrom=chroms,
+        ),
+    output:
+        "results/sfs_files/merged_{scenario}_seed{seed}_n{n}.sfs.tsv.gz",
+    shell:
+        "zcat {input} | awk 'NR > 1 && /^Annot/ {{ next }} 1' | gzip > {output}"
+
+rule sum_stats:
+    input:
+        expand(
+            "results/sfs_files/merged_{{scenario}}_seed{seed}_n{{n}}.sfs.tsv.gz",
+            seed=seeds,
+        ),
+    output:
+        sum_stats_file="results/sum_stats/{scenario}_n{n}.tsv",
+    params:
+        nsamp=lambda wildcards: int(wildcards.n),
+        label=lambda wildcards: wildcards.scenario,
+    script:
+        "scripts/sum_stats.py"
+
+
+rule sfs:
+    input:
+        expand(
+            "results/sfs_files/merged_{{scenario}}_seed{seed}_n{{n}}.sfs.tsv.gz",
+            seed=seeds,
+        ),
+    output:
+        sum_stats_file="results/sfs/{scenario}_n{n}_{sfstype}.tsv",
+    params:
+        nsamp=lambda wildcards: int(wildcards.n),
+        label=lambda wildcards: wildcards.scenario,
+        type=lambda wildcards: wildcards.sfstype,
+    script:
+        "scripts/sfs.py"
