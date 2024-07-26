@@ -74,7 +74,8 @@ def get_weights(lcs, mean=25, var=5):
 
 
 # Gaussian samples with different sds
-sd_range_disp = np.arange(0, 205, 5)
+sd_range_disp = [0,5,10,50,100,185]
+sd_range_disp = np.array(sd_range_disp,dtype=float)
 sd_range = sd_range_disp * np.sqrt(0.06)
 
 sfs_data = {}
