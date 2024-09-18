@@ -1,4 +1,13 @@
 __pycache__
 venv/
 bp_sims/results/
-empirical/
+empirical/popgrowth/
+empirical/archive/
+empirical/subsampling_vF/.snakemake/
+empirical/subsampling_vF/data/frq/
+empirical/subsampling_vF/results/sfs_files/
+empirical/subsampling_vF/metadata/ukb_pca_plink2.eigenvec
+empirical/subsampling_vF/metadata/metadata_cleaned_wes.csv
+empirical/subsampling_vF/metadata/ukb23158_500k_OQFE.annotations.txt
+cf50d8c8ac19e6b92c47f0fed86839a3d3813e35
+b5c8b5ba5f5ecbd003e07efa16c86df8fee4bc7c
