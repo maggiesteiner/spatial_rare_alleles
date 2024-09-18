@@ -1,0 +1,1 @@
+{"s": 0.01, "mu": 1e-09, "rho": 2.5, "r": 0.1, "sigma": 10.0, "time_limit": 1000000.0, "L": 100.0, "w": null, "n_side": 1, "sampling_scheme": "uniform", "sampled_p_flattened": [4e-05, 8e-05, 8e-05, 4e-05, 0.00024, 4e-05, 0.00024, 4e-05, 8e-05, 8e-05], "zero_samples": 95378, "centers": NaN, "burnin": 1000.0, "N": 25000.0, "theta": 2.5e-05, "seed": 2582913487}
