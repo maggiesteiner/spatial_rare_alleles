@@ -1,2 +1,0 @@
-cluster: "sbatch --time=00:10:00 --mem=50GB -p broadwl -o slurm/logs/{rule}_{wildcards} -e slurm/logs/{rule}_{wildcards}"
-jobs: 100

@@ -1,0 +1,13 @@
+UKBB:
+    scenarios:
+        uniform:
+        1epsilonpca:
+        5epsilonpca:
+        10epsilonpca:
+        50epsilonpca:
+        100epsilonpca:
+        closest10kpca:
+        5epsilongeo:
+        10epsilongeo:
+        50epsilongeo:
+        closest10kgeo:

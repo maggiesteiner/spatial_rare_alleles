@@ -1,0 +1,28 @@
+PLINK v2.00a3.1LM 64-bit Intel (19 May 2022)
+Options in effect:
+  --bfile merged_filtered
+  --keep used_in_pca.tsv
+  --out ukb_pca_plink2
+  --pca approx 20
+
+Hostname: job-GbKYX00J4p8yg3ZPQ2KvVFZQ
+Working directory: /home/dnanexus/out/out
+Start time: Tue Nov 21 23:15:07 2023
+
+Random number seed: 1700608507
+70213 MiB RAM detected; reserving 35106 MiB for main workspace.
+Using up to 36 threads (change this with --threads).
+488377 samples (264719 females, 223412 males, 246 ambiguous; 488377 founders)
+loaded from merged_filtered.fam.
+147604 variants loaded from merged_filtered.bim.
+Note: No phenotype data present.
+--keep: 407012 samples remaining.
+407012 samples (219559 females, 187453 males; 407012 founders) remaining after
+main filters.
+Calculating allele frequencies... done.
+Computing SVD of Krylov matrix... done.
+Recovering top PCs from range approximation... done.
+--pca approx: Eigenvectors written to ukb_pca_plink2.eigenvec , and eigenvalues
+written to ukb_pca_plink2.eigenval .
+
+End time: Wed Nov 22 01:03:20 2023
