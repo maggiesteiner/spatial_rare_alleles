@@ -2,20 +2,21 @@ from hashlib import blake2b
 import numpy as np
 import itertools
 
-s_vals = [1e-1,1e-2]
-mu_vals = [1e-9,1e-8]
+s_vals = [1e-1,1e-2,1e-3]
+mu_vals = [1e-9]#,1e-8]
 dens_vals = [2.5,20]
-L_vals = [100,1000,10000]
-sigma_vals = [10,20]
+L_vals = [1000,10000]
+#L_vals = [100,1000,10000]
+sigma_vals = [10]#,20]
 time_limit = [1e6]
 replicates = np.arange(10)
 samp_rate = [0.1]
 samp_type_unif = ["uniform"]
-w_list = np.logspace(10,10000,10)
+w_list = np.logspace(1,4,10)
 samp_type_gaus = [f"gaussian_w{w}" for w in w_list]
 sampling_schemes = ["wrapped_norm"]
 n_sides = [10]
-out_dir = ["20240520"]
+out_dir = ["20240521"]
 
 def wildcards2seed(wildcards) -> int:
     wildcard_str = str(dict(wildcards))
@@ -45,7 +46,7 @@ rule run_sims_uniform:
             --sigma {wildcards.sigma} --time_limit {wildcards.time} -L {wildcards.L} --sampling_scheme uniform \
             --seed {params.seed} --json_out {output.json}
         end_time=$(date +%s)
-        echo "Execution time for output file {output.json}: $((end_time - start_time)) seconds" >> log_times_20240513.txt
+        echo "Execution time for output file {output.json}: $((end_time - start_time)) seconds" >> log_times_20240521.txt
         """
 
 rule run_sims_gaussian:
@@ -62,5 +63,5 @@ rule run_sims_gaussian:
             --sigma {wildcards.sigma} --time_limit {wildcards.time} -L {wildcards.L} --n_side {wildcards.n_side} \
             --seed {params.seed} --sampling_scheme {wildcards.sampling_scheme} -w {wildcards.w} --json_out {output.json}
         end_time=$(date +%s)
-        echo "Execution time for output file {output.json}: $((end_time - start_time)) seconds" >> log_times_20240513.txt
+        echo "Execution time for output file {output.json}: $((end_time - start_time)) seconds" >> log_times_20240521.txt
         """
