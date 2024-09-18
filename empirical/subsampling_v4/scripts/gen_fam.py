@@ -11,6 +11,12 @@ if snakemake.params.label=="uniform":
     new_df = pd.DataFrame({"X1": sampled_df.iloc[:, 0], "X2": sampled_df.iloc[:, 0], "Clust": snakemake.params.label})
     new_df.to_csv(snakemake.output[0], sep="\t", index=False)
 
+elif snakemake.params.label=="1epsilon":
+    filtered_df = df[(df.iloc[:,1]==1) & (df.iloc[:,-5]==True)] # filter to used in PCA YES and within_1epsilon TRUE
+    sampled_df = filtered_df.sample(n=snakemake.params.numsamp)
+    new_df = pd.DataFrame({"X1": sampled_df.iloc[:, 0], "X2": sampled_df.iloc[:, 0], "Clust": snakemake.params.label})    
+    new_df.to_csv(snakemake.output[0], sep="\t", index=False)
+
 elif snakemake.params.label=="2epsilon":
     filtered_df = df[(df.iloc[:,1]==1) & (df.iloc[:,-4]==True)] # filter to used in PCA YES and within_2epsilon TRUE
     sampled_df = filtered_df.sample(n=snakemake.params.numsamp)

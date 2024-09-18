@@ -1,2 +1,4 @@
 __pycache__
 venv/
+bp_sims/results/
+empirical/
