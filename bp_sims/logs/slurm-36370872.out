@@ -1,0 +1,1309 @@
+Using profile slurm for setting default command line arguments.
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 100
+Job stats:
+job                  count
+-----------------  -------
+run_sims_gaussian      141
+total                  141
+
+Select jobs to execute...
+
+[Sun Mar  3 17:48:24 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.1_n2_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.1_n2_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 676
+    reason: Missing output files: results/gaussian_w100/s0.1_n2_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.1, n=2, mu=0.0001, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 676 with external jobid 'Submitted batch job 36370874'.
+
+[Sun Mar  3 17:48:24 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.001_n1_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.001_n1_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 856
+    reason: Missing output files: results/gaussian_w100/s0.001_n1_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.001, n=1, mu=1e-07, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 856 with external jobid 'Submitted batch job 36370875'.
+
+[Sun Mar  3 17:48:24 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w5/s0.001_n100_mu0.0001_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w5.sfs, results/gaussian_w5/s0.001_n100_mu0.0001_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w5.loc
+    jobid: 556
+    reason: Missing output files: results/gaussian_w5/s0.001_n100_mu0.0001_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w5.sfs
+    wildcards: w=5, s=0.001, n=100, mu=0.0001, dens=5, L=50, maxcount=1000, sigma=0.2, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 556 with external jobid 'Submitted batch job 36370876'.
+
+[Sun Mar  3 17:48:25 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 886
+    reason: Missing output files: results/gaussian_w10/s0.001_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=2, mu=1e-08, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 886 with external jobid 'Submitted batch job 36370877'.
+
+[Sun Mar  3 17:48:25 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.001_n1000_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.001_n1000_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 916
+    reason: Missing output files: results/gaussian_w100/s0.001_n1000_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.001, n=1000, mu=0.0001, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 916 with external jobid 'Submitted batch job 36370878'.
+
+[Sun Mar  3 17:48:25 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.1_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 738
+    reason: Missing output files: results/gaussian_w10/s0.1_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.1, n=1000, mu=1e-08, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 738 with external jobid 'Submitted batch job 36370879'.
+
+[Sun Mar  3 17:48:25 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n1000_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n1000_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 918
+    reason: Missing output files: results/gaussian_w10/s0.001_n1000_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=1000, mu=0.0001, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 918 with external jobid 'Submitted batch job 36370880'.
+
+[Sun Mar  3 17:48:26 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.01_n1000_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.01_n1000_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 828
+    reason: Missing output files: results/gaussian_w100/s0.01_n1000_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.01, n=1000, mu=1e-07, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 828 with external jobid 'Submitted batch job 36370881'.
+
+[Sun Mar  3 17:48:26 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n1_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n1_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 858
+    reason: Missing output files: results/gaussian_w10/s0.001_n1_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=1, mu=1e-08, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 858 with external jobid 'Submitted batch job 36370882'.
+
+[Sun Mar  3 17:48:26 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.1_n2_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n2_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 678
+    reason: Missing output files: results/gaussian_w10/s0.1_n2_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.1, n=2, mu=0.0001, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 678 with external jobid 'Submitted batch job 36370883'.
+
+[Sun Mar  3 17:48:26 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.001_n100_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.001_n100_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 892
+    reason: Missing output files: results/gaussian_w100/s0.001_n100_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.001, n=100, mu=0.0001, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 892 with external jobid 'Submitted batch job 36370884'.
+
+[Sun Mar  3 17:48:26 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.001_n1_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.001_n1_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 864
+    reason: Missing output files: results/gaussian_w100/s0.001_n1_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.001, n=1, mu=1e-08, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 864 with external jobid 'Submitted batch job 36370885'.
+
+[Sun Mar  3 17:48:26 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.01_n100_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.01_n100_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 804
+    reason: Missing output files: results/gaussian_w100/s0.01_n100_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.01, n=100, mu=1e-07, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 804 with external jobid 'Submitted batch job 36370886'.
+
+[Sun Mar  3 17:48:26 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.1_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 714
+    reason: Missing output files: results/gaussian_w10/s0.1_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.1, n=100, mu=1e-08, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 714 with external jobid 'Submitted batch job 36370887'.
+
+[Sun Mar  3 17:48:26 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.1_n1_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n1_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 654
+    reason: Missing output files: results/gaussian_w10/s0.1_n1_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.1, n=1, mu=0.0001, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 654 with external jobid 'Submitted batch job 36370888'.
+
+[Sun Mar  3 17:48:26 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.01_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 834
+    reason: Missing output files: results/gaussian_w10/s0.01_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.01, n=1000, mu=1e-08, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 834 with external jobid 'Submitted batch job 36370889'.
+
+[Sun Mar  3 17:48:27 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n100_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n100_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 894
+    reason: Missing output files: results/gaussian_w10/s0.001_n100_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=100, mu=0.0001, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 894 with external jobid 'Submitted batch job 36370890'.
+
+[Sun Mar  3 17:48:27 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.01_n2_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n2_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 774
+    reason: Missing output files: results/gaussian_w10/s0.01_n2_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.01, n=2, mu=0.0001, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 774 with external jobid 'Submitted batch job 36370891'.
+
+[Sun Mar  3 17:48:27 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n100_mu1e-08_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n100_mu1e-08_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 594
+    reason: Missing output files: results/gaussian_w10/s0.001_n100_mu1e-08_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=100, mu=1e-08, dens=5, L=50, maxcount=1000, sigma=0.2, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 594 with external jobid 'Submitted batch job 36370892'.
+
+[Sun Mar  3 17:48:27 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.001_n1000_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.001_n1000_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 924
+    reason: Missing output files: results/gaussian_w100/s0.001_n1000_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.001, n=1000, mu=1e-07, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 924 with external jobid 'Submitted batch job 36370893'.
+
+[Sun Mar  3 17:48:27 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.01_n100_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n100_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 806
+    reason: Missing output files: results/gaussian_w10/s0.01_n100_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.01, n=100, mu=1e-07, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 806 with external jobid 'Submitted batch job 36370894'.
+
+[Sun Mar  3 17:48:27 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w1/s0.001_n1_mu0.0001_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.sfs, results/gaussian_w1/s0.001_n1_mu0.0001_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.loc
+    jobid: 446
+    reason: Missing output files: results/gaussian_w1/s0.001_n1_mu0.0001_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.sfs
+    wildcards: w=1, s=0.001, n=1, mu=0.0001, dens=5, L=50, maxcount=1000, sigma=0.2, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 446 with external jobid 'Submitted batch job 36370895'.
+
+[Sun Mar  3 17:48:27 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.01_n2_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.01_n2_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 776
+    reason: Missing output files: results/gaussian_w100/s0.01_n2_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.01, n=2, mu=0.0001, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 776 with external jobid 'Submitted batch job 36370896'.
+
+[Sun Mar  3 17:48:27 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.1_n1_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.1_n1_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 656
+    reason: Missing output files: results/gaussian_w100/s0.1_n1_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.1, n=1, mu=0.0001, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 656 with external jobid 'Submitted batch job 36370897'.
+
+[Sun Mar  3 17:48:27 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.001_n100_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.001_n100_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 896
+    reason: Missing output files: results/gaussian_w100/s0.001_n100_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.001, n=100, mu=0.0001, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 896 with external jobid 'Submitted batch job 36370898'.
+
+[Sun Mar  3 17:48:27 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.01_n1_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n1_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 746
+    reason: Missing output files: results/gaussian_w10/s0.01_n1_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.01, n=1, mu=0.0001, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 746 with external jobid 'Submitted batch job 36370899'.
+
+[Sun Mar  3 17:48:27 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n2_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n2_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 866
+    reason: Missing output files: results/gaussian_w10/s0.001_n2_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=2, mu=0.0001, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 866 with external jobid 'Submitted batch job 36370900'.
+
+[Sun Mar  3 17:48:27 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n1000_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n1000_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 926
+    reason: Missing output files: results/gaussian_w10/s0.001_n1000_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=1000, mu=1e-07, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 926 with external jobid 'Submitted batch job 36370901'.
+
+[Sun Mar  3 17:48:28 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.01_n1_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.01_n1_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 748
+    reason: Missing output files: results/gaussian_w100/s0.01_n1_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.01, n=1, mu=0.0001, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 748 with external jobid 'Submitted batch job 36370902'.
+
+[Sun Mar  3 17:48:28 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.001_n2_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.001_n2_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 868
+    reason: Missing output files: results/gaussian_w100/s0.001_n2_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.001, n=2, mu=0.0001, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 868 with external jobid 'Submitted batch job 36370903'.
+
+[Sun Mar  3 17:48:28 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.001_n1000_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.001_n1000_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 928
+    reason: Missing output files: results/gaussian_w100/s0.001_n1000_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.001, n=1000, mu=1e-07, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 928 with external jobid 'Submitted batch job 36370904'.
+
+[Sun Mar  3 17:48:28 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.01_n100_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.01_n100_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 808
+    reason: Missing output files: results/gaussian_w100/s0.01_n100_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.01, n=100, mu=1e-07, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 808 with external jobid 'Submitted batch job 36370905'.
+
+[Sun Mar  3 17:48:28 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w5/s0.001_n1_mu0.0001_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w5.sfs, results/gaussian_w5/s0.001_n1_mu0.0001_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w5.loc
+    jobid: 448
+    reason: Missing output files: results/gaussian_w5/s0.001_n1_mu0.0001_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w5.sfs
+    wildcards: w=5, s=0.001, n=1, mu=0.0001, dens=5, L=50, maxcount=1000, sigma=0.2, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 448 with external jobid 'Submitted batch job 36370906'.
+
+[Sun Mar  3 17:48:28 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w5/s0.1_n100_mu0.0001_rho2_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w5.sfs, results/gaussian_w5/s0.1_n100_mu0.0001_rho2_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w5.loc
+    jobid: 118
+    reason: Missing output files: results/gaussian_w5/s0.1_n100_mu0.0001_rho2_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w5.sfs
+    wildcards: w=5, s=0.1, n=100, mu=0.0001, dens=2, L=50, maxcount=1000, sigma=0.2, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 118 with external jobid 'Submitted batch job 36370907'.
+
+[Sun Mar  3 17:48:28 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w5/s0.001_n1000_mu0.0001_rho1_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w5.sfs, results/gaussian_w5/s0.001_n1000_mu0.0001_rho1_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w5.loc
+    jobid: 598
+    reason: Missing output files: results/gaussian_w5/s0.001_n1000_mu0.0001_rho1_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w5.sfs
+    wildcards: w=5, s=0.001, n=1000, mu=0.0001, dens=1, L=50, maxcount=1000, sigma=0.2, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 598 with external jobid 'Submitted batch job 36370908'.
+
+[Sun Mar  3 17:48:28 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.1_n1_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n1_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 658
+    reason: Missing output files: results/gaussian_w10/s0.1_n1_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.1, n=1, mu=1e-07, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 658 with external jobid 'Submitted batch job 36370909'.
+
+[Sun Mar  3 17:48:29 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.1_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 718
+    reason: Missing output files: results/gaussian_w10/s0.1_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.1, n=100, mu=1e-08, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 718 with external jobid 'Submitted batch job 36370910'.
+
+[Sun Mar  3 17:48:29 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.01_n1000_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n1000_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 838
+    reason: Missing output files: results/gaussian_w10/s0.01_n1000_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.01, n=1000, mu=1e-08, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 838 with external jobid 'Submitted batch job 36370911'.
+
+[Sun Mar  3 17:48:29 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n100_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n100_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 898
+    reason: Missing output files: results/gaussian_w10/s0.001_n100_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=100, mu=1e-07, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 898 with external jobid 'Submitted batch job 36370912'.
+
+[Sun Mar  3 17:48:29 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.01_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 810
+    reason: Missing output files: results/gaussian_w10/s0.01_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.01, n=100, mu=1e-08, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 810 with external jobid 'Submitted batch job 36370913'.
+
+[Sun Mar  3 17:48:29 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n1_mu0.0001_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n1_mu0.0001_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 450
+    reason: Missing output files: results/gaussian_w10/s0.001_n1_mu0.0001_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=1, mu=0.0001, dens=5, L=50, maxcount=1000, sigma=0.2, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 450 with external jobid 'Submitted batch job 36370914'.
+
+[Sun Mar  3 17:48:29 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.01_n100_mu1e-07_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n100_mu1e-07_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 360
+    reason: Missing output files: results/gaussian_w10/s0.01_n100_mu1e-07_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.01, n=100, mu=1e-07, dens=5, L=50, maxcount=1000, sigma=0.2, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 360 with external jobid 'Submitted batch job 36370915'.
+
+[Sun Mar  3 17:48:29 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.01_n1000_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.01_n1000_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 840
+    reason: Missing output files: results/gaussian_w100/s0.01_n1000_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.01, n=1000, mu=1e-08, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 840 with external jobid 'Submitted batch job 36370916'.
+
+[Sun Mar  3 17:48:29 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.001_n100_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.001_n100_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 900
+    reason: Missing output files: results/gaussian_w100/s0.001_n100_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.001, n=100, mu=1e-07, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 900 with external jobid 'Submitted batch job 36370917'.
+
+[Sun Mar  3 17:48:29 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.1_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 690
+    reason: Missing output files: results/gaussian_w10/s0.1_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.1, n=2, mu=1e-08, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 690 with external jobid 'Submitted batch job 36370918'.
+
+[Sun Mar  3 17:48:29 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.01_n1_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n1_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 750
+    reason: Missing output files: results/gaussian_w10/s0.01_n1_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.01, n=1, mu=0.0001, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 750 with external jobid 'Submitted batch job 36370919'.
+
+[Sun Mar  3 17:48:30 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n2_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n2_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 870
+    reason: Missing output files: results/gaussian_w10/s0.001_n2_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=2, mu=0.0001, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 870 with external jobid 'Submitted batch job 36370920'.
+
+[Sun Mar  3 17:48:30 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 930
+    reason: Missing output files: results/gaussian_w10/s0.001_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=1000, mu=1e-08, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 930 with external jobid 'Submitted batch job 36370921'.
+
+[Sun Mar  3 17:48:30 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.001_n2_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.001_n2_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 872
+    reason: Missing output files: results/gaussian_w100/s0.001_n2_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.001, n=2, mu=0.0001, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 872 with external jobid 'Submitted batch job 36370922'.
+
+[Sun Mar  3 17:48:30 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.01_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.01_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 812
+    reason: Missing output files: results/gaussian_w100/s0.01_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.01, n=100, mu=1e-08, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 812 with external jobid 'Submitted batch job 36370923'.
+
+[Sun Mar  3 17:48:30 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.1_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.1_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 692
+    reason: Missing output files: results/gaussian_w100/s0.1_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.1, n=2, mu=1e-08, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 692 with external jobid 'Submitted batch job 36370924'.
+
+[Sun Mar  3 17:48:30 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w1/s0.001_n100_mu0.0001_rho1_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.sfs, results/gaussian_w1/s0.001_n100_mu0.0001_rho1_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.loc
+    jobid: 542
+    reason: Missing output files: results/gaussian_w1/s0.001_n100_mu0.0001_rho1_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.sfs
+    wildcards: w=1, s=0.001, n=100, mu=0.0001, dens=1, L=50, maxcount=1000, sigma=0.2, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 542 with external jobid 'Submitted batch job 36370925'.
+
+[Sun Mar  3 17:48:30 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.01_n2_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n2_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 782
+    reason: Missing output files: results/gaussian_w10/s0.01_n2_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.01, n=2, mu=1e-07, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 782 with external jobid 'Submitted batch job 36370926'.
+
+[Sun Mar  3 17:48:30 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w1/s0.01_n1_mu1e-07_rho2_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.sfs, results/gaussian_w1/s0.01_n1_mu1e-07_rho2_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.loc
+    jobid: 242
+    reason: Missing output files: results/gaussian_w1/s0.01_n1_mu1e-07_rho2_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.sfs
+    wildcards: w=1, s=0.01, n=1, mu=1e-07, dens=2, L=50, maxcount=1000, sigma=0.2, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 242 with external jobid 'Submitted batch job 36370927'.
+
+[Sun Mar  3 17:48:30 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w1/s0.01_n1000_mu1e-08_rho2_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.sfs, results/gaussian_w1/s0.01_n1000_mu1e-08_rho2_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.loc
+    jobid: 422
+    reason: Missing output files: results/gaussian_w1/s0.01_n1000_mu1e-08_rho2_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.sfs
+    wildcards: w=1, s=0.01, n=1000, mu=1e-08, dens=2, L=50, maxcount=1000, sigma=0.2, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 422 with external jobid 'Submitted batch job 36370928'.
+
+[Sun Mar  3 17:48:30 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w1/s0.001_n1_mu1e-08_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.sfs, results/gaussian_w1/s0.001_n1_mu1e-08_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.loc
+    jobid: 482
+    reason: Missing output files: results/gaussian_w1/s0.001_n1_mu1e-08_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.sfs
+    wildcards: w=1, s=0.001, n=1, mu=1e-08, dens=5, L=50, maxcount=1000, sigma=0.2, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 482 with external jobid 'Submitted batch job 36370929'.
+
+[Sun Mar  3 17:48:30 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.1_n1_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n1_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 662
+    reason: Missing output files: results/gaussian_w10/s0.1_n1_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.1, n=1, mu=1e-07, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 662 with external jobid 'Submitted batch job 36370930'.
+
+[Sun Mar  3 17:48:30 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.1_n1000_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n1000_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 722
+    reason: Missing output files: results/gaussian_w10/s0.1_n1000_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.1, n=1000, mu=0.0001, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 722 with external jobid 'Submitted batch job 36370931'.
+
+[Sun Mar  3 17:48:30 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n1_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n1_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 842
+    reason: Missing output files: results/gaussian_w10/s0.001_n1_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=1, mu=0.0001, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 842 with external jobid 'Submitted batch job 36370932'.
+
+[Sun Mar  3 17:48:30 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n100_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n100_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 902
+    reason: Missing output files: results/gaussian_w10/s0.001_n100_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=100, mu=1e-07, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 902 with external jobid 'Submitted batch job 36370933'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w1/s0.1_n1_mu0.0001_rho1_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.sfs, results/gaussian_w1/s0.1_n1_mu0.0001_rho1_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.loc
+    jobid: 2
+    reason: Missing output files: results/gaussian_w1/s0.1_n1_mu0.0001_rho1_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.sfs
+    wildcards: w=1, s=0.1, n=1, mu=0.0001, dens=1, L=50, maxcount=1000, sigma=0.2, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 2 with external jobid 'Submitted batch job 36370934'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.01_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 814
+    reason: Missing output files: results/gaussian_w10/s0.01_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.01, n=100, mu=1e-08, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 814 with external jobid 'Submitted batch job 36370935'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.1_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 694
+    reason: Missing output files: results/gaussian_w10/s0.1_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.1, n=2, mu=1e-08, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 694 with external jobid 'Submitted batch job 36370936'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.01_n2_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.01_n2_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 784
+    reason: Missing output files: results/gaussian_w100/s0.01_n2_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.01, n=2, mu=1e-07, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 784 with external jobid 'Submitted batch job 36370937'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.1_n1000_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.1_n1000_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 724
+    reason: Missing output files: results/gaussian_w100/s0.1_n1000_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.1, n=1000, mu=0.0001, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 724 with external jobid 'Submitted batch job 36370938'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.001_n1_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.001_n1_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 844
+    reason: Missing output files: results/gaussian_w100/s0.001_n1_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.001, n=1, mu=0.0001, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 844 with external jobid 'Submitted batch job 36370939'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.001_n100_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.001_n100_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 904
+    reason: Missing output files: results/gaussian_w100/s0.001_n100_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.001, n=100, mu=1e-07, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 904 with external jobid 'Submitted batch job 36370940'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.01_n1_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n1_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 754
+    reason: Missing output files: results/gaussian_w10/s0.01_n1_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.01, n=1, mu=1e-07, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 754 with external jobid 'Submitted batch job 36370941'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n2_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n2_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 874
+    reason: Missing output files: results/gaussian_w10/s0.001_n2_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=2, mu=1e-07, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 874 with external jobid 'Submitted batch job 36370942'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n1000_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n1000_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 934
+    reason: Missing output files: results/gaussian_w10/s0.001_n1000_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=1000, mu=1e-08, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 934 with external jobid 'Submitted batch job 36370943'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.01_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.01_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 816
+    reason: Missing output files: results/gaussian_w100/s0.01_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.01, n=100, mu=1e-08, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 816 with external jobid 'Submitted batch job 36370944'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.1_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.1_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 696
+    reason: Missing output files: results/gaussian_w100/s0.1_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.1, n=2, mu=1e-08, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 696 with external jobid 'Submitted batch job 36370945'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.01_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 786
+    reason: Missing output files: results/gaussian_w10/s0.01_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.01, n=2, mu=1e-08, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 786 with external jobid 'Submitted batch job 36370946'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.1_n1_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n1_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 666
+    reason: Missing output files: results/gaussian_w10/s0.1_n1_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.1, n=1, mu=1e-08, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 666 with external jobid 'Submitted batch job 36370947'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.1_n1000_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n1000_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 726
+    reason: Missing output files: results/gaussian_w10/s0.1_n1000_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.1, n=1000, mu=0.0001, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 726 with external jobid 'Submitted batch job 36370948'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n1_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n1_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 846
+    reason: Missing output files: results/gaussian_w10/s0.001_n1_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=1, mu=0.0001, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 846 with external jobid 'Submitted batch job 36370949'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 906
+    reason: Missing output files: results/gaussian_w10/s0.001_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=100, mu=1e-08, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 906 with external jobid 'Submitted batch job 36370950'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.01_n1_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.01_n1_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 752
+    reason: Missing output files: results/gaussian_w100/s0.01_n1_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.01, n=1, mu=0.0001, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 752 with external jobid 'Submitted batch job 36370951'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.001_n2_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.001_n2_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 876
+    reason: Missing output files: results/gaussian_w100/s0.001_n2_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.001, n=2, mu=1e-07, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 876 with external jobid 'Submitted batch job 36370952'.
+
+[Sun Mar  3 17:48:31 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.001_n1000_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.001_n1000_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 936
+    reason: Missing output files: results/gaussian_w100/s0.001_n1000_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.001, n=1000, mu=1e-08, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 936 with external jobid 'Submitted batch job 36370953'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.01_n1000_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n1000_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 818
+    reason: Missing output files: results/gaussian_w10/s0.01_n1000_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.01, n=1000, mu=0.0001, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 818 with external jobid 'Submitted batch job 36370954'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.1_n100_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n100_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 698
+    reason: Missing output files: results/gaussian_w10/s0.1_n100_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.1, n=100, mu=0.0001, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 698 with external jobid 'Submitted batch job 36370955'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w1/s0.001_n1000_mu0.0001_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.sfs, results/gaussian_w1/s0.001_n1000_mu0.0001_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.loc
+    jobid: 608
+    reason: Missing output files: results/gaussian_w1/s0.001_n1000_mu0.0001_rho5_L50_maxcount1000_sigma0.2_seed0_iter100000000_r0.1_gaussian_w1.sfs
+    wildcards: w=1, s=0.001, n=1000, mu=0.0001, dens=5, L=50, maxcount=1000, sigma=0.2, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 608 with external jobid 'Submitted batch job 36370956'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.01_n1_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n1_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 758
+    reason: Missing output files: results/gaussian_w10/s0.01_n1_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.01, n=1, mu=1e-07, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 758 with external jobid 'Submitted batch job 36370957'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n2_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n2_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 878
+    reason: Missing output files: results/gaussian_w10/s0.001_n2_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=2, mu=1e-07, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 878 with external jobid 'Submitted batch job 36370958'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.01_n1000_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.01_n1000_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 820
+    reason: Missing output files: results/gaussian_w100/s0.01_n1000_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.01, n=1000, mu=0.0001, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 820 with external jobid 'Submitted batch job 36370959'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.1_n100_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.1_n100_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 700
+    reason: Missing output files: results/gaussian_w100/s0.1_n100_mu0.0001_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.1, n=100, mu=0.0001, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 700 with external jobid 'Submitted batch job 36370960'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.01_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 790
+    reason: Missing output files: results/gaussian_w10/s0.01_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.01, n=2, mu=1e-08, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 790 with external jobid 'Submitted batch job 36370961'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.1_n1_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n1_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 670
+    reason: Missing output files: results/gaussian_w10/s0.1_n1_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.1, n=1, mu=1e-08, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 670 with external jobid 'Submitted batch job 36370962'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.1_n1000_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n1000_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 730
+    reason: Missing output files: results/gaussian_w10/s0.1_n1000_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.1, n=1000, mu=1e-07, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 730 with external jobid 'Submitted batch job 36370963'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n1_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n1_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 850
+    reason: Missing output files: results/gaussian_w10/s0.001_n1_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=1, mu=1e-07, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 850 with external jobid 'Submitted batch job 36370964'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.001_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 910
+    reason: Missing output files: results/gaussian_w10/s0.001_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.001, n=100, mu=1e-08, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 910 with external jobid 'Submitted batch job 36370965'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.01_n1_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.01_n1_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 760
+    reason: Missing output files: results/gaussian_w100/s0.01_n1_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.01, n=1, mu=1e-07, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 760 with external jobid 'Submitted batch job 36370966'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.001_n2_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.001_n2_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 880
+    reason: Missing output files: results/gaussian_w100/s0.001_n2_mu1e-07_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.001, n=2, mu=1e-07, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 880 with external jobid 'Submitted batch job 36370967'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.01_n1000_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n1000_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 822
+    reason: Missing output files: results/gaussian_w10/s0.01_n1000_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.01, n=1000, mu=0.0001, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 822 with external jobid 'Submitted batch job 36370968'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w10/s0.1_n100_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n100_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    jobid: 702
+    reason: Missing output files: results/gaussian_w10/s0.1_n100_mu0.0001_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs
+    wildcards: w=10, s=0.1, n=100, mu=0.0001, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 702 with external jobid 'Submitted batch job 36370969'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.01_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.01_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 792
+    reason: Missing output files: results/gaussian_w100/s0.01_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.01, n=2, mu=1e-08, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 792 with external jobid 'Submitted batch job 36370970'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.1_n1_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.1_n1_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 672
+    reason: Missing output files: results/gaussian_w100/s0.1_n1_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.1, n=1, mu=1e-08, dens=100, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 672 with external jobid 'Submitted batch job 36370971'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.1_n1000_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.1_n1000_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 732
+    reason: Missing output files: results/gaussian_w100/s0.1_n1000_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.1, n=1000, mu=1e-07, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 732 with external jobid 'Submitted batch job 36370972'.
+
+[Sun Mar  3 17:48:32 2024]
+rule run_sims_gaussian:
+    output: results/gaussian_w100/s0.001_n1_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs, results/gaussian_w100/s0.001_n1_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.loc
+    jobid: 852
+    reason: Missing output files: results/gaussian_w100/s0.001_n1_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w100.sfs
+    wildcards: w=100, s=0.001, n=1, mu=1e-07, dens=10, L=5000, maxcount=1000, sigma=1, seed=0, iter=100000000, r=0.1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 852 with external jobid 'Submitted batch job 36370973'.
+[Sun Mar  3 17:49:48 2024]
+Error in rule run_sims_gaussian:
+    jobid: 738
+    output: results/gaussian_w10/s0.1_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    shell:
+        
+        mkdir -p results/gaussian_w10
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n 1000 -s 0.1 --mu 1e-08 --dens 10 -r 0.1             --sigma 1 --num_iter 100000000 --max_allele_count 1000 -L 5000 --sfs_out results/gaussian_w10/s0.1_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs             --loc_out results/gaussian_w10/s0.1_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc --seed 0 --gaussian -w 10
+        end_time=$(date +%s)
+        echo "Execution time for output file results/gaussian_w10/s0.1_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: $((end_time - start_time)) seconds" >> log_times.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 36370879
+
+Error executing rule run_sims_gaussian on cluster (jobid: 738, external: Submitted batch job 36370879, jobscript: /project2/jnovembre/steinerm/spatial_rare_alleles/bp_sims/.snakemake/tmp.47nd71zb/snakejob.run_sims_gaussian.738.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Mar  3 17:49:48 2024]
+Error in rule run_sims_gaussian:
+    jobid: 714
+    output: results/gaussian_w10/s0.1_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    shell:
+        
+        mkdir -p results/gaussian_w10
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n 100 -s 0.1 --mu 1e-08 --dens 10 -r 0.1             --sigma 1 --num_iter 100000000 --max_allele_count 1000 -L 5000 --sfs_out results/gaussian_w10/s0.1_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs             --loc_out results/gaussian_w10/s0.1_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc --seed 0 --gaussian -w 10
+        end_time=$(date +%s)
+        echo "Execution time for output file results/gaussian_w10/s0.1_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: $((end_time - start_time)) seconds" >> log_times.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 36370887
+
+Error executing rule run_sims_gaussian on cluster (jobid: 714, external: Submitted batch job 36370887, jobscript: /project2/jnovembre/steinerm/spatial_rare_alleles/bp_sims/.snakemake/tmp.47nd71zb/snakejob.run_sims_gaussian.714.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Mar  3 17:50:48 2024]
+Error in rule run_sims_gaussian:
+    jobid: 838
+    output: results/gaussian_w10/s0.01_n1000_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n1000_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    shell:
+        
+        mkdir -p results/gaussian_w10
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n 1000 -s 0.01 --mu 1e-08 --dens 100 -r 0.1             --sigma 1 --num_iter 100000000 --max_allele_count 1000 -L 5000 --sfs_out results/gaussian_w10/s0.01_n1000_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs             --loc_out results/gaussian_w10/s0.01_n1000_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc --seed 0 --gaussian -w 10
+        end_time=$(date +%s)
+        echo "Execution time for output file results/gaussian_w10/s0.01_n1000_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: $((end_time - start_time)) seconds" >> log_times.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 36370911
+
+Error executing rule run_sims_gaussian on cluster (jobid: 838, external: Submitted batch job 36370911, jobscript: /project2/jnovembre/steinerm/spatial_rare_alleles/bp_sims/.snakemake/tmp.47nd71zb/snakejob.run_sims_gaussian.838.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Mar  3 17:51:09 2024]
+Error in rule run_sims_gaussian:
+    jobid: 814
+    output: results/gaussian_w10/s0.01_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    shell:
+        
+        mkdir -p results/gaussian_w10
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n 100 -s 0.01 --mu 1e-08 --dens 100 -r 0.1             --sigma 1 --num_iter 100000000 --max_allele_count 1000 -L 5000 --sfs_out results/gaussian_w10/s0.01_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs             --loc_out results/gaussian_w10/s0.01_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc --seed 0 --gaussian -w 10
+        end_time=$(date +%s)
+        echo "Execution time for output file results/gaussian_w10/s0.01_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: $((end_time - start_time)) seconds" >> log_times.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 36370935
+
+Error executing rule run_sims_gaussian on cluster (jobid: 814, external: Submitted batch job 36370935, jobscript: /project2/jnovembre/steinerm/spatial_rare_alleles/bp_sims/.snakemake/tmp.47nd71zb/snakejob.run_sims_gaussian.814.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Mar  3 17:54:31 2024]
+Error in rule run_sims_gaussian:
+    jobid: 730
+    output: results/gaussian_w10/s0.1_n1000_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n1000_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    shell:
+        
+        mkdir -p results/gaussian_w10
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n 1000 -s 0.1 --mu 1e-07 --dens 10 -r 0.1             --sigma 1 --num_iter 100000000 --max_allele_count 1000 -L 5000 --sfs_out results/gaussian_w10/s0.1_n1000_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs             --loc_out results/gaussian_w10/s0.1_n1000_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc --seed 0 --gaussian -w 10
+        end_time=$(date +%s)
+        echo "Execution time for output file results/gaussian_w10/s0.1_n1000_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: $((end_time - start_time)) seconds" >> log_times.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 36370963
+
+Error executing rule run_sims_gaussian on cluster (jobid: 730, external: Submitted batch job 36370963, jobscript: /project2/jnovembre/steinerm/spatial_rare_alleles/bp_sims/.snakemake/tmp.47nd71zb/snakejob.run_sims_gaussian.730.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Mar  3 17:54:54 2024]
+Error in rule run_sims_gaussian:
+    jobid: 718
+    output: results/gaussian_w10/s0.1_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    shell:
+        
+        mkdir -p results/gaussian_w10
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n 100 -s 0.1 --mu 1e-08 --dens 100 -r 0.1             --sigma 1 --num_iter 100000000 --max_allele_count 1000 -L 5000 --sfs_out results/gaussian_w10/s0.1_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs             --loc_out results/gaussian_w10/s0.1_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc --seed 0 --gaussian -w 10
+        end_time=$(date +%s)
+        echo "Execution time for output file results/gaussian_w10/s0.1_n100_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: $((end_time - start_time)) seconds" >> log_times.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 36370910
+
+Error executing rule run_sims_gaussian on cluster (jobid: 718, external: Submitted batch job 36370910, jobscript: /project2/jnovembre/steinerm/spatial_rare_alleles/bp_sims/.snakemake/tmp.47nd71zb/snakejob.run_sims_gaussian.718.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Mar  3 17:55:14 2024]
+Error in rule run_sims_gaussian:
+    jobid: 690
+    output: results/gaussian_w10/s0.1_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    shell:
+        
+        mkdir -p results/gaussian_w10
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n 2 -s 0.1 --mu 1e-08 --dens 10 -r 0.1             --sigma 1 --num_iter 100000000 --max_allele_count 1000 -L 5000 --sfs_out results/gaussian_w10/s0.1_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs             --loc_out results/gaussian_w10/s0.1_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc --seed 0 --gaussian -w 10
+        end_time=$(date +%s)
+        echo "Execution time for output file results/gaussian_w10/s0.1_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: $((end_time - start_time)) seconds" >> log_times.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 36370918
+
+Error executing rule run_sims_gaussian on cluster (jobid: 690, external: Submitted batch job 36370918, jobscript: /project2/jnovembre/steinerm/spatial_rare_alleles/bp_sims/.snakemake/tmp.47nd71zb/snakejob.run_sims_gaussian.690.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Mar  3 17:56:47 2024]
+Error in rule run_sims_gaussian:
+    jobid: 834
+    output: results/gaussian_w10/s0.01_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    shell:
+        
+        mkdir -p results/gaussian_w10
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n 1000 -s 0.01 --mu 1e-08 --dens 10 -r 0.1             --sigma 1 --num_iter 100000000 --max_allele_count 1000 -L 5000 --sfs_out results/gaussian_w10/s0.01_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs             --loc_out results/gaussian_w10/s0.01_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc --seed 0 --gaussian -w 10
+        end_time=$(date +%s)
+        echo "Execution time for output file results/gaussian_w10/s0.01_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: $((end_time - start_time)) seconds" >> log_times.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 36370889
+
+Error executing rule run_sims_gaussian on cluster (jobid: 834, external: Submitted batch job 36370889, jobscript: /project2/jnovembre/steinerm/spatial_rare_alleles/bp_sims/.snakemake/tmp.47nd71zb/snakejob.run_sims_gaussian.834.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Mar  3 17:57:10 2024]
+Error in rule run_sims_gaussian:
+    jobid: 694
+    output: results/gaussian_w10/s0.1_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    shell:
+        
+        mkdir -p results/gaussian_w10
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n 2 -s 0.1 --mu 1e-08 --dens 100 -r 0.1             --sigma 1 --num_iter 100000000 --max_allele_count 1000 -L 5000 --sfs_out results/gaussian_w10/s0.1_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs             --loc_out results/gaussian_w10/s0.1_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc --seed 0 --gaussian -w 10
+        end_time=$(date +%s)
+        echo "Execution time for output file results/gaussian_w10/s0.1_n2_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: $((end_time - start_time)) seconds" >> log_times.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 36370936
+
+Error executing rule run_sims_gaussian on cluster (jobid: 694, external: Submitted batch job 36370936, jobscript: /project2/jnovembre/steinerm/spatial_rare_alleles/bp_sims/.snakemake/tmp.47nd71zb/snakejob.run_sims_gaussian.694.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Mar  3 18:00:18 2024]
+Error in rule run_sims_gaussian:
+    jobid: 810
+    output: results/gaussian_w10/s0.01_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    shell:
+        
+        mkdir -p results/gaussian_w10
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n 100 -s 0.01 --mu 1e-08 --dens 10 -r 0.1             --sigma 1 --num_iter 100000000 --max_allele_count 1000 -L 5000 --sfs_out results/gaussian_w10/s0.01_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs             --loc_out results/gaussian_w10/s0.01_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc --seed 0 --gaussian -w 10
+        end_time=$(date +%s)
+        echo "Execution time for output file results/gaussian_w10/s0.01_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: $((end_time - start_time)) seconds" >> log_times.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 36370913
+
+Error executing rule run_sims_gaussian on cluster (jobid: 810, external: Submitted batch job 36370913, jobscript: /project2/jnovembre/steinerm/spatial_rare_alleles/bp_sims/.snakemake/tmp.47nd71zb/snakejob.run_sims_gaussian.810.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Mar  3 18:05:37 2024]
+Error in rule run_sims_gaussian:
+    jobid: 666
+    output: results/gaussian_w10/s0.1_n1_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n1_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    shell:
+        
+        mkdir -p results/gaussian_w10
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n 1 -s 0.1 --mu 1e-08 --dens 10 -r 0.1             --sigma 1 --num_iter 100000000 --max_allele_count 1000 -L 5000 --sfs_out results/gaussian_w10/s0.1_n1_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs             --loc_out results/gaussian_w10/s0.1_n1_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc --seed 0 --gaussian -w 10
+        end_time=$(date +%s)
+        echo "Execution time for output file results/gaussian_w10/s0.1_n1_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: $((end_time - start_time)) seconds" >> log_times.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 36370947
+
+Error executing rule run_sims_gaussian on cluster (jobid: 666, external: Submitted batch job 36370947, jobscript: /project2/jnovembre/steinerm/spatial_rare_alleles/bp_sims/.snakemake/tmp.47nd71zb/snakejob.run_sims_gaussian.666.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Mar  3 18:12:32 2024]
+Error in rule run_sims_gaussian:
+    jobid: 786
+    output: results/gaussian_w10/s0.01_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.01_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    shell:
+        
+        mkdir -p results/gaussian_w10
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n 2 -s 0.01 --mu 1e-08 --dens 10 -r 0.1             --sigma 1 --num_iter 100000000 --max_allele_count 1000 -L 5000 --sfs_out results/gaussian_w10/s0.01_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs             --loc_out results/gaussian_w10/s0.01_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc --seed 0 --gaussian -w 10
+        end_time=$(date +%s)
+        echo "Execution time for output file results/gaussian_w10/s0.01_n2_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: $((end_time - start_time)) seconds" >> log_times.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 36370946
+
+Error executing rule run_sims_gaussian on cluster (jobid: 786, external: Submitted batch job 36370946, jobscript: /project2/jnovembre/steinerm/spatial_rare_alleles/bp_sims/.snakemake/tmp.47nd71zb/snakejob.run_sims_gaussian.786.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Mar  3 18:52:54 2024]
+Error in rule run_sims_gaussian:
+    jobid: 930
+    output: results/gaussian_w10/s0.001_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    shell:
+        
+        mkdir -p results/gaussian_w10
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n 1000 -s 0.001 --mu 1e-08 --dens 10 -r 0.1             --sigma 1 --num_iter 100000000 --max_allele_count 1000 -L 5000 --sfs_out results/gaussian_w10/s0.001_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs             --loc_out results/gaussian_w10/s0.001_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc --seed 0 --gaussian -w 10
+        end_time=$(date +%s)
+        echo "Execution time for output file results/gaussian_w10/s0.001_n1000_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: $((end_time - start_time)) seconds" >> log_times.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 36370921
+
+Error executing rule run_sims_gaussian on cluster (jobid: 930, external: Submitted batch job 36370921, jobscript: /project2/jnovembre/steinerm/spatial_rare_alleles/bp_sims/.snakemake/tmp.47nd71zb/snakejob.run_sims_gaussian.930.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Mar  3 20:05:13 2024]
+Error in rule run_sims_gaussian:
+    jobid: 670
+    output: results/gaussian_w10/s0.1_n1_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n1_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    shell:
+        
+        mkdir -p results/gaussian_w10
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n 1 -s 0.1 --mu 1e-08 --dens 100 -r 0.1             --sigma 1 --num_iter 100000000 --max_allele_count 1000 -L 5000 --sfs_out results/gaussian_w10/s0.1_n1_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs             --loc_out results/gaussian_w10/s0.1_n1_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc --seed 0 --gaussian -w 10
+        end_time=$(date +%s)
+        echo "Execution time for output file results/gaussian_w10/s0.1_n1_mu1e-08_rho100_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: $((end_time - start_time)) seconds" >> log_times.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 36370962
+
+Error executing rule run_sims_gaussian on cluster (jobid: 670, external: Submitted batch job 36370962, jobscript: /project2/jnovembre/steinerm/spatial_rare_alleles/bp_sims/.snakemake/tmp.47nd71zb/snakejob.run_sims_gaussian.670.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Mar  3 21:03:15 2024]
+Error in rule run_sims_gaussian:
+    jobid: 658
+    output: results/gaussian_w10/s0.1_n1_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.1_n1_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    shell:
+        
+        mkdir -p results/gaussian_w10
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n 1 -s 0.1 --mu 1e-07 --dens 10 -r 0.1             --sigma 1 --num_iter 100000000 --max_allele_count 1000 -L 5000 --sfs_out results/gaussian_w10/s0.1_n1_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs             --loc_out results/gaussian_w10/s0.1_n1_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc --seed 0 --gaussian -w 10
+        end_time=$(date +%s)
+        echo "Execution time for output file results/gaussian_w10/s0.1_n1_mu1e-07_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: $((end_time - start_time)) seconds" >> log_times.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 36370909
+
+Error executing rule run_sims_gaussian on cluster (jobid: 658, external: Submitted batch job 36370909, jobscript: /project2/jnovembre/steinerm/spatial_rare_alleles/bp_sims/.snakemake/tmp.47nd71zb/snakejob.run_sims_gaussian.658.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Mar  3 21:03:34 2024]
+Finished job 118.
+1 of 467 steps (0.2%) done
+[Sun Mar  3 21:03:53 2024]
+Finished job 692.
+2 of 467 steps (0.4%) done
+[Sun Mar  3 21:08:24 2024]
+Finished job 2.
+3 of 467 steps (1%) done
+[Sun Mar  3 21:44:57 2024]
+Finished job 732.
+4 of 467 steps (1%) done
+[Sun Mar  3 21:46:14 2024]
+Finished job 242.
+5 of 467 steps (1%) done
+[Sun Mar  3 21:49:38 2024]
+Finished job 360.
+6 of 467 steps (1%) done
+[Sun Mar  3 21:53:04 2024]
+Finished job 422.
+7 of 467 steps (1%) done
+[Sun Mar  3 21:54:07 2024]
+Finished job 672.
+8 of 467 steps (2%) done
+[Sun Mar  3 22:10:49 2024]
+Finished job 696.
+9 of 467 steps (2%) done
+[Sun Mar  3 22:22:10 2024]
+Error in rule run_sims_gaussian:
+    jobid: 906
+    output: results/gaussian_w10/s0.001_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs, results/gaussian_w10/s0.001_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc
+    shell:
+        
+        mkdir -p results/gaussian_w10
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n 100 -s 0.001 --mu 1e-08 --dens 10 -r 0.1             --sigma 1 --num_iter 100000000 --max_allele_count 1000 -L 5000 --sfs_out results/gaussian_w10/s0.001_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs             --loc_out results/gaussian_w10/s0.001_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.loc --seed 0 --gaussian -w 10
+        end_time=$(date +%s)
+        echo "Execution time for output file results/gaussian_w10/s0.001_n100_mu1e-08_rho10_L5000_maxcount1000_sigma1_seed0_iter100000000_r0.1_gaussian_w10.sfs: $((end_time - start_time)) seconds" >> log_times.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 36370950
+
+Error executing rule run_sims_gaussian on cluster (jobid: 906, external: Submitted batch job 36370950, jobscript: /project2/jnovembre/steinerm/spatial_rare_alleles/bp_sims/.snakemake/tmp.47nd71zb/snakejob.run_sims_gaussian.906.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Mar  3 22:41:33 2024]
+Finished job 812.
+10 of 467 steps (2%) done
+[Mon Mar  4 00:57:44 2024]
+Finished job 482.
+11 of 467 steps (2%) done
+[Mon Mar  4 01:07:04 2024]
+Finished job 594.
+12 of 467 steps (3%) done
+[Mon Mar  4 02:51:47 2024]
+Finished job 542.
+13 of 467 steps (3%) done
+[Mon Mar  4 02:56:01 2024]
+Finished job 598.
+14 of 467 steps (3%) done

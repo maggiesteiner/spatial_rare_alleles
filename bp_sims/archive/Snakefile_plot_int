@@ -1,0 +1,95 @@
+import os
+from glob import glob
+
+s_vals = [1e-1,1e-2,1e-3]
+n_vals = [1,2,100,1000]
+mu_vals = [1e-4,1e-7,1e-8]
+dens_vals = [1,2,5]
+L_vals = [50]
+maxcount = [1000]
+seeds = [0]
+sigma_vals = [0.2]
+num_iter = [100000000] #[10000000]
+extensions = ["sfs","loc"]
+samp_rate = [0.1]
+#samp_type = ["uniform","gaussian_w1","gaussian_w10"]
+samp_type = ["gaussian_w1","gaussian_w5","gaussian_w10"]
+
+#rule all:
+#    input:
+#        expand("results/{samp_type}/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}_{samp_type}.{extensions}",
+#               s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,maxcount=maxcount,sigma_vals=sigma_vals,seeds=seeds,num_iter=num_iter,
+#               samp_rate=samp_rate,extensions=extensions,samp_type=samp_type)
+
+dens_vals_2 = [10,100]
+L_vals_2 = [5000]
+sigma_vals_2 = [1]
+samp_type_2 = ["gaussian_w10","gaussian_w100"]
+
+#rule all:
+#    input:
+#        expand("plots/{samp_type}/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}_{samp_type}.png",
+#               s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals,L_vals=L_vals,maxcount=maxcount,sigma_vals=sigma_vals,seeds=seeds,num_iter=num_iter,
+#               samp_rate=samp_rate,samp_type=samp_type),
+#        expand("plots/{samp_type}/s{s_vals}_n{n_vals}_mu{mu_vals}_rho{dens_vals}_L{L_vals}_maxcount{maxcount}_sigma{sigma_vals}_seed{seeds}_iter{num_iter}_r{samp_rate}_{samp_type}.png",
+#               s_vals=s_vals,n_vals=n_vals,mu_vals=mu_vals,dens_vals=dens_vals_2,L_vals=L_vals_2,maxcount=maxcount,sigma_vals=sigma_vals_2,seeds=seeds,num_iter=num_iter,
+#               samp_rate=samp_rate,samp_type=samp_type_2)
+
+sfs_files = glob("results/**/*.sfs",recursive=True)
+png_files = [file.replace("results","plots").replace(".sfs",".png") for file in sfs_files]
+
+rule all:
+    input:
+        png_files
+
+rule run_sims_uniform:
+    input:
+    output:
+        sfs="results/uniform/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_uniform.sfs",
+        loc="results/uniform/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_uniform.loc",
+    shell:
+        """
+        mkdir -p results/uniform
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n {wildcards.n} -s {wildcards.s} --mu {wildcards.mu} --dens {wildcards.dens} -r {wildcards.r} \
+            --sigma {wildcards.sigma} --num_iter {wildcards.iter} --max_allele_count {wildcards.maxcount} -L {wildcards.L} --sfs_out {output.sfs} \
+            --loc_out {output.loc} --seed {wildcards.seed} 
+        end_time=$(date +%s)
+        echo "Execution time for output file {output.sfs}: $((end_time - start_time)) seconds" >> log_times.txt
+        """
+
+rule run_sims_gaussian:
+    input:
+    output:
+        sfs="results/gaussian_w{w}/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_gaussian_w{w}.sfs",
+        loc="results/gaussian_w{w}/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_gaussian_w{w}.loc",
+    shell:
+        """
+        mkdir -p results/gaussian_w{wildcards.w}
+        start_time=$(date +%s)
+        ~/.conda/envs/snakemake310/bin/python source/simulations.py -n {wildcards.n} -s {wildcards.s} --mu {wildcards.mu} --dens {wildcards.dens} -r {wildcards.r} \
+            --sigma {wildcards.sigma} --num_iter {wildcards.iter} --max_allele_count {wildcards.maxcount} -L {wildcards.L} --sfs_out {output.sfs} \
+            --loc_out {output.loc} --seed {wildcards.seed} --gaussian -w {wildcards.w}
+        end_time=$(date +%s)
+        echo "Execution time for output file {output.sfs}: $((end_time - start_time)) seconds" >> log_times.txt
+        """
+
+rule plot_sfs_unif:
+    input:
+        sfs="results/uniform/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_uniform.sfs",
+    output:
+        plot="plots/uniform/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_uniform.png",
+    shell:
+        """
+        python source/plot_sim_sfs.py --sfs_file {input.sfs} --filename {output.plot} --plot_theory
+        """
+
+rule plot_sfs_gaussian:
+    input:
+        sfs="results/gaussian_w{w}/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_gaussian_w{w}.sfs"
+    output:
+        plot="plots/gaussian_w{w}/s{s}_n{n}_mu{mu}_rho{dens}_L{L}_maxcount{maxcount}_sigma{sigma}_seed{seed}_iter{iter}_r{r}_gaussian_w{w}.png"
+    shell:
+        """
+        python source/plot_sim_sfs.py --sfs_file {input.sfs} --filename {output.plot} --plot_theory --gaussian -w {wildcards.w} --sigma {wildcards.sigma}
+        """
