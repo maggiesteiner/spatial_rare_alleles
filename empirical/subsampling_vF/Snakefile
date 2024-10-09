@@ -78,6 +78,14 @@ rule clean_metadata:
     script:
         "scripts/clean_metadata.py"
 
+rule importance_weights:
+    input:
+        "metadata/metadata_cleaned_wes.csv"
+    output:
+        "metadata/metadata_cleaned_wes_with_IS.csv"
+    script:
+        "scripts/importance_weights.py"
+
 rule generate_fam_files:
     input:
         meta_clean = "metadata/metadata_cleaned_wes.csv"
