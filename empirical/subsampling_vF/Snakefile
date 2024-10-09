@@ -84,7 +84,8 @@ rule importance_weights:
     input:
         "metadata/metadata_cleaned_wes.csv"
     output:
-        "metadata/metadata_cleaned_wes_with_IS.csv"
+        "metadata/metadata_IS_pca.csv",
+        "metadata/metadata_IS_geo.csv"
     script:
         "scripts/importance_weights.py"
 
