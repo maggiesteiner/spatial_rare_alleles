@@ -48,6 +48,8 @@ for seed in seeds:
 #                   f"data/frq/chr{c}_notwithin5epsilon_geo_all.frq.strat",
 #            )
 
+TARGETS.append("scripts/importance_weights.py")
+
 # Just get the unique targets for the pipeline if possible.
 TARGETS = np.unique(TARGETS).tolist()
 
