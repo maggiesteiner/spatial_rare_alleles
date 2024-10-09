@@ -17,9 +17,9 @@ scenarios = config["UKBB"]["scenarios"]
 for seed in seeds:
     for s in scenarios:
         for c in chroms:
-            TARGETS.append(
-                f"results/sfs_files/merged_{s}_seed{seed}_n10000.sfs.tsv.gz",
-            )
+            #TARGETS.append(
+            #    f"results/sfs_files/merged_{s}_seed{seed}_n10000.sfs.tsv.gz",
+            #)
             TARGETS.append(
                 f"results/sum_stats/{s}_n10000_all.tsv",
             )
@@ -32,21 +32,21 @@ for seed in seeds:
             TARGETS.append(
                 f"results/sfs/{s}_n10000_LOF.tsv",
             )
-            TARGETS.append(
-                f"data/frq/chr{c}_wholedataset.frq",
-            )
-            TARGETS.append(
-                f"data/frq/chr{c}_within1epsilon_pca_all.frq.strat",
-            )
-            TARGETS.append(
-                f"data/frq/chr{c}_notwithin1epsilon_pca_all.frq.strat",
-            )
-            TARGETS.append(
-                f"data/frq/chr{c}_within5epsilon_geo_all.frq.strat",
-            )
-            TARGETS.append(
-                   f"data/frq/chr{c}_notwithin5epsilon_geo_all.frq.strat",
-            )
+#            TARGETS.append(
+#                f"data/frq/chr{c}_wholedataset.frq",
+#            )
+#            TARGETS.append(
+#                f"data/frq/chr{c}_within1epsilon_pca_all.frq.strat",
+#            )
+#            TARGETS.append(
+#                f"data/frq/chr{c}_notwithin1epsilon_pca_all.frq.strat",
+#            )
+#            TARGETS.append(
+#                f"data/frq/chr{c}_within5epsilon_geo_all.frq.strat",
+#            )
+#            TARGETS.append(
+#                   f"data/frq/chr{c}_notwithin5epsilon_geo_all.frq.strat",
+#            )
 
 # Just get the unique targets for the pipeline if possible.
 TARGETS = np.unique(TARGETS).tolist()
@@ -92,6 +92,23 @@ rule generate_fam_files:
         "scripts/gen_fam_files.py"
         
 ### NOTE: after this step, upload the fam files to directory maggie_pipeline_vF and cd into this directory
+
+rule plink_frq:
+    input:
+        fam_file="data/id_lists/{scenario}_seed{seed}_n{n}.tsv",
+    output:
+        frq_file="data/frq/chr{chrom}_{scenario}_seed{seed}_n{n}.frq.strat"
+    shell:
+        """
+        dx run app-swiss-army-knife -y --wait \
+            -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bed \
+            -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bim \
+            -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.fam \
+            -iin={wildcards.scenario}_seed{wildcards.seed}_n{wildcards.n}.tsv \
+            -icmd='plink --bfile ukb23158_c{wildcards.chrom}_b0_v1 --keep {wildcards.scenario}_seed{wildcards.seed}_n{wildcards.n}.tsv --freq --within {wildcards.scenario}_seed{wildcards.seed}_n{wildcards.n}.tsv --out chr{wildcards.chrom}_{wildcards.scenario}_seed{wildcards.seed}_n{wildcards.n}'
+        dx download chr{wildcards.chrom}_{wildcards.scenario}_seed{wildcards.seed}_n{wildcards.n}.frq.strat
+        mv chr{wildcards.chrom}_{wildcards.scenario}_seed{wildcards.seed}_n{wildcards.n}.frq.strat data/frq
+        """
 
 rule plink_frq_wholedataset:
     input:
