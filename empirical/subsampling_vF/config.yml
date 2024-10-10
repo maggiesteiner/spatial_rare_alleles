@@ -12,3 +12,12 @@ UKBB:
         50epsilongeo:
         closest10kgeo:
         uniformgeo:
+        5epsilonpcaIS:
+        10epsilonpcaIS:
+        50epsilonpcaIS:
+        100epsilonpcaIS:
+        uniformpcaIS:
+        5epsilongeoIS:
+        10epsilongeoIS:
+        50epsilongeoIS:
+        uniformgeoIS:
