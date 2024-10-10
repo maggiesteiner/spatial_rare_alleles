@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from sklearn.neighbors import KernelDensity
 
 df = pd.read_csv(snakemake.input[0])
