@@ -97,7 +97,7 @@ if label not in IS_labels:
 
 elif label in IS_labels:
     if 'geo' in label:
-        sampled_df = df_IS_geo.sample(n=snakemake.params.numsamp, weights='weights')
+        sampled_df = df_IS_geo.sample(n=snakemake.params.numsamp, weights='weights',replace=True)
     elif 'pca' in label:
         sampled_df = df_IS_pca.sample(n=snakemake.params.numsamp, weights='weights')
 

@@ -80,33 +80,18 @@ rule clean_metadata:
     script:
         "scripts/clean_metadata.py"
 
-rule importance_weights:
-    input:
-        "metadata/metadata_cleaned_wes.csv"
-    output:
-        "metadata/metadata_IS_pca.csv",
-        "metadata/metadata_IS_geo.csv"
-    script:
-        "scripts/importance_weights.py"
-
-
-
 rule generate_fam_files:
     input:
         meta_clean = "metadata/metadata_cleaned_wes.csv",
-        meta_IS_geo = "metadata/metadata_IS_geo.csv",
-        meta_IS_pca = "metadata/metadata_IS_pca.csv",
     output: 
         fam_file="data/id_lists/{scenario}_seed{seed}_n{n}.tsv",
     params:
         numsamp=lambda wildcards: int(wildcards.n),
         label=lambda wildcards: wildcards.scenario,
         seed=lambda wildcards: int(wildcards.seed),
-        eps_pca= 0.0001,
-        eps_geo=10000,
        
     script:
-        "scripts/gen_fam_files.py"
+        "scripts/gen_fam_files_SIR.py"
         
 ### NOTE: after this step, upload the fam files to directory maggie_pipeline_vF and cd into this directory
 
