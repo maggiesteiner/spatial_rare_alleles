@@ -1,0 +1,56 @@
+ Scatter!  A PLINK-derived program by J. Novembre
+0.0  22/Mar/2007
+Writing this text to log file [ chr1_lof_centerE7N14geo50000_nSIR10000_nSIRreps10.log ]
+Analysis started: Sat Oct 26 00:03:59 2024
+
+Reading map (extended format) from [ chr1_lof.bim ] 
+53658 markers to be included from [ chr1_lof.bim ]
+Reading pedigree information from [ chr1_lof.fam ] 
+	469835 individuals read from [ chr1_lof.fam ] 
+	215157 males, 254619 females, and 59 of unspecified sex
+Warning, found 59 individuals with ambiguous sex codes
+Writing list of these individuals to [ chr1_lof_centerE7N14geo50000_nSIR10000_nSIRreps10.nosex ]
+Reading genotype bitfile from [ chr1_lof.bed ] 
+Detected that binary PED file is v1.00 SNP-major mode
+Reading clusters from [ sir.clst ]
+	469835 of 469835 individuals assigned to 1 cluster(s)
+Reading SIR weights file from [ centerE7N14geo50000.sir ] 
+	469835 SIR weights read from file.
+Calculating frequencies over SIR samplings and building SFS... 
+Note: This code rounds frequencies at sites with missing data to closest value of 1/nSIR... 
+Setting seeds as 2081958 9548
+Taking frequencies per cluster and outputting to file [ chr1_lof_centerE7N14geo50000_nSIR10000_nSIRreps10.SIRsfs ]... 
+SIR replicate 0
+Sum of p: 1.000000
+Running GENMUL command...
+SIR replicate 1
+Sum of p: 1.000000
+Running GENMUL command...
+SIR replicate 2
+Sum of p: 1.000000
+Running GENMUL command...
+SIR replicate 3
+Sum of p: 1.000000
+Running GENMUL command...
+SIR replicate 4
+Sum of p: 1.000000
+Running GENMUL command...
+SIR replicate 5
+Sum of p: 1.000000
+Running GENMUL command...
+SIR replicate 6
+Sum of p: 1.000000
+Running GENMUL command...
+SIR replicate 7
+Sum of p: 1.000000
+Running GENMUL command...
+SIR replicate 8
+Sum of p: 1.000000
+Running GENMUL command...
+SIR replicate 9
+Sum of p: 1.000000
+Running GENMUL command...
+Outputting seeds to file.
+
+Analysis finished: Sat Oct 26 01:21:27 2024
+
