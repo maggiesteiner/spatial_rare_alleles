@@ -1,7 +1,11 @@
 # Spatial Rare Alleles
 
-Repository to store code for simulations and empirical analyses described in: "Spatial dynamics and study design impact rare variant discovery in biobank-scale datasets."
+Repository to store code for simulations and empirical analyses described in: "Study design and the sampling of deleterious rare variants in biobank-scale datasets."
 Please see our preprint (here) for details.
+
+## Figures
+
+Code to produce all figures in the manuscript is available in the `figures` directory. 
 
 ## Simulations
 
@@ -9,4 +13,4 @@ We provide code relating to two simulation methods used in the project: branchin
 
 ## Data 
 
-Scripts pertaining to analysis of UK Biobank WES data can be found in `empirical`. Scripts for running PCA are available in `empirical/pca`, while the pipeline for the subsampling experiments can be found in `empirical/subsampling_vF`.
+Scripts pertaining to analysis of UK Biobank WES data can be found in `empirical`. Scripts for running PCA are available in `empirical/pca`, while the pipeline for the subsampling experiments can be found in `empirical/subsampling_SIR_vF`.
