@@ -79,9 +79,15 @@ def concatenate_data(files):
     return np.array(combined_sampled_p), combined_zero_samples
 
 def main():
-    rcParams = {'font.size': 14}
+
     plt.rcParams.update(rcParams)
 
+    plt.rcParams['axes.labelsize'] = 8
+    plt.rcParams['axes.titlesize'] = 9
+    plt.rcParams['xtick.labelsize'] = 8
+    plt.rcParams['ytick.labelsize'] = 8
+    plt.rcParams['legend.fontsize'] = 8
+    plt.rcParams['font.family'] = 'Arial'
     s_list = [0.1,0.01,0.001]
     mu = 1e-09
     dens = [20]
@@ -96,7 +102,7 @@ def main():
     for n in n_list:
         for rho in dens:
             for L in L_list:
-                fig, ax = plt.subplots(1,3,figsize=(21, 7))
+                fig, ax = plt.subplots(1,3,figsize=(7.5, 3))
                 for j,s in enumerate(s_list):
                     i=0
                     if L == 1000:
@@ -104,9 +110,10 @@ def main():
                     elif L == 10000:
                         w_list_subset = [w_list[3], w_list[-2], w_list[-1]]
                     for w in w_list_subset:
-                        file_path = f"../results/20240521/s{s}_mu{mu}_rho{rho}_L{L}_sigma{sigma}_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w{w}*"
+                        file_path = f"../bp_sims/results/20240521/s{s}_mu{mu}_rho{rho}_L{L}_sigma{sigma}_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w{w}*"
                         files = glob.glob(os.path.join(file_path))
                         if len(files) == 10:
+                            print("here")
                             combined_sampled_p, combined_zero_samples = concatenate_data(files)
                             sfs = sample_sfs(combined_sampled_p, combined_zero_samples, n, max_x)
 
@@ -118,19 +125,19 @@ def main():
                                 sfs_thinned = np.concatenate((sfs[:100][x_values <= 10], sfs[:100][x_values > 10][::thin_factor]))
                                 ax[j].loglog(x_values_thinned, sfs_thinned, label=f'w={round(w,1)} (simulation)', marker='x',
                                           linestyle='',
-                                          markersize=8, color=colors[i])
+                                          markersize=5, color=colors[i])
                             else:
                                 ax[j].loglog(np.arange(0,max_x), sfs[:100], label=f'w={round(w, 1)} (simulation)',
                                              marker='x',
                                              linestyle='',
-                                             markersize=8, color=colors[i])
+                                             markersize=5, color=colors[i])
 
                             fit_pmf = fitted_nb_pmf(sfs)
                             ax[j].loglog(np.arange(0,max_x), fit_pmf, label=f'w={round(w,1)} (NB fit)', marker=None, linestyle='--',
-                                      linewidth=3, alpha=1, color=colors[i])
+                                      linewidth=2, alpha=1, color=colors[i])
                             nb_dist = [get_sfs_theory(y, n, mu, s, rho, sigma, w) for y in np.arange(0, max_x)]
                             ax[j].loglog(np.arange(0, max_x), nb_dist, label=f'w={round(w,1)} (theory)', marker=None, linestyle='-',
-                                      linewidth=3, alpha=0.8, color=colors[i])
+                                      linewidth=2, alpha=0.8, color=colors[i])
                             i+=1
                         else:
                             continue
@@ -143,17 +150,22 @@ def main():
                     elements = [Patch(facecolor=colors[0],edgecolor='None',label=f'$w$={round(w_list_subset[0],1)}'),
                                 Patch(facecolor=colors[1],edgecolor='None',label=f'$w$={round(w_list_subset[1],1)}'),
                                 Patch(facecolor=colors[2],edgecolor='None',label=f'$w$={round(w_list_subset[2],1)}')]
-                    leg1 = ax[j].legend(handles=elements, frameon=False, loc='lower left')
+                    if n==10000 and  j==0:
+                        leg1 = ax[j].legend(handles=elements, frameon=False, loc='center right')
+                    elif n==10000 and  j==1:
+                        leg1 = ax[j].legend(handles=elements, frameon=False, loc='center right')
+                    else:
+                        leg1 = ax[j].legend(handles=elements, frameon=False, loc='lower left')
                     ax[j].add_artist(leg1)
                     elements2 = [Line2D([0], [0], color='black', label='Theory', linewidth=2),
                                  Line2D([0], [0], marker='x', color='w', label='Simulation',
-                                        markeredgecolor='black', markersize=7),
-                                 Line2D([0],[0],color='black',linewidth=2,linestyle='--',label='Negative Binomial Fit')]
+                                        markeredgecolor='black', markersize=5),
+                                 Line2D([0],[0],color='black',linewidth=2,linestyle='--',label='Neg. Binom.')]
                     ax[j].legend(handles=elements2, frameon=False, loc='upper right')
 
 
-                plt.tight_layout()
-                plt.savefig(f"plots_20241104/n{n}_sigma{sigma}_L{L}_rho{rho}_sfs_3vals_withfittedpmf.pdf")
+                plt.tight_layout(pad=0.1)
+                plt.savefig(f"plots_20250103/n{n}_sigma{sigma}_L{L}_rho{rho}_sfs_3vals_withfittedpmf.pdf")
                 plt.close()
 
 

@@ -101,7 +101,12 @@ def print_moments(files):
 def main():
 
     rcParams.update({'font.size': 14})
-
+    plt.rcParams['axes.labelsize'] = 9
+    plt.rcParams['axes.titlesize'] = 10
+    plt.rcParams['xtick.labelsize'] = 9
+    plt.rcParams['ytick.labelsize'] = 9
+    plt.rcParams['legend.fontsize'] = 9
+    plt.rcParams['font.family'] = 'Arial'
     s_list = [0.1, 0.01, 0.001]#,0.01]
     mu = 1e-09
     dens = [20]#, 20]
@@ -111,7 +116,7 @@ def main():
 
     for rho in dens:
         for L in L_list:
-            fig, axs = plt.subplots(3, 2, figsize=(12, 18))
+            fig, axs = plt.subplots(3, 2, figsize=(7.01, 10.52))
             for i,s in enumerate(s_list):
 
                 sim_ep_list = []
@@ -120,7 +125,7 @@ def main():
                 theory_ep2_list = []
                 theory_ep2_list_approx = []
                 for w in w_list:
-                    file_path = f"results/20240521/s{s}_mu{mu}_rho{rho}_L{L}_sigma{sigma}_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w{w}*"
+                    file_path = f"../bp_sims/results/20240521/s{s}_mu{mu}_rho{rho}_L{L}_sigma{sigma}_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w{w}*"
                     files = glob.glob(os.path.join(file_path))
                     if len(files)==10:
                         sim_EP, theory_EP, sim_EP2, theory_EP2, theory_EP2_approx = print_moments(files)
@@ -136,18 +141,18 @@ def main():
                 if not sim_ep2_list:
                     continue
 
-                axs[i,0].loglog(w_list, theory_ep_list, label='Wrapped Gaussian (theory)', linestyle='', marker='^', markersize=8, color='black')
-                axs[i,0].loglog(w_list, sim_ep_list, label='Wrapped Gaussian (simulation)', marker='x', linestyle='', color='red', markersize=8)
+                axs[i,0].loglog(w_list, theory_ep_list, label='Wrapped Gaussian (theory)', linestyle='', marker='^', markersize=5, color='black')
+                axs[i,0].loglog(w_list, sim_ep_list, label='Wrapped Gaussian (simulation)', marker='x', linestyle='', color='red', markersize=5)
                 axs[i,0].loglog(w_list, np.repeat(mu/s, 10), label='Uniform limit (theory)', linestyle='--', color='black')
                 axs[i,0].set_title(r"$\mathbb{E}[P]$, $s=$"+str(s))
                 axs[i,0].set_xlabel(r"sampling width ($w$)")
                 axs[i,0].set_ylabel(r"$\mathbb{E}[P]$")
                 axs[i,0].set_ylim((mu/s)*1e-1, (mu/s)*1e1)
                 axs[i,0].legend(frameon=False, loc='upper left')#, title='Sampling kernel')
-                axs[i,1].loglog(w_list, theory_ep2_list, label='Wrapped Gaussian (theory)', linestyle='', marker='^', markersize=8, color='black')
+                axs[i,1].loglog(w_list, theory_ep2_list, label='Wrapped Gaussian (theory)', linestyle='', marker='^', markersize=5, color='black')
                 # axs[1].loglog(w_list, theory_ep2_list_approx, label='Gaussian (theory approx)', linestyle='', marker='+',
                 #               markersize=8, color='blue')
-                axs[i,1].loglog(w_list, sim_ep2_list, label='Wrapped Gaussian (simulation)', marker='x', linestyle='', color='red', markersize=8)
+                axs[i,1].loglog(w_list, sim_ep2_list, label='Wrapped Gaussian (simulation)', marker='x', linestyle='', color='red', markersize=5)
                 axs[i,1].loglog(w_list, np.repeat(mu / (s**2*L**2*rho), 10), label='Uniform limit (theory)', linestyle='--', color='black')
                 axs[i,1].set_title(r"$\mathbb{E}[P^2]$, $s=$"+str(s))
                 axs[i,1].set_xlabel(r"sampling width ($w$)")
@@ -155,7 +160,7 @@ def main():
                 # axs[1].axvline(np.sqrt(get_lc_squared(sigma,s)), color='gray', linestyle='--')
                 # fig.suptitle(f"L={L}, density={rho}, s={s}, mu={mu}, sigma={sigma}")
             plt.tight_layout()
-            plt.savefig(f"plots_20240703/moments_over_w_rho{rho}_L{L}_sigma{sigma}_mu{mu}.pdf")
+            plt.savefig(f"plots_20250103/moments_over_w_rho{rho}_L{L}_sigma{sigma}_mu{mu}.pdf")
 
     # for rho in dens:
     #     for w in w_list:
