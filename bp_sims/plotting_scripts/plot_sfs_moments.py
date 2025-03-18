@@ -104,7 +104,7 @@ def main():
                     elif L == 10000:
                         w_list_subset = [w_list[3], w_list[-2], w_list[-1]]
                     for w in w_list_subset:
-                        file_path = f"results/20240521/s{s}_mu{mu}_rho{rho}_L{L}_sigma{sigma}_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w{w}*"
+                        file_path = f"../results/20240521/s{s}_mu{mu}_rho{rho}_L{L}_sigma{sigma}_time1000000.0_r0.1_burnin_wrapped_norm_gaussian_w{w}*"
                         files = glob.glob(os.path.join(file_path))
                         if len(files) == 10:
                             combined_sampled_p, combined_zero_samples = concatenate_data(files)
@@ -134,7 +134,7 @@ def main():
                             i+=1
                         else:
                             continue
-                    ax[j].set_ylim(1e-16, 1e0)
+                    ax[j].set_ylim(1e-10, 1e0)
                     ax[j].set_xlabel('allele count')
                     ax[j].set_ylabel('expected proportion of sites')
                     ax[j].set_title(fr"$n$={n}, $s$={s}")#, $L$={L}, $\rho$={rho}, $\ell_c$={round(np.sqrt(get_lc_squared(sigma,s)),2)}")
@@ -153,7 +153,7 @@ def main():
 
 
                 plt.tight_layout()
-                plt.savefig(f"plots_20240703/n{n}_sigma{sigma}_L{L}_rho{rho}_sfs_3vals_withfittedpmf.pdf")
+                plt.savefig(f"plots_20241104/n{n}_sigma{sigma}_L{L}_rho{rho}_sfs_3vals_withfittedpmf.pdf")
                 plt.close()
 
 
