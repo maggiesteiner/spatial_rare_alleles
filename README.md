@@ -1,7 +1,7 @@
 # Spatial Rare Alleles
 
 Repository to store code for simulations and empirical analyses described in: "Study design and the sampling of deleterious rare variants in biobank-scale datasets."
-Please see our preprint (here) for details.
+Please see our preprint [here](https://www.biorxiv.org/content/10.1101/2024.12.02.626424v1) for details.
 
 ## Figures
 
@@ -13,4 +13,4 @@ We provide code relating to two simulation methods used in the project: branchin
 
 ## Data 
 
-Scripts pertaining to analysis of UK Biobank WES data can be found in `empirical`. Scripts for running PCA are available in `empirical/pca`, while the pipeline for the subsampling experiments can be found in `empirical/subsampling_SIR_vF`.
+Scripts pertaining to analysis of UK Biobank WES data can be found in `empirical`. Scripts for running PCA are available in `empirical/pca`, while the pipeline for the subsampling experiments can be found in `empirical/subsampling_SIR_v20250127`.
