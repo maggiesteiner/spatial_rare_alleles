@@ -96,7 +96,11 @@ def main():
     n_list = [10000,500000]#[1000,10000,100000]
     max_x = 100
     w_list = np.logspace(1, 4, 10)[0:7]
+    x = np.logspace(0, 2, 100)  # Log-spaced x from 1 to 100
+    y = x ** -1  # Defines slope -1
 
+    # Position lines to cover full y-axis range (10^-10 to 10^-1)
+    scales = np.logspace(-9, 0, 5)  # Adjusted so lines span entire y range
     colors = ['steelblue','darkorange','mediumseagreen']
 
     for n in n_list:
@@ -123,27 +127,27 @@ def main():
                                 x_values_thinned = np.concatenate(
                                     (x_values[x_values <= 10], x_values[x_values > 10][::thin_factor]))
                                 sfs_thinned = np.concatenate((sfs[:100][x_values <= 10], sfs[:100][x_values > 10][::thin_factor]))
-                                ax[j].loglog(x_values_thinned, sfs_thinned, label=f'w={round(w,1)} (simulation)', marker='x',
+                                ax[j].loglog(x_values_thinned, sfs_thinned, label=f'w={round(w,0)} (simulation)', marker='x',
                                           linestyle='',
                                           markersize=5, color=colors[i])
                             else:
-                                ax[j].loglog(np.arange(0,max_x), sfs[:100], label=f'w={round(w, 1)} (simulation)',
+                                ax[j].loglog(np.arange(0,max_x), sfs[:100], label=f'w={round(w, 0)} (simulation)',
                                              marker='x',
                                              linestyle='',
                                              markersize=5, color=colors[i])
 
                             fit_pmf = fitted_nb_pmf(sfs)
-                            ax[j].loglog(np.arange(0,max_x), fit_pmf, label=f'w={round(w,1)} (NB fit)', marker=None, linestyle='--',
+                            ax[j].loglog(np.arange(0,max_x), fit_pmf, label=f'w={round(w,0)} (NB fit)', marker=None, linestyle='--',
                                       linewidth=2, alpha=1, color=colors[i])
                             nb_dist = [get_sfs_theory(y, n, mu, s, rho, sigma, w) for y in np.arange(0, max_x)]
-                            ax[j].loglog(np.arange(0, max_x), nb_dist, label=f'w={round(w,1)} (theory)', marker=None, linestyle='-',
+                            ax[j].loglog(np.arange(0, max_x), nb_dist, label=f'w={round(w,0)} (theory)', marker=None, linestyle='-',
                                       linewidth=2, alpha=0.8, color=colors[i])
                             i+=1
                         else:
                             continue
                     ax[j].set_ylim(1e-10, 1e0)
-                    ax[j].set_xlabel('allele count')
-                    ax[j].set_ylabel('expected proportion of sites')
+                    ax[j].set_xlabel('Allele count')
+                    ax[j].set_ylabel('Expected proportion of sites')
                     ax[j].set_title(fr"$n$={n}, $s$={s}")#, $L$={L}, $\rho$={rho}, $\ell_c$={round(np.sqrt(get_lc_squared(sigma,s)),2)}")
                     # ax[j].legend()
 
@@ -162,7 +166,8 @@ def main():
                                         markeredgecolor='black', markersize=5),
                                  Line2D([0],[0],color='black',linewidth=2,linestyle='--',label='Neg. Binom.')]
                     ax[j].legend(handles=elements2, frameon=False, loc='upper right')
-
+                    for s in scales:
+                        ax[j].loglog(x, y * s, color='lightgray', linestyle='--', zorder=0)
 
                 plt.tight_layout(pad=0.1)
                 plt.savefig(f"plots_20250103/n{n}_sigma{sigma}_L{L}_rho{rho}_sfs_3vals_withfittedpmf.pdf")
