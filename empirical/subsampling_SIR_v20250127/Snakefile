@@ -20,6 +20,7 @@ for vc in varclass:
                 TARGETS.append(f"results/freq/chr{chr}_{vc}_{c}geo{w}_nSIR{nsamp}_nSIRreps{nreps}.SIRfreq")
                 TARGETS.append(f"results/seeds/chr{chr}_{vc}_{c}geo{w}_nSIR{nsamp}_nSIRreps{nreps}.SIRseeds")
                 TARGETS.append(f"results/daf/chr{chr}_{vc}_{c}geo{w}_nSIR{nsamp}_nSIRreps{nreps}.daf")
+                TARGETS.append(f"results/sfs_daf_v2/chr{chr}_{vc}_{c}geo{w}_nSIR{nsamp}_nSIRreps{nreps}.daf.sfs")
     for chr in chroms:
         TARGETS.append(f"results/sfs/chr{chr}_{vc}_uniformgeo_nSIR{nsamp}_nSIRreps{nreps}.SIRsfs")
         TARGETS.append(f"results/ids/chr{chr}_{vc}_uniformgeo_nSIR{nsamp}_nSIRreps{nreps}.SIRexamples")
@@ -27,6 +28,8 @@ for vc in varclass:
         TARGETS.append(f"results/freq/chr{chr}_{vc}_uniformgeo_nSIR{nsamp}_nSIRreps{nreps}.SIRfreq")
         TARGETS.append(f"results/seeds/chr{chr}_{vc}_uniformgeo_nSIR{nsamp}_nSIRreps{nreps}.SIRseeds")
         TARGETS.append(f"results/daf/chr{chr}_{vc}_uniformgeo_nSIR{nsamp}_nSIRreps{nreps}.daf")
+        TARGETS.append(f"results/sfs_daf_v2/chr{chr}_{vc}_uniformgeo_nSIR{nsamp}_nSIRreps{nreps}.daf.sfs")
+        TARGETS.append(f"data/chr{chr}_ukb_all_kao.frqx")
 
 TARGETS.append("data/weights/uniformgeo.weights")
 TARGETS.append("data/sir/uniformgeo.sir")
@@ -47,6 +50,7 @@ for vc in varclass:
                 TARGETS.append(f"results/freq/chr{chr}_{vc}_{c}pca{w}_nSIR{nsamp}_nSIRreps{nreps}.SIRfreq")
                 TARGETS.append(f"results/seeds/chr{chr}_{vc}_{c}pca{w}_nSIR{nsamp}_nSIRreps{nreps}.SIRseeds")
                 TARGETS.append(f"results/daf/chr{chr}_{vc}_{c}pca{w}_nSIR{nsamp}_nSIRreps{nreps}.daf")
+                TARGETS.append(f"results/sfs_daf_v2/chr{chr}_{vc}_{c}pca{w}_nSIR{nsamp}_nSIRreps{nreps}.daf.sfs")
     for chr in chroms:
         TARGETS.append(f"results/sfs/chr{chr}_{vc}_uniformpca_nSIR{nsamp}_nSIRreps{nreps}.SIRsfs")
         TARGETS.append(f"results/ids/chr{chr}_{vc}_uniformpca_nSIR{nsamp}_nSIRreps{nreps}.SIRexamples")
@@ -54,6 +58,7 @@ for vc in varclass:
         TARGETS.append(f"results/freq/chr{chr}_{vc}_uniformpca_nSIR{nsamp}_nSIRreps{nreps}.SIRfreq")
         TARGETS.append(f"results/seeds/chr{chr}_{vc}_uniformpca_nSIR{nsamp}_nSIRreps{nreps}.SIRseeds")
         TARGETS.append(f"results/daf/chr{chr}_{vc}_uniformpca_nSIR{nsamp}_nSIRreps{nreps}.daf")
+        TARGETS.append(f"results/sfs_daf_v2/chr{chr}_{vc}_uniformpca_nSIR{nsamp}_nSIRreps{nreps}.daf.sfs")
 TARGETS.append("data/weights/uniformpca.weights")
 TARGETS.append("data/sir/uniformpca.sir")
 TARGETS = np.unique(TARGETS).tolist()
@@ -227,16 +232,6 @@ rule run_scatter:
         mv chr{wildcards.chrom}_{wildcards.varclass}_{wildcards.scenario}_nSIR{wildcards.nsamp}_nSIRreps{wildcards.nreps}.SIRseeds results/seeds
         """
 
-# rule get_anc_alleles:
-#     input:
-#         thougene_vcf="metadata/ALL.chr1.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf",
-#     output:
-#         anc_alleles_file="metadata/chr1_anc_alleles.tsv",
-#     shell:
-#         """
-#         bcftools query -f '%CHROM\t%POS\t%INFO/AA\n' {input.thougene_vcf} | awk -F'|' '{{print $1}}' > {output.anc_alleles_file}
-#         """
-
 rule extract_ancestral_alleles:
     input:
         fasta="metadata/homo_sapiens_ancestor_GRCh38/homo_sapiens_ancestor_1.fa",# Your FASTA file
@@ -244,7 +239,6 @@ rule extract_ancestral_alleles:
         anc="metadata/ancestral_vars_chr1.txt",# Output file for ancestral alleles
     script:
         'scripts/extract_ancestral.py'
-
 
 rule extract_reference_alleles:
     input:
@@ -254,24 +248,6 @@ rule extract_reference_alleles:
     script:
         'scripts/extract_ancestral.py'
 
-# rule clean_anc_alleles:
-#     input:
-#         anc_alleles_file="metadata/chr1_anc_alleles.tsv",
-#     output:
-#         anc_alleles_file_clean="metadata/chr1_anc_alleles_clean.tsv",
-#     shell:
-#         """
-#         awk 'BEGIN {{OFS="\t"}}
-#         {{
-#           # Check if the 3rd column is not missing (i.e., not "." or "") and has a single character (SNP)
-#           if ($3 != "." && $3 != "" && length($3) == 1) {{
-#             # Convert the 3rd column allele to uppercase
-#             $3 = toupper($3);
-#             print $0;
-#           }}
-#         }}' {input.anc_alleles_file} > {output.anc_alleles_file_clean}
-#         """
-
 rule derived_allele_freq:
     input:
         anc_alleles_file_clean="metadata/ancestral_vars_chr1.txt",
@@ -280,19 +256,6 @@ rule derived_allele_freq:
         daf_snv="results/daf/chr{chrom}_{varclass}_{scenario}_nSIR{nsamp}_nSIRreps{nreps}.daf"
     script:
         'scripts/calc_daf.py'
-
-
-# rule redacted_samples:
-#     input:
-#     output:
-#         redacted='redacted_samples_chr{chrom}.txt'
-#     shell:
-#         """
-#         dx run app-swiss-army-knife -y --wait \
-#                 -iin="Rare Variants in Space:/Bulk/Exome sequences/Population level exome OQFE variants, PLINK format - final release/ukb23158_c{wildcards.chrom}_b0_v1.fam" \
-#                 -icmd="awk '\$6 != \"-9\" {{print \$1, \$2}}' ukb23158_c{wildcards.chrom}_b0_v1.fam > redacted_samples_chr{wildcards.chrom}.txt"
-#         dx download redacted_samples_chr{wildcards.chrom}.txt
-#         """
 
 rule chrom_freqs_all:
     input:
@@ -313,7 +276,7 @@ rule chrom_freqs_WB:
     input:
         ids='data/WB_seed0_n1000.tsv'
     output:
-        chr1_freqs="data/chr{chrom}_ukb_WB_kar.frqx",
+        chr1_freqs="data/chr{chrom}_ukb_WB_kao.frqx",
     shell:
         """
         dx run app-swiss-army-knife -y --wait \
@@ -321,16 +284,16 @@ rule chrom_freqs_WB:
             -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bim \
             -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.fam \
             -iin=WB_seed0_n1000.tsv \
-            -icmd='plink --bfile ukb23158_c{wildcards.chrom}_b0_v1 --keep-allele-order --keep WB_seed0_n1000.tsv --snps-only just-acgt --freqx --out chr{wildcards.chrom}_ukb_WB_kar'
-        dx download chr{wildcards.chrom}_ukb_WB_kar.frqx
-        mv chr{wildcards.chrom}_ukb_WB_kar.frqx data
+            -icmd='plink --bfile ukb23158_c{wildcards.chrom}_b0_v1 --keep-allele-order --keep WB_seed0_n1000.tsv --snps-only just-acgt --freqx --out chr{wildcards.chrom}_ukb_WB_kao'
+        dx download chr{wildcards.chrom}_ukb_WB_kao.frqx
+        mv chr{wildcards.chrom}_ukb_WB_kao.frqx data
         """
 
 rule chrom_freqs_AFR:
     input:
         ids = 'data/AFR_seed0_n1000.tsv'
     output:
-        chr1_freqs="data/chr{chrom}_ukb_AFR_kar.frqx",
+        chr1_freqs="data/chr{chrom}_ukb_AFR_kao.frqx",
     shell:
         """
         dx run app-swiss-army-knife -y --wait \
@@ -338,14 +301,36 @@ rule chrom_freqs_AFR:
             -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bed \
             -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.bim \
             -iin=Rare\ Variants\ in\ Space:/Bulk/Exome\ sequences/Population\ level\ exome\ OQFE\ variants,\ PLINK\ format\ -\ final\ release/ukb23158_c{wildcards.chrom}_b0_v1.fam \
-            -icmd='plink --bfile ukb23158_c{wildcards.chrom}_b0_v1 --keep-allele-order --keep AFR_seed0_n1000.tsv --snps-only just-acgt --freqx --out chr{wildcards.chrom}_ukb_AFR_kar'
-        dx download chr{wildcards.chrom}_ukb_AFR_kar.frqx
-        mv chr{wildcards.chrom}_ukb_AFR_kar.frqx data
+            -icmd='plink --bfile ukb23158_c{wildcards.chrom}_b0_v1 --keep-allele-order --keep AFR_seed0_n1000.tsv --snps-only just-acgt --freqx --out chr{wildcards.chrom}_ukb_AFR_kao'
+        dx download chr{wildcards.chrom}_ukb_AFR_kao.frqx
+        mv chr{wildcards.chrom}_ukb_AFR_kao.frqx data
         """
 
+rule sfs_daf_v2:
+    input:
+        daf = "results/daf/chr{chrom}_{varclass}_{scenario}_nSIR{nsamp}_nSIRreps{nreps}.daf"
+    output:
+        sfs_daf = "results/sfs_daf_v2/chr{chrom}_{varclass}_{scenario}_nSIR{nsamp}_nSIRreps{nreps}.daf.sfs"
+    run:
+        import pandas as pd
+        import numpy as np
+
+        df = pd.read_csv(input.daf,sep="\t")
+        df = df[df['MAF']>0] # remove for v1
+        df["OBS_N"] = (df["Derived_Frequency"] * df["NOBS"]).round().astype(int)
+        obs_n_values = np.arange(0,2 * int(wildcards.nsamp) + 1)
+        sir_rep_values = df["ITER"].unique()
+
+        complete_combinations = pd.MultiIndex.from_product([sir_rep_values, obs_n_values],names=["SIR_REP", "OBS_N"])
+
+        complete_combinations_df = pd.DataFrame(index=complete_combinations).reset_index()
+        # print(complete_combinations_df)
+
+        df["SIR_REP"] = df["ITER"]
+        df.drop(columns=["ITER"],inplace=True)
+        sfs = df.groupby(["SIR_REP", "OBS_N"]).size().reset_index(name="COUNT_SITES")
+        sfs_complete = pd.merge(complete_combinations_df,sfs,on=["SIR_REP","OBS_N"],how="left")
+        sfs_complete["COUNT_SITES"].fillna(0,inplace=True)
+        sfs_complete.to_csv(output.sfs_daf,sep="\t",index=False)
 
 
-# plink2 --bfile mydata \
-#        --freq \
-#        --ref-from-fa ancestral.fa \
-#        --out allele_frequencies
