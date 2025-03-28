@@ -18,6 +18,7 @@ for vc in varclass:
                 TARGETS.append(f"results/ids/chr{chr}_{vc}_{c}geo{w}_nSIR{nsamp}_nSIRreps{nreps}.SIRexamples")
                 TARGETS.append(f"results/logs/chr{chr}_{vc}_{c}geo{w}_nSIR{nsamp}_nSIRreps{nreps}.log")
                 TARGETS.append(f"results/freq/chr{chr}_{vc}_{c}geo{w}_nSIR{nsamp}_nSIRreps{nreps}.SIRfreq")
+                TARGETS.append(f"results/sfs_freq/chr{chr}_{vc}_{c}geo{w}_nSIR{nsamp}_nSIRreps{nreps}.SIRfreq.sfs")
                 TARGETS.append(f"results/seeds/chr{chr}_{vc}_{c}geo{w}_nSIR{nsamp}_nSIRreps{nreps}.SIRseeds")
                 TARGETS.append(f"results/daf/chr{chr}_{vc}_{c}geo{w}_nSIR{nsamp}_nSIRreps{nreps}.daf")
                 TARGETS.append(f"results/sfs_daf_v2/chr{chr}_{vc}_{c}geo{w}_nSIR{nsamp}_nSIRreps{nreps}.daf.sfs")
@@ -30,6 +31,7 @@ for vc in varclass:
         TARGETS.append(f"results/daf/chr{chr}_{vc}_uniformgeo_nSIR{nsamp}_nSIRreps{nreps}.daf")
         TARGETS.append(f"results/sfs_daf_v2/chr{chr}_{vc}_uniformgeo_nSIR{nsamp}_nSIRreps{nreps}.daf.sfs")
         TARGETS.append(f"data/chr{chr}_ukb_all_kao.frqx")
+        TARGETS.append(f"results/sfs_freq/chr{chr}_{vc}_uniformgeo_nSIR{nsamp}_nSIRreps{nreps}.SIRfreq.sfs")
 
 TARGETS.append("data/weights/uniformgeo.weights")
 TARGETS.append("data/sir/uniformgeo.sir")
@@ -51,6 +53,8 @@ for vc in varclass:
                 TARGETS.append(f"results/seeds/chr{chr}_{vc}_{c}pca{w}_nSIR{nsamp}_nSIRreps{nreps}.SIRseeds")
                 TARGETS.append(f"results/daf/chr{chr}_{vc}_{c}pca{w}_nSIR{nsamp}_nSIRreps{nreps}.daf")
                 TARGETS.append(f"results/sfs_daf_v2/chr{chr}_{vc}_{c}pca{w}_nSIR{nsamp}_nSIRreps{nreps}.daf.sfs")
+                TARGETS.append(f"results/sfs_freq/chr{chr}_{vc}_{c}pca{w}_nSIR{nsamp}_nSIRreps{nreps}.SIRfreq.sfs")
+
     for chr in chroms:
         TARGETS.append(f"results/sfs/chr{chr}_{vc}_uniformpca_nSIR{nsamp}_nSIRreps{nreps}.SIRsfs")
         TARGETS.append(f"results/ids/chr{chr}_{vc}_uniformpca_nSIR{nsamp}_nSIRreps{nreps}.SIRexamples")
@@ -59,6 +63,7 @@ for vc in varclass:
         TARGETS.append(f"results/seeds/chr{chr}_{vc}_uniformpca_nSIR{nsamp}_nSIRreps{nreps}.SIRseeds")
         TARGETS.append(f"results/daf/chr{chr}_{vc}_uniformpca_nSIR{nsamp}_nSIRreps{nreps}.daf")
         TARGETS.append(f"results/sfs_daf_v2/chr{chr}_{vc}_uniformpca_nSIR{nsamp}_nSIRreps{nreps}.daf.sfs")
+        TARGETS.append(f"results/sfs_freq/chr{chr}_{vc}_uniformpca_nSIR{nsamp}_nSIRreps{nreps}.SIRfreq.sfs")
 TARGETS.append("data/weights/uniformpca.weights")
 TARGETS.append("data/sir/uniformpca.sir")
 TARGETS = np.unique(TARGETS).tolist()
@@ -333,4 +338,30 @@ rule sfs_daf_v2:
         sfs_complete["COUNT_SITES"].fillna(0,inplace=True)
         sfs_complete.to_csv(output.sfs_daf,sep="\t",index=False)
 
+rule sfs_from_frq:
+    input:
+        freq = "results/freq/chr{chrom}_{varclass}_{scenario}_nSIR{nsamp}_nSIRreps{nreps}.SIRfreq"
+    output:
+        sfs_frq = "results/sfs_freq/chr{chrom}_{varclass}_{scenario}_nSIR{nsamp}_nSIRreps{nreps}.SIRfreq.sfs"
+    params:
+        nsamp = '{nsamp}'
+    run:
+        import pandas as pd
+        import numpy as np
 
+        # read in .SIRfreq file
+        df = pd.read_csv(input.freq,sep="\s+")
+        # compute counts as round(freq*2*nsamp)
+        df["COUNT"] = (df["FREQ"] * int(wildcards.nsamp) *2).round().astype(int)
+        # all possible values of counts (up to 2*nsamp)
+        count_values = np.arange(0,2 * int(wildcards.nsamp) + 1)
+        # create df with entries for every possible ITER, COUNT combination (will later merge with counts)
+        sir_rep_values = df["ITER"].unique()
+        complete_combinations = pd.MultiIndex.from_product([sir_rep_values, count_values],names=["ITER", "COUNT"])
+        complete_combinations_df = pd.DataFrame(index=complete_combinations).reset_index()
+        # compute SFS values
+        sfs = df.groupby(["ITER", "COUNT"]).size().reset_index(name="SFS_COUNTS")
+        # merge with complete_combinations_df
+        sfs_complete = pd.merge(complete_combinations_df,sfs,on=["ITER", "COUNT"],how="left")
+        sfs_complete["SFS_COUNTS"].fillna(0,inplace=True)
+        sfs_complete.to_csv(output.sfs_frq,sep="\t",index=False)
